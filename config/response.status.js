@@ -8,6 +8,12 @@ export const status = {
     code: 2000,
     message: "success!",
   },
+  IMAGE_SAVE_SUCCESS: {
+    status: StatusCodes.OK,
+    isSuccess: true,
+    code: 2001,
+    message: "이미지 저장 성공입니다."
+  },
 
   // error
   // common err

@@ -4,17 +4,17 @@ on:
 
   pull_request:
     types: [closed] # pull_request closed 됐을 경우
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-20.04 
     if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'dev'
     
-
     strategy:
       matrix:
-        node-version: [20.x] 
-
+        node-version: [20.x]
+        
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}

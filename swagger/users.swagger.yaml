@@ -237,7 +237,7 @@ paths:
                   errorMessage:
                     type: string
                     example: "Invalid request"
-  /user:
+  /users:
     delete:
       tags:
         - 사용자

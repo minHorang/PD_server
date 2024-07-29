@@ -1,0 +1,309 @@
+openapi: 3.0.0
+info:
+  title: 사용자 관련 API
+  version: 1.0.0
+
+paths:
+  /users/info:
+    get:
+      tags:
+        - 사용자
+      summary: 계정 정보 가져오기
+      parameters:
+      - name: token
+        in: header
+        required: true
+        schema:
+          properties:
+            Authorization:
+              type: string
+              description: 헤더에 토큰을 입력
+      responses:
+        '200':
+          description: 계정 정보 가져오기 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  issuccess:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "계정 정보 가져오기 성공"
+                  result:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      nickname:
+                        type: string
+                        example: "사과 빠진 통나무 0612"
+                      name:
+                        type: string
+                        example: "모오"
+                      provider:
+                        type: string
+                        example: "Google"
+                      email:
+                        type: string
+                        example: "hanggildong@naver.com"
+        '400':
+          description: 잘못된 요청
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errorMessage:
+                    type: string
+                    example: "Invalid request"
+
+  /users/info/nickname:
+    post:
+      tags:
+        - 사용자
+      summary: 닉네임 변경하기
+      parameters:
+      - name: token
+        in: header
+        required: true
+        schema:
+          properties:
+            Authorization:
+              type: string
+              description: 헤더에 토큰을 입력
+      - name: newNickname
+        in: body
+        description: 변경할 닉네임을 입력합니다.
+        required: true
+        schema:
+          properties:
+            newNickname:
+              type: string
+              description: 변경할 닉네임
+              example: 모오
+      responses:
+        '200':
+          description: 닉네임 변경 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  issuccess:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "닉네임 변경 성공"
+                  result:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      nickname:
+                        type: string
+                        example: "Halyn"
+        '400':
+          description: 닉네임 변경 실패
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errorMessage:
+                    type: string
+                    example: "Invalid request"                         
+
+  /users/subscription:
+    post:
+      tags:
+        - 사용자
+      summary: 구독하기
+      parameters:
+      - name: token
+        in: header
+        required: true
+        schema:
+          properties:
+            Authorization:
+              type: string
+              description: 헤더에 토큰을 입력
+      responses:
+        '200':
+          description: 구독이 성공적으로 시작
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  issuccess:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 구독이 성공적으로 시작되었습니다.
+                  result:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      name:
+                        type: string
+                        example: "모오"
+                      email:
+                        type: string
+                        example: "haggildong@gmail.com"
+                      subscriptionPlan:
+                        type: string
+                        example: "pro"
+                      status:
+                        type: string
+                        example: "active"
+                      period:
+                        type: string
+                        example: "1개월"
+        '400':
+          description: 구독 실패
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errorMessage:
+                    type: string
+                    example: "Invalid request"
+
+    patch:
+      tags:
+        - 사용자
+      summary: 구독 취소
+      parameters:
+      - name: token
+        in: header
+        required: true
+        schema:
+          properties:
+            Authorization:
+              type: string
+              description: 헤더에 토큰을 입력
+      responses:
+        '200':
+          description: 구독 취소
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  issuccess:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 구독이 성공적으로 취소되었습니다.
+                  result:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      name:
+                        type: string
+                        example: "모오"
+                      email:
+                        type: string
+                        example: "haggildong@gmail.com"
+                      subscriptionPlan:
+                        type: string
+                        example: "basic"
+                      status:
+                        type: string
+                        example: "inactive"
+                      endDate:
+                        type: string
+                        example: "2024-07-28"
+        '400':
+          description: 구독 취소 실패
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errorMessage:
+                    type: string
+                    example: "Invalid request"
+  /user:
+    delete:
+      tags:
+        - 사용자
+      summary: 회원 탈퇴
+      parameters:
+      - name: token
+        in: header
+        description: redis에 저장된 refresh token과 db에 저장된 유저 관련 데이터들을 삭제
+        required: true
+      responses:
+        '200':
+          description: 회원탈퇴 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  issuccess:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 회원탈퇴 성공
+                  
+        '400':
+          description: 회원 탈퇴 실패
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errorMessage:
+                    type: string
+                    example: "Invalid request"
+  
+  /users/logout:
+    get:
+      tags:
+        - 사용자
+      summary: 로그아웃
+      parameters:
+      - name: token
+        in: header
+        description: redis에 저장된 refreshToken을 삭제
+        required: true
+      responses:
+        '200':
+          description: 로그아웃 성공 시 로그인 페이지로 리디렉션
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  issuccess:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 로그아웃 성공
+        '400':
+          description: 로그아웃 실패
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errorMessage:
+                    type: string
+                    example: "Invalid request"

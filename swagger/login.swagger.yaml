@@ -1,0 +1,223 @@
+openapi: 3.0.0
+info:
+  title: 로그인 관련 API
+  version: 1.0.0
+
+paths:
+  /users/login/signUp:
+    post:
+      tags:
+        - 로그인
+      summary: 회원가입
+      parameters:
+      - name: singUp
+        in: body
+        required: true
+        schema:
+          properties:
+            email:
+              type: string
+              description: 가입하려는 이메일
+              example: dhrwodms@naver.com
+            password:
+              type: string
+              description: 가입 비밀번호
+              example: 1234
+            
+      responses:
+        '200':
+          description: 회원가입 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  issuccess:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 회원가입 성공      
+        '400':
+          description: 계정 정보 가져오기 실패
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errorMessage:
+                    type: string
+                    example: "Invalid request"
+
+  /users/login/general:
+    post:
+      tags:
+        - 로그인
+      summary: 일반 로그인
+      parameters:
+      - name: Login
+        in: body
+        required: true
+        schema:
+          properties:
+            email:
+              type: string
+              description: 로그인하려는 이메일
+              example: dhrwodms@naver.com
+            password:
+              type: string
+              description: 로그인 비밀번호
+              example: 1234
+      responses:
+        '200':
+          description: 일반 로그인 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  issuccess:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 로그인 성공
+                  # result:
+                  #   type: string
+                  #   example: "${refreshToken}"
+        '400':
+          description: 일반 로그인 실패
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errorMessage:
+                    type: string
+                    example: "Invalid request"            
+  
+  /users/login/naver: 
+    post:
+      tags:
+        - 로그인
+      summary: 네이버 로그인
+      parameters:
+      - name: token
+        in: body
+        description: 로그인 후 받은 id 토큰을 입력합니다.
+        required: true
+        schema:
+          properties:
+            idToken:
+              type: string
+               
+      responses:
+        '200':
+          description: 네이버 로그인 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  issuccess:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 네이버 로그인 성공
+                  result:
+                    type: string
+                    example: "${refreshToken}"
+        '400':
+          description: 네이버 로그인 실패
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errorMessage:
+                    type: string
+                    example: "Invalid request"            
+
+  /users/login/kakao:
+    delete:
+      tags:
+        - 로그인
+      summary: 카카오 로그인
+      parameters:
+      - name: token
+        in: body
+        description: 로그인 후 받은 id 토큰을 입력합니다.
+        required: true
+        schema:
+          properties:
+            idToken:
+              type: string
+
+      responses:
+        '200':
+          description: 카카오 로그인
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  issuccess:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 카카오 로그인 성공
+                  result:
+                    type: string
+                    example: "${refreshToken}"
+                  
+        '400':
+          description: 카카오 로그인 실패
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errorMessage:
+                    type: string
+                    example: "Invalid request"
+
+  /users/login/refresh:
+    delete:
+      tags:
+        - 로그인
+      summary: 토큰 재발급(임시)
+      parameters:
+      - name: token
+        in: header
+        description: accessToken을 입력합니다.
+        required: true
+      responses:
+        '200':
+          description: 토큰 재발급
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  issuccess:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 토큰 재발급 성공
+                  result:
+                    type: string
+                    example: "${refreshToken}"
+                  
+        '400':
+          description: 토큰 재발급 실패
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errorMessage:
+                    type: string
+                    example: "Invalid request"

@@ -140,7 +140,7 @@ paths:
                     example: "Invalid request"            
 
   /users/login/kakao:
-    delete:
+    post:
       tags:
         - 로그인
       summary: 카카오 로그인
@@ -184,7 +184,7 @@ paths:
                     example: "Invalid request"
 
   /users/login/refresh:
-    delete:
+    post:
       tags:
         - 로그인
       summary: 토큰 재발급(임시)

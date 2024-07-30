@@ -6,6 +6,7 @@ import { specs } from "./config/swagger.config.js";
 import SwaggerUi from "swagger-ui-express";
 import { healthCheck } from "./srcs/utils/healthCheck.js";
 import { imageRouter } from "./srcs/utils/image/image.route.js";
+import { problemRouter } from "./srcs/problem/problem.route.js";
 import cors from "cors";
 
 const app = express();
@@ -19,6 +20,7 @@ app.use(cors());
 
 // router setting
 app.use("/temp", tempRouter);
+app.use("/problems", problemRouter);
 
 //health
 app.use("/health", healthCheck);

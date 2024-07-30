@@ -7,6 +7,7 @@ import SwaggerUi from "swagger-ui-express";
 import { healthCheck } from "./srcs/utils/healthCheck.js";
 import { imageRouter } from "./srcs/utils/image/image.route.js";
 import cors from "cors";
+import { userRotuer } from "./srcs/user/user.route.js";
 
 const app = express();
 const port = 3000;
@@ -14,7 +15,7 @@ const port = 3000;
 // 미들웨어 설정
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('public'));
+app.use(express.static("public"));
 app.use(cors());
 
 // router setting
@@ -25,10 +26,10 @@ app.use("/health", healthCheck);
 
 app.use("/upload", imageRouter);
 
+app.use("/user", userRotuer);
 
 //swagger
 app.use("/api-docs", SwaggerUi.serve, SwaggerUi.setup(specs));
-
 
 app.use((err, req, res, next) => {
   // 템플릿 엔진 변수 설정
@@ -38,7 +39,6 @@ app.use((err, req, res, next) => {
   console.log(err.message);
   res.status(err.data.status).send(response(err.data));
 });
-
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

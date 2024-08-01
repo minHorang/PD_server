@@ -6,20 +6,24 @@ import redis from 'redis';
 import { saveUser } from './auth.model.js';
 
 const client = redis.createClient({ host: process.env.REDIS_HOST, port: process.env.REDIS_PORT });
-const { JWT_SECRET, KAKAO_CLIENT_ID, KAKAO_CLIENT_SECRET, NAVER_CLIENT_ID, NAVER_CLIENT_SECRET } = process.env;
+const { JWT_SECRET, KAKAO_CLIENT_ID, KAKAO_CLIENT_SECRET, NAVER_CLIENT_ID, NAVER_CLIENT_SECRET, OAUTH_STATE } = process.env;
 
 client.on('error', (err) => {
     console.error('Redis error:', err);
 });
 
-export const getKakaoTokens = async (code) => {
+export const getKakaoTokens = async (code, state) => {
+    if (state !== OAUTH_STATE) {
+        throw new Error('Invalid state parameter');
+    }
     const response = await axios.post('https://kauth.kakao.com/oauth/token', null, {
         params: {
             grant_type: 'authorization_code',
             client_id: KAKAO_CLIENT_ID,
             client_secret: KAKAO_CLIENT_SECRET,
             redirect_uri: 'http://localhost:3000/auth/kakao/callback',
-            code
+            code,
+            state
         }
     });
     return response.data;
@@ -34,14 +38,17 @@ export const getKakaoUserInfo = async (accessToken) => {
     return response.data;
 };
 
-export const getNaverTokens = async (code) => {
+export const getNaverTokens = async (code, state) => {
+    if (state !== OAUTH_STATE) {
+        throw new Error('Invalid state parameter');
+    }
     const response = await axios.post('https://nid.naver.com/oauth2.0/token', null, {
         params: {
             grant_type: 'authorization_code',
             client_id: NAVER_CLIENT_ID,
             client_secret: NAVER_CLIENT_SECRET,
             code,
-            state: 'your_state'
+            state
         }
     });
     return response.data;
@@ -90,7 +97,16 @@ export const refreshJwtToken = async (refreshToken) => {
     }
 };
 
-export const createUserWithProvider = async (userInfo, provider) => {
-    const userWithProvider = { ...userInfo, provider };
-    await saveUser(userWithProvider);
+export const invalidateRefreshToken = async (refreshToken) => {
+    try {
+        const decoded = jwt.verify(refreshToken, JWT_SECRET);
+        await new Promise((resolve, reject) => {
+            client.del(`refreshToken:${decoded.id}`, (err) => {
+                if (err) reject(err);
+                resolve();
+            });
+        });
+    } catch (error) {
+        throw new Error('Failed to invalidate token: ' + error.message);
+    }
 };

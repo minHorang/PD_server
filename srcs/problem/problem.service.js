@@ -8,12 +8,15 @@ export const ProblemService = {
     return scale;
   },
 
-  searchProblems: async (query, folderId) => {
-    try {
-      const problems = await ProblemModel.search(query, folderId);
-      return problems;
-    } catch (error) {
-      throw new BaseError(status.BAD_REQUEST, "문제 검색 실패");
+  searchProblems: async (query, folderId, userId) => {
+    const isSubscribed = await ProblemModel.checkSubscriptionStatus(userId);
+    if (!isSubscribed) {
+      throw new Error("구독 계정만 이용 가능합니다.");
+    }
+    if (folderId) {
+      return await ProblemModel.searchByFolder(query, folderId);
+    } else {
+      return await ProblemModel.searchAll(query);
     }
   },
 

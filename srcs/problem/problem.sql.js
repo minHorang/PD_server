@@ -1,7 +1,33 @@
 export const sql = {
-    searchProblem: `SELECT * FROM problem WHERE problem_text LIKE ?`,
-    searchProblemByFolder: `SELECT * FROM problem WHERE problem_text LIKE ? AND folder_id = ?`,
+  searchProblem: `
+    SELECT 
+      *
+    FROM 
+      problem
+    WHERE 
+      problem_text LIKE ?
+  `,
 
+  searchProblemByFolder: `
+    SELECT 
+      *
+    FROM 
+      problem
+    WHERE 
+      problem_text LIKE ? AND folder_id = ?
+  `,
+
+  checkSubscriptionStatus: `
+    SELECT 
+      status,
+      start_date,
+      end_date
+    FROM 
+      subscription
+    WHERE 
+      user_id = ? AND status = '구독' AND NOW() BETWEEN start_date AND end_date
+  `
+  ,
     findProblemById: `
     SELECT *
     FROM 

@@ -2,16 +2,39 @@ import { pool } from "../../config/db.js";
 import { sql } from "./problem.sql.js"; 
 
 export const ProblemModel = {
-  search: async (query, folderId) => {
+
+  searchAll: async (query) => {
     try {
-      const queryStr = folderId ? sql.searchProblemByFolder : sql.searchProblem;
-      const values = folderId ? [`%${query}%`, folderId] : [`%${query}%`];
-      const [results] = await pool.query(queryStr, values);
+      console.log("searchAll");
+      const [results] = await pool.query(sql.searchProblem, [`%${query}%`]);
       return results;
     } catch (error) {
+      console.error("문제 검색 실패:", error.message);
       throw new Error("문제 검색 실패");
     }
   },
+
+  searchByFolder: async (query, folderId) => {
+    try {
+      const [results] = await pool.query(sql.searchProblemByFolder, [`%${query}%`, folderId]);
+      return results;
+    } catch (error) {
+      console.error("문제 검색 실패:", error.message);
+      throw new Error("문제 검색 실패");
+    }
+  },
+
+  checkSubscriptionStatus: async (userId) => {
+    try {
+      const [results] = await pool.query(sql.checkSubscriptionStatus, [userId]);
+      return results.length > 0;
+    } catch (error) {
+      console.error("구독 상태 확인 실패:", error.message);
+      throw new Error("구독 상태 확인 실패");
+    }
+  },
+
+
 
   findById: async (problemId) => {
     try {

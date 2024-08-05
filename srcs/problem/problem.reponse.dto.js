@@ -4,11 +4,13 @@ export const setScaleResponseDTO = (scale) => ({
   });
   
   // 문제 검색 응답 DTO
-  export const searchProblemsResponseDTO = (problems) => problems.map(problem => ({
-    problemId: problem.problem_id,
-    problemImage: problem.problem_image,
-    problemText: problem.problem_text,
-  }));
+  export const getProblemListResponseDTO = (problems) => {
+    return problems.map(problem => ({
+      problemId: problem.problem_id.toString(),
+      problemImage: problem.problemImage || null,
+      problemText: problem.problem_text
+    }));
+  };
   
   // 문제 조회 응답 DTO
   export const getProblemResponseDTO = (problem) => ({

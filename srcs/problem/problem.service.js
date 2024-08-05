@@ -36,4 +36,14 @@ export const ProblemService = {
       throw new BaseError(status.BAD_REQUEST, "문제 수정 실패");
     }
   },
+
+  addProblem: async (problemData) => {
+    try {
+      await ProblemModel.create(problemData);
+    } catch (error) {
+      throw new BaseError(status.BAD_REQUEST, "문제 추가 실패");
+    }
+  },
+
+
 };

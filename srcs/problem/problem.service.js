@@ -17,15 +17,21 @@ export const ProblemService = {
     }
   },
 
+
   getProblem: async (problemId) => {
     try {
       const problem = await ProblemModel.findById(problemId);
-      if (!problem) {
-        throw new BaseError(status.NOT_FOUND, "문제를 찾을 수 없습니다.");
-      }
-      return problem;
+      if (!problem) return null;
+
+      const photos = await ProblemModel.findPhotosByProblemId(problemId);
+      const types = await ProblemModel.findTypesByProblemId(problemId);
+      return {
+        ...problem,
+        photos,
+        types
+      };
     } catch (error) {
-      throw new BaseError(status.BAD_REQUEST, "문제 조회 실패");
+      throw new Error("문제 조회 실패");
     }
   },
 

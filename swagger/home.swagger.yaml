@@ -460,8 +460,17 @@ paths:
                     type: string
                     description: (구독) 문제 텍스트
                   problemType:
-                    type: string
-                    description: 문제 유형
+                    type: object
+                    properties:
+                      major:
+                        type: string
+                        description: 대분류
+                      minor:
+                        type: string
+                        description: 중분류
+                      sub:
+                        type: string
+                        description: 소분류
                   statistics:
                     type: object
                     properties:

@@ -28,7 +28,7 @@ app.use("/health", healthCheck);
 
 app.use("/upload", imageRouter);
 
-app.use("/user", userRotuer);
+app.use("/users", userRotuer);
 
 //swagger
 app.use("/api-docs", SwaggerUi.serve, SwaggerUi.setup(specs));

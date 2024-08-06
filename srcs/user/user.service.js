@@ -14,4 +14,20 @@ export const UserService = {
       throw new BaseError(status.BAD_REQUEST, "회원 조회 실패");
     }
   },
+
+  editNickname: async (userId, nicknameData) => {
+    try {
+      await UserModel.updateNickname(userId, nicknameData);
+    } catch (error) {
+      throw new BaseError(status.BAD_REQUEST, "문제 수정 실패");
+    }
+  },
+
+  inactiveUser: async (userId) => {
+    try {
+      await UserModel.patchStatus(userId);
+    } catch (error) {
+      throw new BaseError(status.BAD_REQUEST, "회원 비활성화 실패");
+    }
+  },
 };

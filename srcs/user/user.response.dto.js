@@ -8,5 +8,13 @@ export const getInfoResponseDTO = (userInfo) => ({
 });
 
 export const errorResponseDTO = (message) => ({
+  errorMessage: message.message,
+});
+
+export const patchNicknameResponseDTO = (nickname) => ({
+  message,
+});
+
+export const patchUserStatusrResponseDTO = (nickname) => ({
   message,
 });

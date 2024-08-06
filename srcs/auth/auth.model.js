@@ -1,23 +1,33 @@
-import { pool } from '../../config/db.js'; 
+// auth.model.js
+import { pool } from "../../config/db.js";
 
-// 사용자 정보를 저장하거나 업데이트합니다.
-export const saveUser = async (userInfo) => {
-    const { id, email, provider } = userInfo;
-    const query = `
-        INSERT INTO users (id, email, provider)
-        VALUES ($1, $2, $3)
-        ON CONFLICT (id) 
-        DO UPDATE SET email = EXCLUDED.email, provider = EXCLUDED.provider
-        RETURNING *;
-    `;
-    const values = [id, email, provider];
-    const result = await pool.query(query, values);
-    return result.rows[0];
+const getUserBySocialId = async (socialId, provider) => {
+    const [rows] = await pool.query(
+        `SELECT user_id, nickname, status, phone_number, name, profile_image_url, social_provider, social_id, refresh_token
+         FROM User
+         WHERE social_id = ? AND social_provider = ?`, 
+        [socialId, provider]
+    );
+    return rows[0];
 };
 
-// 사용자 ID로 사용자 정보를 조회합니다.
-export const getUserById = async (id) => {
-    const query = 'SELECT * FROM users WHERE id = $1';
-    const result = await pool.query(query, [id]);
-    return result.rows[0];
+const signUp = async (email, name, socialId, profileImage, provider, refreshToken) => {
+    const [result] = await pool.query(
+        `INSERT INTO User (
+            nickname, status, phone_number, name, profile_image_url, social_provider, social_id, refresh_token, created_at, updated_at
+        ) VALUES (?, 'active', NULL, ?, ?, ?, ?, ?, NOW(), NOW())`,
+        [name, email, profileImage, provider, socialId, refreshToken]
+    );
+    return result.insertId;
 };
+
+
+// 리프레시 토큰 업데이트
+const updateRefreshToken = async (userId, refreshToken) => {
+    await pool.query(
+        `UPDATE users SET refresh_token = ? WHERE user_id = ?`,
+        [refreshToken, userId]
+    );
+};
+
+export { getUserBySocialId, signUp, updateRefreshToken };

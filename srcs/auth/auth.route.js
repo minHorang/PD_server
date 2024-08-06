@@ -1,10 +1,12 @@
-import express from 'express';
-import { kakaoLogin, naverLogin, refreshToken, testAccessToken, testRefreshToken } from './auth.controller.js';
+// auth.route.js
+import express from "express";
+import { handleKakaoLogin, handleNaverLogin } from "./auth.controller.js";
 
 const router = express.Router();
 
-router.post('/kakao', kakaoLogin);
-router.post('/naver', naverLogin);
-router.post('/refresh', refreshToken);
+router.post('/kakao', handleKakaoLogin);
+router.post('/naver', handleNaverLogin);
 
-export default router;
+const authRoutes = router; 
+
+export { authRoutes };

@@ -1,112 +1,61 @@
 // auth.service.js
+import axios from "axios";
+import jwt from "jsonwebtoken";
+import { getUserBySocialId, signUp } from "./auth.model.js";
 
-import axios from 'axios';
-import jwt from 'jsonwebtoken';
-import redis from 'redis';
-import { saveUser } from './auth.model.js';
+const { JWT_SECRET, JWT_REFRESH_SECRET } = process.env;
 
-const client = redis.createClient({ host: process.env.REDIS_HOST, port: process.env.REDIS_PORT });
-const { JWT_SECRET, KAKAO_CLIENT_ID, KAKAO_CLIENT_SECRET, NAVER_CLIENT_ID, NAVER_CLIENT_SECRET, OAUTH_STATE } = process.env;
-
-client.on('error', (err) => {
-    console.error('Redis error:', err);
-});
-
-export const getKakaoTokens = async (code, state) => {
-    if (state !== OAUTH_STATE) {
-        throw new Error('Invalid state parameter');
-    }
-    const response = await axios.post('https://kauth.kakao.com/oauth/token', null, {
-        params: {
-            grant_type: 'authorization_code',
-            client_id: KAKAO_CLIENT_ID,
-            client_secret: KAKAO_CLIENT_SECRET,
-            redirect_uri: 'http://localhost:3000/auth/kakao/callback',
-            code,
-            state
-        }
-    });
-    return response.data;
-};
-
-export const getKakaoUserInfo = async (accessToken) => {
-    const response = await axios.get('https://kapi.kakao.com/v2/user/me', {
-        headers: {
-            Authorization: `Bearer ${accessToken}`
-        }
-    });
-    return response.data;
-};
-
-export const getNaverTokens = async (code, state) => {
-    if (state !== OAUTH_STATE) {
-        throw new Error('Invalid state parameter');
-    }
-    const response = await axios.post('https://nid.naver.com/oauth2.0/token', null, {
-        params: {
-            grant_type: 'authorization_code',
-            client_id: NAVER_CLIENT_ID,
-            client_secret: NAVER_CLIENT_SECRET,
-            code,
-            state
-        }
-    });
-    return response.data;
-};
-
-export const getNaverUserInfo = async (accessToken) => {
-    const response = await axios.get('https://openapi.naver.com/v1/nid/me', {
-        headers: {
-            Authorization: `Bearer ${accessToken}`
-        }
-    });
-    return response.data.response;
-};
-
-export const generateJwtToken = async (userInfo) => {
-    const payload = { id: userInfo.id, email: userInfo.email };
-    const accessToken = jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
-    const refreshToken = jwt.sign(payload, JWT_SECRET, { expiresIn: '7d' });
-    
-    await saveUser(userInfo);
-    
-    await new Promise((resolve, reject) => {
-        client.set(`refreshToken:${userInfo.id}`, refreshToken, 'EX', 7 * 24 * 60 * 60, (err) => {
-            if (err) reject(err);
-            resolve();
-        });
-    });
-    
+// 액세스 토큰과 리프레시 토큰을 생성
+const generateTokens = (userId) => {
+    const accessToken = jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: "1h" });
+    const refreshToken = jwt.sign({ id: userId }, JWT_REFRESH_SECRET, { expiresIn: "30d" });
     return { accessToken, refreshToken };
 };
 
-export const refreshJwtToken = async (refreshToken) => {
-    try {
-        const decoded = jwt.verify(refreshToken, JWT_SECRET);
-        const storedToken = await new Promise((resolve, reject) => {
-            client.get(`refreshToken:${decoded.id}`, (err, result) => {
-                if (err) reject(err);
-                resolve(result);
-            });
-        });
-        if (storedToken !== refreshToken) throw new Error('Invalid refresh token');
-        const newAccessToken = jwt.sign({ id: decoded.id, email: decoded.email }, JWT_SECRET, { expiresIn: '1h' });
-        return newAccessToken;
-    } catch (error) {
-        throw new Error('Failed to refresh token: ' + error.message);
+const kakaoLogin = async (kakaoToken) => {
+    const result = await axios.get("https://kapi.kakao.com/v2/user/me", {
+        headers: { Authorization: `Bearer ${kakaoToken}` },
+    });
+
+    console.log('Kakao API Response:', result.data);
+
+    const { data } = result;
+    const { nickname: name, profile_image: profileImage } = data.properties;
+    const email = data.kakao_account.email;
+    const kakaoId = data.id;
+
+    if (!name || !kakaoId) throw new Error("KEY_ERROR");
+
+    let user = await getUserBySocialId(kakaoId, "kakao");
+    if (!user) {
+        await signUp(email, name, kakaoId, profileImage, "kakao", kakaoToken);
+        user = await getUserBySocialId(kakaoId, "kakao");
     }
+
+    const { accessToken, refreshToken } = generateTokens(user.user_id);
+    return { accessToken, refreshToken };
 };
 
-export const invalidateRefreshToken = async (refreshToken) => {
-    try {
-        const decoded = jwt.verify(refreshToken, JWT_SECRET);
-        await new Promise((resolve, reject) => {
-            client.del(`refreshToken:${decoded.id}`, (err) => {
-                if (err) reject(err);
-                resolve();
-            });
-        });
-    } catch (error) {
-        throw new Error('Failed to invalidate token: ' + error.message);
+
+const naverLogin = async (naverToken) => {
+    const result = await axios.get("https://openapi.naver.com/v1/nid/me", {
+        headers: { Authorization: `Bearer ${naverToken}` },
+    });
+
+    const { response } = result.data;
+    const { name, email, id: naverId, profile_image: profileImage } = response;
+
+    if (!name || !email || !naverId) throw new Error("KEY_ERROR");
+
+    let user = await getUserBySocialId(naverId, "naver");
+    if (!user) {
+        await signUp(email, name, naverId, profileImage, "naver", naverToken);
+        user = await getUserBySocialId(naverId, "naver");
     }
+
+    const { accessToken, refreshToken } = generateTokens(user.user_id);
+    return { accessToken, refreshToken };
 };
+
+
+export { kakaoLogin, naverLogin };

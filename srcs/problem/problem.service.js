@@ -4,7 +4,6 @@ import { status } from "../../config/response.status.js";
 
 export const ProblemService = {
   setScale: async (scale) => {
-    // 스케일 설정
     return scale;
   },
 

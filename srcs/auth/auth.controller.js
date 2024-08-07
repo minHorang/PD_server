@@ -1,55 +1,96 @@
 // auth.controller.js
 import { kakaoLogin, naverLogin, refreshTokens } from "./auth.service.js";
+import { response } from "../../config/response.js";
 
+const extractTokenFromHeader = (req) => {
+    const authHeader = req.headers['authorization'];
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        throw new Error("Authorization header missing or invalid");
+    }
+    return authHeader.split(' ')[1];
+};
+
+// 카카오 로그인 처리
 const handleKakaoLogin = async (req, res) => {
     try {
-        const authorization = req.headers.authorization;
-        if (!authorization) {
-            return res.status(400).json({ error: "Authorization header missing" });
-        }
-        const kakaoToken = authorization.split(" ")[1];
-        if (!kakaoToken) {
-            return res.status(400).json({ error: "Kakao token missing" });
-        }
-
+        const kakaoToken = extractTokenFromHeader(req);
         const { accessToken, refreshToken } = await kakaoLogin(kakaoToken);
-        return res.status(200).json({ accessToken, refreshToken });
+        
+        // 액세스 토큰을 헤더에 추가
+        res.setHeader('Authorization', `Bearer ${accessToken}`);
+
+        return res.status(200).json(
+            response(
+                { isSuccess: true, code: 200, message: "카카오 로그인 성공" },
+                { refreshToken }
+            )
+        );
     } catch (error) {
-        return res.status(500).json({ error: "Kakao login failed", details: error.message });
+        return res.status(400).json(
+            response(
+                { isSuccess: false, code: 400, message: "카카오 로그인 실패" },
+                { errorMessage: error.message }
+            )
+        );
     }
 };
 
+// 네이버 로그인 처리
 const handleNaverLogin = async (req, res) => {
     try {
-        const authorization = req.headers.authorization;
-        if (!authorization) {
-            return res.status(400).json({ error: "Authorization header missing" });
-        }
-
-        const naverToken = authorization.split(" ")[1];
-        if (!naverToken) {
-            return res.status(400).json({ error: "Naver token missing" });
-        }
-
+        const naverToken = extractTokenFromHeader(req);
         const { accessToken, refreshToken } = await naverLogin(naverToken);
-        return res.status(200).json({ accessToken, refreshToken });
+        
+        // 액세스 토큰을 헤더에 추가
+        res.setHeader('Authorization', `Bearer ${accessToken}`);
+
+        return res.status(200).json(
+            response(
+                { isSuccess: true, code: 200, message: "네이버 로그인 성공" },
+                { refreshToken }
+            )
+        );
     } catch (error) {
-        return res.status(500).json({ error: "Naver login failed", details: error.message });
+        return res.status(400).json(
+            response(
+                { isSuccess: false, code: 400, message: "네이버 로그인 실패" },
+                { errorMessage: error.message }
+            )
+        );
     }
 };
 
+// 토큰 재발급 처리
 const handleTokenRefresh = async (req, res) => {
     try {
         const { refreshToken } = req.body;
         if (!refreshToken) {
-            return res.status(400).json({ error: "Refresh token missing" });
+            return res.status(400).json(
+                response(
+                    { isSuccess: false, code: 400, message: "Refresh token missing" },
+                    {}
+                )
+            );
         }
         const { accessToken, newRefreshToken } = await refreshTokens(refreshToken);
-        return res.status(200).json({ accessToken, refreshToken: newRefreshToken });
+
+        // 액세스 토큰을 헤더에 추가
+        res.setHeader('Authorization', `Bearer ${accessToken}`);
+
+        return res.status(200).json(
+            response(
+                { isSuccess: true, code: 200, message: "토큰 재발급 성공" },
+                { newRefreshToken }
+            )
+        );
     } catch (error) {
-        return res.status(500).json({ error: "Token refresh failed", details: error.message });
+        return res.status(400).json(
+            response(
+                { isSuccess: false, code: 400, message: "토큰 재발급 실패" },
+                { errorMessage: error.message }
+            )
+        );
     }
 };
 
-
-export { handleKakaoLogin, handleNaverLogin, handleTokenRefresh };
+export { handleKakaoLogin, handleNaverLogin, handleTokenRefresh, extractTokenFromHeader };

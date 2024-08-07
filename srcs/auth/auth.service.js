@@ -13,7 +13,6 @@ const generateTokens = (userId) => {
 
 const kakaoLogin = async (kakaoToken) => {
     try {
-        // 카카오 API로부터 사용자 정보 가져오기
         const result = await axios.get("https://kapi.kakao.com/v2/user/me", {
             headers: { Authorization: `Bearer ${kakaoToken}` },
         });
@@ -24,17 +23,14 @@ const kakaoLogin = async (kakaoToken) => {
 
         if (!name || !kakaoId) throw new Error("KEY_ERROR");
 
-        // 카카오 ID로 사용자 검색
         let user = await getUserBySocialId(kakaoId, "kakao");
 
         let accessToken, refreshToken;
 
         if (!user) {
-            // 신규 사용자 등록
-            ({ accessToken, refreshToken } = generateTokens(kakaoId)); // socialId를 사용자 ID로 사용
+            ({ accessToken, refreshToken } = generateTokens(kakaoId));
             await signUp(name, kakaoId, profileImage, "kakao", refreshToken);
         } else {
-            // 기존 사용자에게 새로운 토큰 생성
             ({ accessToken, refreshToken } = generateTokens(user.user_id));
             await updateRefreshToken(user.user_id, refreshToken);
         }
@@ -67,7 +63,6 @@ const naverLogin = async (naverToken) => {
     return { accessToken, refreshToken };
 };
 
-// auth.service.js
 const refreshTokens = async (refreshToken) => {
     try {
         console.log("Received refresh token:", refreshToken);
@@ -88,7 +83,5 @@ const refreshTokens = async (refreshToken) => {
         throw new Error("Invalid or expired refresh token");
     }
 };
-
-
 
 export { kakaoLogin, naverLogin, refreshTokens };

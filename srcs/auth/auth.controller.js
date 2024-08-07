@@ -15,7 +15,6 @@ const handleKakaoLogin = async (req, res) => {
         const { accessToken, refreshToken } = await kakaoLogin(kakaoToken);
         return res.status(200).json({ accessToken, refreshToken });
     } catch (error) {
-        console.error(error);
         return res.status(500).json({ error: "Kakao login failed", details: error.message });
     }
 };
@@ -35,24 +34,19 @@ const handleNaverLogin = async (req, res) => {
         const { accessToken, refreshToken } = await naverLogin(naverToken);
         return res.status(200).json({ accessToken, refreshToken });
     } catch (error) {
-        console.error(error);
         return res.status(500).json({ error: "Naver login failed", details: error.message });
     }
 };
 
-// auth.controller.js
 const handleTokenRefresh = async (req, res) => {
     try {
         const { refreshToken } = req.body;
         if (!refreshToken) {
             return res.status(400).json({ error: "Refresh token missing" });
         }
-
-        console.log("Handling token refresh with refreshToken:", refreshToken);
         const { accessToken, newRefreshToken } = await refreshTokens(refreshToken);
         return res.status(200).json({ accessToken, refreshToken: newRefreshToken });
     } catch (error) {
-        console.error("Token refresh error:", error);
         return res.status(500).json({ error: "Token refresh failed", details: error.message });
     }
 };

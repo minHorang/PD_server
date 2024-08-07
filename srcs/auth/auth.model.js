@@ -30,10 +30,8 @@ const updateRefreshToken = async (userId, refreshToken) => {
         if (result.affectedRows === 0) {
             throw new Error("User not found or refresh token update failed");
         }
-        console.log(`Updated refresh token for userId: ${userId}`);
     } catch (error) {
-        console.error(`Failed to update refresh token for userId: ${userId}`, error);
-        throw error; // Add throw here to propagate errors
+        throw error; 
     }
 };
 

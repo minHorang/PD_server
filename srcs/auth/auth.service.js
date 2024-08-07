@@ -11,6 +11,16 @@ const generateTokens = (userId) => {
     return { accessToken, refreshToken };
 };
 
+// 액세스 토큰로 유저아이디 반환
+const getUserIdFromAccessToken = (accessToken) => {
+    try {
+        const decoded = jwt.verify(accessToken, JWT_SECRET);
+        return decoded.id;
+    } catch (error) {
+        throw new Error('유효하지 않거나 만료된 액세스 토큰');
+    }
+};
+
 const kakaoLogin = async (kakaoToken) => {
     try {
         const result = await axios.get("https://kapi.kakao.com/v2/user/me", {
@@ -28,20 +38,19 @@ const kakaoLogin = async (kakaoToken) => {
         let accessToken, refreshToken;
 
         if (!user) {
-            ({ accessToken, refreshToken } = generateTokens(kakaoId));
-            await signUp(name, kakaoId, profileImage, "kakao", refreshToken);
+            const userId = await signUp(name, kakaoId, profileImage, "kakao", refreshToken);
+            ({ accessToken, refreshToken } = generateTokens(userId));
+            console.log(userId)
         } else {
             ({ accessToken, refreshToken } = generateTokens(user.user_id));
             await updateRefreshToken(user.user_id, refreshToken);
         }
-
-        return { accessToken, refreshToken };
+        return { accessToken, refreshToken};
     } catch (error) {
         console.error("Kakao login error:", error);
         throw new Error("Kakao login failed");
     }
 };
-
 
 const naverLogin = async (naverToken) => {
     const result = await axios.get("https://openapi.naver.com/v1/nid/me", {
@@ -54,14 +63,19 @@ const naverLogin = async (naverToken) => {
     if (!name || !naverId) throw new Error("KEY_ERROR");
 
     let user = await getUserBySocialId(naverId, "naver");
+    let accessToken, refreshToken;
+
     if (!user) {
-        await signUp(name, naverId, profileImage, "naver", naverToken);
-        user = await getUserBySocialId(naverId, "naver");
+        const userId = await signUp(name, naverId, profileImage, "naver", naverToken);
+        ({ accessToken, refreshToken } = generateTokens(userId));
+    } else {
+        ({ accessToken, refreshToken } = generateTokens(user.user_id));
+        await updateRefreshToken(user.user_id, refreshToken);
     }
 
-    const { accessToken, refreshToken } = generateTokens(user.user_id);
-    return { accessToken, refreshToken };
+    return { accessToken, refreshToken};
 };
+
 
 const refreshTokens = async (refreshToken) => {
     try {
@@ -71,11 +85,11 @@ const refreshTokens = async (refreshToken) => {
         console.log("Decoded userId:", userId);
 
         const { accessToken, refreshToken: newRefreshToken } = generateTokens(userId);
-        console.log("Generated access token:", accessToken);
-        console.log("Generated new refresh token:", newRefreshToken);
+        console.log("access token 생성:", accessToken);
+        console.log("refresh token 생성:", newRefreshToken);
 
         await updateRefreshToken(userId, newRefreshToken);
-        console.log("Refresh token updated successfully");
+        console.log("refreshToken 업데이트 완료");
 
         return { accessToken, newRefreshToken };
     } catch (error) {
@@ -84,4 +98,4 @@ const refreshTokens = async (refreshToken) => {
     }
 };
 
-export { kakaoLogin, naverLogin, refreshTokens };
+export { kakaoLogin, naverLogin, refreshTokens, getUserIdFromAccessToken, generateTokens };

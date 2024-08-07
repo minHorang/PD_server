@@ -1,5 +1,5 @@
 // auth.controller.js
-import { kakaoLogin, naverLogin, refreshTokens } from "./auth.service.js";
+import { kakaoLogin, naverLogin, refreshTokens, getUserIdFromAccessToken } from './auth.service.js';
 import { response } from "../../config/response.js";
 
 const extractTokenFromHeader = (req) => {
@@ -16,7 +16,6 @@ const handleKakaoLogin = async (req, res) => {
         const kakaoToken = extractTokenFromHeader(req);
         const { accessToken, refreshToken } = await kakaoLogin(kakaoToken);
         
-        // 액세스 토큰을 헤더에 추가
         res.setHeader('Authorization', `Bearer ${accessToken}`);
 
         return res.status(200).json(
@@ -41,7 +40,6 @@ const handleNaverLogin = async (req, res) => {
         const naverToken = extractTokenFromHeader(req);
         const { accessToken, refreshToken } = await naverLogin(naverToken);
         
-        // 액세스 토큰을 헤더에 추가
         res.setHeader('Authorization', `Bearer ${accessToken}`);
 
         return res.status(200).json(
@@ -67,14 +65,13 @@ const handleTokenRefresh = async (req, res) => {
         if (!refreshToken) {
             return res.status(400).json(
                 response(
-                    { isSuccess: false, code: 400, message: "Refresh token missing" },
+                    { isSuccess: false, code: 400, message: "리프레시 토큰이 누락되었습니다" },
                     {}
                 )
             );
         }
         const { accessToken, newRefreshToken } = await refreshTokens(refreshToken);
 
-        // 액세스 토큰을 헤더에 추가
         res.setHeader('Authorization', `Bearer ${accessToken}`);
 
         return res.status(200).json(
@@ -93,4 +90,15 @@ const handleTokenRefresh = async (req, res) => {
     }
 };
 
-export { handleKakaoLogin, handleNaverLogin, handleTokenRefresh, extractTokenFromHeader };
+const getUserId = async (req) => {
+    try {
+        const accessToken = extractTokenFromHeader(req);
+        const userId = getUserIdFromAccessToken(accessToken);
+        console.log(`사용자 ID: ${userId}`);
+        
+    } catch (error) {
+        console.error('작업 실패:', error.message);
+    }
+};
+
+export { handleKakaoLogin, handleNaverLogin, handleTokenRefresh, extractTokenFromHeader, getUserId };

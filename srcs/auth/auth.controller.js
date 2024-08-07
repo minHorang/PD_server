@@ -1,5 +1,5 @@
 // auth.controller.js
-import { kakaoLogin, naverLogin } from "./auth.service.js";
+import { kakaoLogin, naverLogin, refreshTokens } from "./auth.service.js";
 
 const handleKakaoLogin = async (req, res) => {
     try {
@@ -40,4 +40,22 @@ const handleNaverLogin = async (req, res) => {
     }
 };
 
-export { handleKakaoLogin, handleNaverLogin };
+// auth.controller.js
+const handleTokenRefresh = async (req, res) => {
+    try {
+        const { refreshToken } = req.body;
+        if (!refreshToken) {
+            return res.status(400).json({ error: "Refresh token missing" });
+        }
+
+        console.log("Handling token refresh with refreshToken:", refreshToken);
+        const { accessToken, newRefreshToken } = await refreshTokens(refreshToken);
+        return res.status(200).json({ accessToken, refreshToken: newRefreshToken });
+    } catch (error) {
+        console.error("Token refresh error:", error);
+        return res.status(500).json({ error: "Token refresh failed", details: error.message });
+    }
+};
+
+
+export { handleKakaoLogin, handleNaverLogin, handleTokenRefresh };

@@ -7,7 +7,8 @@ import SwaggerUi from "swagger-ui-express";
 import { healthCheck } from "./srcs/utils/healthCheck.js";
 import { imageRouter } from "./srcs/utils/image/image.route.js";
 import { problemRouter } from "./srcs/problem/problem.route.js";
-import { folderRouter } from "./srcs/folder/folder.route.js";
+import { studyRouter } from "./srcs/study/study.route.js";
+// import { folderRouter } from "./srcs/folder/folder.route.js";
 import cors from "cors";
 import { userRotuer } from "./srcs/user/user.route.js";
 
@@ -23,7 +24,8 @@ app.use(cors());
 // router setting
 app.use("/temp", tempRouter);
 app.use("/problems", problemRouter);
-app.use("/folders", folderRouter);
+app.use("/studies", studyRouter);
+// app.use("/folders", folderRouter);
 
 //health
 app.use("/health", healthCheck);

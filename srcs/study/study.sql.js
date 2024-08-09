@@ -1,73 +1,34 @@
 export const sql = {
-    findFolderByIdAndUserId: `
-        SELECT 
-            *
-        FROM 
-            problem
-        WHERE 
-            folder_id = ? AND user_id = ?
-    `,
-
-
-    findProblemByFolderIdAndIndex: `
-        SELECT 
-            *
-        FROM 
-            problem
-        WHERE 
-            folder_id = ?
-        ORDER BY 
-            order_value
-        LIMIT 1 OFFSET ?
-    `,
-
-    findFolderNameById: `
-        SELECT 
-            folder_name
-        FROM 
-            folder
-        WHERE 
-            folder_id = ?
-    `,
-
-    findProblemImageById: `
-        SELECT 
-            photo_url AS problem_image_url
-        FROM 
-            photo
-        WHERE 
-            problem_id = ? AND photo_type = 'problem'
-    `,
-
-    findAnswerByProblemId: `
+  // 폴더 ID와 user_id로 폴더 정보 조회
+  // TODO : folder 도메인으로 이동
+  findFolderById: `
     SELECT 
-      answer_text
+      folder_id,
+      user_id,
+      folder_name,
+      order_value,
+      created_at,
+      updated_at
+    FROM 
+      folder
+    WHERE 
+      folder_id = ?
+  `,
+
+  // 폴더 ID로 문제 ID 조회
+  // TODO : folder 도메인으로 이동
+  findProblemIdsByFolderId: `
+    SELECT 
+      problem_id
     FROM 
       problem
     WHERE 
-      problem_id = ?
+      folder_id = ?
+    ORDER BY 
+      order_value
   `,
 
-  updateCorrectCount: `
-    UPDATE 
-      problem
-    SET 
-      correct_count = correct_count + 1
-    WHERE 
-      problem_id = ?
-  `,
-
-  updateIncorrectCount: `
-    UPDATE 
-      problem
-    SET 
-      incorrect_count = incorrect_count + 1
-    WHERE 
-      problem_id = ?
-  `,
-
-
-
+  // 폴더 ID로 문제 진척도 조회
   findProgressByFolderId: `
     SELECT 
       problem_id,
@@ -80,19 +41,35 @@ export const sql = {
       order_value
   `,
 
-  findFolderByIdAndUserId: `
+  // 문제 ID로 문제 정답 조회
+  findAnswerByProblemId: `
     SELECT 
-      folder_id,
-      user_id,
-      folder_name,
-      order_value,
-      created_at,
-      updated_at
+      answer
     FROM 
-      folder
+      problem
     WHERE 
-      folder_id = ? AND user_id = ?
-  `
+      problem_id = ?
+  `,
 
-  };
-  
+  // 문제의 정답 맞춘 횟수 업데이트
+  updateCorrectCount: `
+    UPDATE 
+      problem
+    SET 
+      correct_count = correct_count + 1,
+      progress = '맞은 문제'
+    WHERE 
+      problem_id = ?
+  `,
+
+  // 문제의 정답 틀린 횟수 업데이트
+  updateIncorrectCount: `
+    UPDATE 
+      problem
+    SET 
+      incorrect_count = incorrect_count + 1,
+      progress = '틀린 문제'
+    WHERE 
+      problem_id = ?
+  `
+};

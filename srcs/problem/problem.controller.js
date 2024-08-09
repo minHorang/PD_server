@@ -6,7 +6,8 @@ import {
   getProblemListResponseDTO, 
   getProblemResponseDTO, 
   editProblemResponseDTO, 
-  errorResponseDTO 
+  errorResponseDTO,
+  addProblemResponseDTO, 
 } from "./problem.reponse.dto.js";
 
 export const setScale = async (req, res) => {
@@ -58,5 +59,16 @@ export const editProblem = async (req, res) => {
     res.send(response(status.SUCCESS, editProblemResponseDTO("문제 수정 성공")));
   } catch (error) {
     res.send(response(status.BAD_REQUEST, errorResponseDTO("잘못된 요청 본문")));
+  }
+};
+
+// 문제 등록
+export const addProblem = async (req, res) => {
+  try {
+    const problemData = req.body;
+    await ProblemService.addProblem(problemData);
+    res.send(response(status.SUCCESS, addProblemResponseDTO("문제 등록 성공")));
+  } catch (error) {
+    res.send(response(status.BAD_REQUEST, errorResponseDTO("문제 등록 실패")));
   }
 };

@@ -77,5 +77,26 @@ export const ProblemModel = {
     } catch (error) {
       throw new Error("문제 수정 실패");
     }
-  }
+  },
+
+
+  create: async (problemData) => {
+    try {
+      const {
+        folderId, folderName, subscriptionPlan, problemText, answer,
+        mainCategory, category, subCategory, problemImage,
+        solutionImage, passageImage, additionalProblemImage
+      } = problemData;
+
+      await pool.query(sql.addProblem, [
+        folderId, folderName, subscriptionPlan, problemText, answer,
+        mainCategory, category, subCategory, problemImage,
+        solutionImage, passageImage, additionalProblemImage
+      ]);
+    } catch (error) {
+      console.error("문제 추가 실패: ", error);
+      throw new Error("문제 추가 실패");
+    }
+  },
+  
 };

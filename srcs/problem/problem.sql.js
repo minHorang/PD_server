@@ -60,5 +60,6 @@ export const sql = {
 
   
     updateProblem: `UPDATE problem SET problem_text = ? WHERE problem_id = ?`,
+    addProblem: 'INSERT INTO problem (folder_id, folder_name, subscription_plan, problem_text, answer, main_category, category, sub_category, problem_image, solution_image, passage_image, additional_problem_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
   };
   

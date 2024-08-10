@@ -28,53 +28,68 @@ const kakaoLogin = async (kakaoToken) => {
         });
 
         const { data } = result;
-        const { nickname: name, profile_image: profileImage } = data.properties;
+        const { nickname: name } = data.properties;
         const kakaoId = data.id;
 
         if (!name || !kakaoId) throw new Error("KEY_ERROR");
 
         let user = await getUserBySocialId(kakaoId, "kakao");
-
         let accessToken, refreshToken;
+        let userId;
 
         if (!user) {
-            const userId = await signUp(name, kakaoId, profileImage, "kakao", refreshToken);
-            ({ accessToken, refreshToken } = generateTokens(userId));
-            console.log(userId)
+            userId = await signUp(name, kakaoId, "kakao"); 
+            ({ accessToken, refreshToken } = generateTokens(userId)); 
+            await updateRefreshToken(userId, refreshToken);
         } else {
-            ({ accessToken, refreshToken } = generateTokens(user.user_id));
-            await updateRefreshToken(user.user_id, refreshToken);
+            userId = user.user_id;
+            ({ accessToken, refreshToken } = generateTokens(userId)); 
+            await updateRefreshToken(userId, refreshToken);
         }
-        return { accessToken, refreshToken};
+
+        return { accessToken, refreshToken };
     } catch (error) {
         console.error("Kakao login error:", error);
         throw new Error("Kakao login failed");
     }
 };
 
+
+
 const naverLogin = async (naverToken) => {
-    const result = await axios.get("https://openapi.naver.com/v1/nid/me", {
-        headers: { Authorization: `Bearer ${naverToken}` },
-    });
+    try {
+        const result = await axios.get("https://openapi.naver.com/v1/nid/me", {
+            headers: { Authorization: `Bearer ${naverToken}` },
+        });
+        console.log("Naver API 응답 데이터:", result.data);
 
-    const { response } = result.data;
-    const { name, id: naverId, profile_image: profileImage } = response;
+        const { response } = result.data;
+        const { name, id: naverId } = response;
 
-    if (!name || !naverId) throw new Error("KEY_ERROR");
+        if (!name || !naverId) {
+            throw new Error("KEY_ERROR");
+        }
 
-    let user = await getUserBySocialId(naverId, "naver");
-    let accessToken, refreshToken;
+        let user = await getUserBySocialId(naverId, "naver");
+        let accessToken, refreshToken;
 
-    if (!user) {
-        const userId = await signUp(name, naverId, profileImage, "naver", naverToken);
-        ({ accessToken, refreshToken } = generateTokens(userId));
-    } else {
-        ({ accessToken, refreshToken } = generateTokens(user.user_id));
-        await updateRefreshToken(user.user_id, refreshToken);
+        if (!user) {
+            const userId = await signUp(name, naverId, "naver");
+            ({ accessToken, refreshToken } = generateTokens(userId));
+            await updateRefreshToken(user.user_id, refreshToken);
+        } else {
+            ({ accessToken, refreshToken } = generateTokens(user.user_id));
+            await updateRefreshToken(user.user_id, refreshToken);
+        }
+
+        return { accessToken, refreshToken };
+    } catch (error) {
+        console.error("Naver login error:", error);
+        throw new Error("Naver login failed");
     }
-
-    return { accessToken, refreshToken};
 };
+
+
 
 
 const refreshTokens = async (refreshToken) => {

@@ -1,20 +1,27 @@
 export const getInfoResponseDTO = (userInfo) => ({
-  result: {
-    id: userInfo.id,
-    nickname: userInfo.nickname,
-    name: userInfo.name,
-    provider: userInfo.social_provider,
-  },
+  id: userInfo.id,
+  nickname: userInfo.nickname,
+  name: userInfo.name,
+  provider: userInfo.social_provider,
 });
 
 export const errorResponseDTO = (message) => ({
   errorMessage: message.message,
 });
 
-export const patchNicknameResponseDTO = (nickname) => ({
+export const patchNicknameResponseDTO = (message) => ({
   message,
 });
 
-export const patchUserStatusrResponseDTO = (nickname) => ({
+export const patchUserStatusrResponseDTO = (message) => ({
   message,
+});
+
+export const singupUserDTO = (message) => ({
+  message,
+});
+
+export const loginUserDTO = (token) => ({
+  accesstoken: token.accessToken,
+  refreshtoken: token.refreshToken,
 });

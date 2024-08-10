@@ -2,8 +2,11 @@ import { status } from "../../config/response.status.js";
 import { response } from "../../config/response.js";
 import { UserService } from "./user.service.js";
 import {
+  singupUserDTO,
+  loginUserDTO,
   errorResponseDTO,
   getInfoResponseDTO,
+  patchNicknameResponseDTO,
   patchUserStatusrResponseDTO,
 } from "./user.response.dto.js";
 
@@ -44,7 +47,7 @@ export const deleteUser = async (req, res) => {
   try {
     const userId = 1;
     await UserService.inactiveUser(userId);
-    res.semd(
+    res.send(
       response(status.SUCCESS, patchUserStatusrResponseDTO("비활성화 성공"))
     );
   } catch (error) {
@@ -54,6 +57,26 @@ export const deleteUser = async (req, res) => {
 
 export const userLogout = async (req, res) => {
   try {
+  } catch (error) {
+    res.send(response(status.BAD_REQUEST, errorResponseDTO("Invalid request")));
+  }
+};
+
+export const signupUser = async (req, res) => {
+  try {
+    const signupInfo = req.body;
+    await UserService.postUser(signupInfo);
+    res.send(response(status.SUCCESS, singupUserDTO("회원가입 성공")));
+  } catch (error) {
+    res.send(response(status.BAD_REQUEST, errorResponseDTO("Invalid request")));
+  }
+};
+
+export const loginUser = async (req, res) => {
+  try {
+    const loginInfo = req.body;
+    const token = await UserService.loginGeneral(loginInfo);
+    res.send(response(status.SUCCESS, loginUserDTO(token)));
   } catch (error) {
     res.send(response(status.BAD_REQUEST, errorResponseDTO("Invalid request")));
   }

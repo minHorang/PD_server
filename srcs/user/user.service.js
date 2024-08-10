@@ -30,4 +30,27 @@ export const UserService = {
       throw new BaseError(status.BAD_REQUEST, "회원 비활성화 실패");
     }
   },
+
+  postUser: async (signupInfo) => {
+    try {
+      const { email, password } = signupInfo;
+      //이름, 아이디, 패스워드가 모두 있으면
+      if (email && password) {
+        await UserModel.signup(signupInfo);
+      }
+    } catch (error) {
+      throw new BaseError(status.BAD_REQUEST, "회원가입 실패");
+    }
+  },
+
+  loginGeneral: async (loginInfo) => {
+    try {
+      const token = await UserModel.loginGeneral(loginInfo);
+      if (token) {
+        return token;
+      }
+    } catch (error) {
+      throw new BaseError(status.BAD_REQUEST, "로그인 실패");
+    }
+  },
 };

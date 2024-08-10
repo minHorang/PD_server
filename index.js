@@ -11,6 +11,9 @@ import { studyRouter } from "./srcs/study/study.route.js";
 // import { folderRouter } from "./srcs/folder/folder.route.js";
 import cors from "cors";
 import { userRotuer } from "./srcs/user/user.route.js";
+import authRoutes from './srcs/auth/auth.route.js';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app = express();
 const port = 3000;
@@ -33,6 +36,8 @@ app.use("/health", healthCheck);
 app.use("/upload", imageRouter);
 
 app.use("/user", userRotuer);
+
+app.use('/auth', authRoutes);
 
 //swagger
 app.use("/api-docs", SwaggerUi.serve, SwaggerUi.setup(specs));

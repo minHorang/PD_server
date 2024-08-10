@@ -6,13 +6,35 @@ export const sql = {
     addProblem: `
     INSERT INTO problem (
       folder_id, user_id, problem_text, answer, status,
-      correct_count, incorrect_count, order_value,
-      subscription_plan, main_category, category, sub_category, memo
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      correct_count, incorrect_count, order_value, memo
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
   `,
   addPhotos: `
     INSERT INTO photo (problem_id, photo_url, photo_type)
     VALUES ?
+  `,
+  addProblemTypeAssignment: `
+    INSERT INTO PROBLEMTYPEASSIGNMENT (problem_id, type_id)
+    VALUES (?, ?)
+  `,
+  addProblemTypeAssignments: `
+    INSERT INTO PROBLEMTYPEASSIGNMENT (problem_id, type_id)
+    VALUES ?
+  `,
+
+  getMainTypes: `
+    SELECT type_id, type_name FROM PROBLEMTYPE
+    WHERE type_level = 1
+  `,
+
+  getMidTypes: `
+    SELECT type_id, type_name FROM PROBLEMTYPE
+    WHERE parent_type_id = ? AND type_level = 2
+  `,
+
+  getSubTypes: `
+    SELECT type_id, type_name FROM PROBLEMTYPE
+    WHERE parent_type_id = ? AND type_level = 3
   `,
   };
   

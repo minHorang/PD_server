@@ -37,22 +37,37 @@ export const ProblemModel = {
   create: async (problemData) => {
     const {
       folderId, userId, problemText, answer, status,
-      correctCount, incorrectCount, orderValue,
-      subscriptionPlan, mainCategory, category, subCategory,
-      photos, memo
+      correctCount, incorrectCount, orderValue, photos, memo,
+      mainTypeId, midTypeId, subTypeIds
     } = problemData;
 
     try {
-      // 문제 데이터 삽입
       const [result] = await pool.query(sql.addProblem, [
         folderId, userId, problemText, answer, status,
-        correctCount, incorrectCount, orderValue,
-        subscriptionPlan, mainCategory, category, subCategory, memo
+        correctCount, incorrectCount, orderValue, memo
       ]);
 
       const problemId = result.insertId;
 
-      // 사진 데이터 삽입
+      if (mainTypeId) {
+        await pool.query(sql.addProblemTypeAssignment, [problemId, mainTypeId]);
+      }
+  
+      if (midTypeId) {
+        await pool.query(sql.addProblemTypeAssignment, [problemId, midTypeId]);
+      }
+  
+      if (subTypeIds) {
+        if (Array.isArray(subTypeIds)) {
+          if (subTypeIds.length > 0) {
+            const subtypeAssignments = subTypeIds.map(subTypeId => [problemId, subTypeId]);
+            await pool.query(sql.addProblemTypeAssignments, [subtypeAssignments]);
+          }
+        } else {
+          await pool.query(sql.addProblemTypeAssignment, [problemId, subTypeIds]);
+        }
+      }
+
       if (photos && photos.length > 0) {
         const photoValues = photos.map(photo => [
           problemId, photo.photoUrl, photo.photoType
@@ -64,5 +79,32 @@ export const ProblemModel = {
       throw new Error("문제 추가 실패");
     }
   },
+
+  getMainTypes: async () => {
+    try {
+      const [results] = await pool.query(sql.getMainTypes);
+      return results;
+    } catch (error) {
+      throw new Error("대분류 조회 실패");
+    }
+  },
+
+  getMidTypes: async (parentTypeId) => {
+    try {
+      const [results] = await pool.query(sql.getMidTypes, [parentTypeId]);
+      return results;
+    } catch (error) {
+      throw new Error("중분류 조회 실패");
+    }
+  },
+
+  getSubTypes: async (parentTypeId) => {
+    try {
+      const [results] = await pool.query(sql.getSubTypes, [parentTypeId]);
+      return results;
+    } catch (error) {
+      throw new Error("소분류 조회 실패");
+    }
+  }
   
 };

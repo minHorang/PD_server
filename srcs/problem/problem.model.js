@@ -35,20 +35,32 @@ export const ProblemModel = {
 
 
   create: async (problemData) => {
-    try {
-      const {
-        folderId, folderName, subscriptionPlan, problemText, answer,
-        mainCategory, category, subCategory, problemImage,
-        solutionImage, passageImage, additionalProblemImage
-      } = problemData;
+    const {
+      folderId, userId, problemText, answer, status,
+      correctCount, incorrectCount, orderValue,
+      subscriptionPlan, mainCategory, category, subCategory,
+      photos, memo
+    } = problemData;
 
-      await pool.query(sql.addProblem, [
-        folderId, folderName, subscriptionPlan, problemText, answer,
-        mainCategory, category, subCategory, problemImage,
-        solutionImage, passageImage, additionalProblemImage
+    try {
+      // 문제 데이터 삽입
+      const [result] = await pool.query(sql.addProblem, [
+        folderId, userId, problemText, answer, status,
+        correctCount, incorrectCount, orderValue,
+        subscriptionPlan, mainCategory, category, subCategory, memo
       ]);
+
+      const problemId = result.insertId;
+
+      // 사진 데이터 삽입
+      if (photos && photos.length > 0) {
+        const photoValues = photos.map(photo => [
+          problemId, photo.photoUrl, photo.photoType
+        ]);
+
+        await pool.query(sql.addPhotos, [photoValues]);
+      }
     } catch (error) {
-      console.error("문제 추가 실패: ", error);
       throw new Error("문제 추가 실패");
     }
   },

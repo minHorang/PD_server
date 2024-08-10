@@ -7,4 +7,4 @@ problemRouter.patch("/scale", setScale);
 problemRouter.get("/search", searchProblems);
 problemRouter.get("/:problemId", getProblem);
 problemRouter.patch("/:problemId/edit", editProblem);
-problemRouter.post("/folders/problems", addProblem);
+problemRouter.post("/", addProblem);

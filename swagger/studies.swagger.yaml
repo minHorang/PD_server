@@ -1,9 +1,4 @@
-openapi: 3.0.0
-info:
-  title: 학습하기(문제풀기) 관련 API
-  version: 1.0.0
-
-paths: 
+paths:
   /studies/folders/{folderId}:
     get:
       summary: 학습용 폴더 선택하기
@@ -28,10 +23,16 @@ paths:
                   message:
                     type: string
                     example: "폴더 선택 완료"
-                  folderId:
+                  folderName:
                     type: string
-                    description: 선택된 폴더 ID
-                    example: "1"
+                    description: 선택된 폴더 이름
+                    example: "수학"
+                  problemIds:
+                    type: array
+                    items:
+                      type: string
+                      description: 문제 ID
+                      example: "1"
         '404':
           description: 찾을 수 없음
           content:
@@ -53,7 +54,51 @@ paths:
                     type: string
                     example: "잘못된 요청 본문입니다."
 
-  /studies/folders/{folderId}/problems/{problemIndex}:
+  /studies/folders/{folderId}/progress:
+    get:
+      summary: 풀이 진척도 확인하기
+      description: 폴더 내 풀이 진척도를 확인합니다.
+      tags:
+        - 학습하기
+      parameters:
+        - name: folderId
+          in: path
+          required: true
+          schema:
+            type: string
+            description: 폴더 ID
+      responses:
+        '200':
+          description: 풀이 진척도 조회 성공
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    problemId:
+                      type: string
+                      description: 문제 ID
+                    status:
+                      type: string
+                      enum: 
+                        - 미완료
+                        - 맞은 문제
+                        - 틀린 문제
+                      description: 문제 상태  
+        '500':
+          description: 서버 오류
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "서버 오류 발생"
+
+  /studies/folders/{folderId}/problems/{problemId}:
     get:
       summary: 학습용 문제 조회하기
       description: 학습하기 탭에서 특정 폴더 내 문제를 조회합니다.
@@ -66,12 +111,12 @@ paths:
           schema:
             type: string
             description: 폴더 ID
-        - name: problemIndex
+        - name: problemId
           in: path
           required: true
           schema:
-            type: integer
-            description: 문제 인덱스(0부터 시작)
+            type: string
+            description: 문제 ID
       responses:
         '200':
           description: 문제 조회 성공
@@ -82,15 +127,42 @@ paths:
                 properties:
                   problemId:
                     type: string
-                  problemImage:
+                  problemText:
                     type: string
-                    format: uri
-                    description: 문제 이미지 URL
+                    description: 문제 텍스트
                   folderName:
                     type: string
                     description: 폴더의 이름
+                  answerText:
+                    type: string
+                    description: 문제 정답
+                  status:
+                    type: string
+                    description: 문제 상태
+                  correctCount:
+                    type: integer
+                    description: 맞춘 횟수
+                  incorrectCount:
+                    type: integer
+                    description: 틀린 횟수
+                  createdAt:
+                    type: string
+                    format: date-time
+                    description: 문제 생성 시간
+                  updatedAt:
+                    type: string
+                    format: date-time
+                    description: 문제 최종 업데이트 시간
                 required:
-                  - problemImage
+                  - problemId
+                  - problemText
+                  - folderName
+                  - answerText
+                  - status
+                  - correctCount
+                  - incorrectCount
+                  - createdAt
+                  - updatedAt
         '404':
           description: 찾을 수 없음
           content:
@@ -101,6 +173,16 @@ paths:
                   message:
                     type: string
                     example: "데이터를 찾을 수 없습니다."
+        '400':
+          description: 잘못된 요청
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "잘못된 요청 본문입니다."
 
   /studies/folders/{folderId}/problems/{problemId}/check-answer:
     post:
@@ -130,7 +212,6 @@ paths:
               - right
               - left
             description: 스와이프 방향 ('right'는 정답, 'left'는 정답이 아님)
-            
       responses:
         '200':
           description: 정답 확인 성공
@@ -175,46 +256,3 @@ paths:
                   message:
                     type: string
                     example: "서버 오류 발생"
-
-  /studies/folders/{folderId}/progress:
-    get:
-      summary: 풀이 진척도 확인하기
-      description: 폴더 내 풀이 진척도를 확인합니다.
-      tags:
-        - 학습하기
-      parameters:
-        - name: folderId
-          in: path
-          required: true
-          schema:
-            type: string
-            description: 폴더 ID
-      responses:
-        '200':
-          description: 풀이 진척도 조회 성공
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    problemId:
-                      type: string
-                      description: 문제 ID
-                    status:
-                      type: string
-                      enum: 
-                        - 미완료
-                        - 맞은 문제
-                        - 틀린 문제
-                      description: 문제 상태  
-        '500':
-          description: 서버 오류
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string

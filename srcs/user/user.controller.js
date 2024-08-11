@@ -10,6 +10,7 @@ import {
   patchUserStatusrResponseDTO,
 } from "./user.response.dto.js";
 
+//유저 정보 가져오기
 export const getInfo = async (req, res) => {
   try {
     //userID에 토큰 값 해석한 실제 값 넣어야함.
@@ -30,6 +31,7 @@ export const getInfo = async (req, res) => {
   }
 };
 
+//닉네임 변경
 export const patchNickname = async (req, res) => {
   try {
     const userId = 1;
@@ -43,6 +45,7 @@ export const patchNickname = async (req, res) => {
   }
 };
 
+//회원 탈퇴 (softdelete - status 변경)
 export const deleteUser = async (req, res) => {
   try {
     const userId = 1;
@@ -62,16 +65,18 @@ export const userLogout = async (req, res) => {
   }
 };
 
+//회원가입
 export const signupUser = async (req, res) => {
   try {
     const signupInfo = req.body;
-    await UserService.postUser(signupInfo);
-    res.send(response(status.SUCCESS, singupUserDTO("회원가입 성공")));
+    const isSusccess = await UserService.postUser(signupInfo);
+    res.send(response(status.SUCCESS, singupUserDTO(isSusccess)));
   } catch (error) {
     res.send(response(status.BAD_REQUEST, errorResponseDTO("Invalid request")));
   }
 };
 
+//로그인
 export const loginUser = async (req, res) => {
   try {
     const loginInfo = req.body;

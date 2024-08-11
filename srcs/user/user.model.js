@@ -45,12 +45,13 @@ export const UserModel = {
         await pool.query(sql.postNewUser, [
           signupInfo.email,
           signupInfo.password,
-          "asdf",
+          "기본값",
           "active",
-          "01023324232",
+          "00000000000",
         ]);
+        return "회원가입 성공";
       } else {
-        return;
+        return "회원가입 실패";
       }
     } catch (error) {
       throw new Error("회원 가입 실패");
@@ -80,15 +81,6 @@ export const UserModel = {
       }
     } catch (error) {
       throw new Error("로그인 실패");
-    }
-  },
-
-  findByEmail: async (email) => {
-    try {
-      const [results] = await pool.query(sql.findUserByEmail, email);
-      return results[0];
-    } catch (error) {
-      throw new Error("유저 조회 실패");
     }
   },
 };

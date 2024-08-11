@@ -36,7 +36,8 @@ export const UserService = {
       const { email, password } = signupInfo;
       //이름, 아이디, 패스워드가 모두 있으면
       if (email && password) {
-        await UserModel.signup(signupInfo);
+        const isSusccess = await UserModel.signup(signupInfo);
+        return isSusccess;
       }
     } catch (error) {
       throw new BaseError(status.BAD_REQUEST, "회원가입 실패");

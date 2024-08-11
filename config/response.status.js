@@ -14,6 +14,13 @@ export const status = {
     code: 2001,
     message: "이미지 저장 성공입니다."
   },
+  //Problem
+  PROBLEM_STATISTIC_SUCCESS: {
+    status: StatusCodes.OK,
+    isSuccess: true,
+    code: "PROBLEM2001",
+    message: "사용자 문제 통계 조회 성공입니다."
+  },
 
   // error
   // common err
@@ -47,4 +54,6 @@ export const status = {
     code: "COMMON004",
     message: "금지된 요청입니다.",
   },
+
+
 };

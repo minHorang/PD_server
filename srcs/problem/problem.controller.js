@@ -7,7 +7,10 @@ import {
   getProblemResponseDTO, 
   editProblemResponseDTO, 
   errorResponseDTO,
-  addProblemResponseDTO, 
+  addProblemResponseDTO,
+  getStatisticIncorrectProblemDTO,
+  getStatisticIncorrectTypeDTO,
+  getStatisticIncorrectRatioDTO, 
 } from "./problem.reponse.dto.js";
 
 export const setScale = async (req, res) => {
@@ -72,3 +75,44 @@ export const addProblem = async (req, res) => {
     res.send(response(status.BAD_REQUEST, errorResponseDTO("문제 등록 실패")));
   }
 };
+
+// 가장 많이 틀린 문제 가져오기
+export const getStatisticIncorrectProblem = async (req, res) => {
+    try{
+    const statistic = await ProblemService.getStatisticIncorrectProblem();
+
+    res.send(response(status.PROBLEM_STATISTIC_SUCCESS,statistic));
+    //res.send(response(status.PROBLEM_STATISTIC_SUCCESS,getStatisticIncorrectProblemDTO(statistic)));
+
+    } catch (error){
+      res.send(response(status.INTERNAL_SERVER_ERROR));
+  }
+}
+
+  
+
+
+//가장 많이 틀린 유형 가져오기
+export const getStatisticIncorrectType = async (req, res) => {
+  try{
+    const statistic = await ProblemService.getStatisticIncorrectType();
+
+    //res.send(response(status.PROBLEM_STATISTIC_SUCCESS,getStatisticIncorrectTypeDTO(statistic)));
+    res.send(response(status.PROBLEM_STATISTIC_SUCCESS,statistic));
+  } catch (error) {
+    res.send(response(status.INTERNAL_SERVER_ERROR));
+  }
+}
+
+//틀린 문제 유형 비율 가져오기
+export const getStatisticIncorrectRatio = async (req, res) => {
+  try{
+    const statistic = await ProblemService.getStatisticIncorrectRatio();
+
+    res.send(response(status.PROBLEM_STATISTIC_SUCCESS,getStatisticIncorrectRatioDTO(statistic)));
+    res.send(response(status.PROBLEM_STATISTIC_SUCCESS,statistic));
+
+  } catch(error){
+    res.send(response(status.INTERNAL_SERVER_ERROR));
+  }
+}

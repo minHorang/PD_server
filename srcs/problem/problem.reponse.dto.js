@@ -45,6 +45,21 @@ export const setScaleResponseDTO = (scale) => ({
     message,
   });
 
-  export const addProblemResponseDTO = (message) => ({
+export const addProblemResponseDTO = (message) => ({
     message,
   });
+
+export const getStatisticIncorrectProblemDTO = (problems) => problems.map(problem => ({
+  problemId: problem.problem_id,
+  problemImage: problem.problem_image,
+  problemText: problem.problem_text,
+}));
+
+export const getStatisticIncorrectTypeDTO = (problems) => problems.map(problem => ({
+  sub_category: problem.sub_category
+}));
+
+export const getStatisticIncorrectRatioDTO = (problems) => problems.map(problem => ({
+  sub_category: problem.sub_category,
+  incorrect_percentage: problem.incorrect_percentage,
+}));

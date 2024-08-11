@@ -98,5 +98,32 @@ export const ProblemModel = {
       throw new Error("문제 추가 실패");
     }
   },
+
+  getIncorrectProblemStatistic: async (userId) => {
+    try{
+      const [result] = await pool.query(sql.getIncorrectProblemStatistic, [userId]);
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  getIncorrectTypeStatistic: async (userId) => {
+    try{
+      const [result] = await pool.query(sql.getIncorrectTypeStatistic, [userId]);
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  getIncorrectRatioStatistic: async (userId) => {
+    try{
+      const [result] = await pool.query(sql.getIncorrectRatioStatistic, [userId]);
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  },
   
 };

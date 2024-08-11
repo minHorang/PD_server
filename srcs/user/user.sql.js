@@ -8,5 +8,5 @@ export const sql = {
   findUserByEmail: `SELECT user_id, email FROM user WHERE email= ?`,
   postRefreshToken: `UPDATE user SET refresh_token = ? WHERE user_id = ?`,
   logoutUserSQL: `UPDATE user SET refresh_token = ? WHERE user_id = ?`,
-  updateProfileSQL: `UPDATE user SET profile_url = ? WHERE user_id = ?`,
+  updateProfileSQL: `UPDATE user SET profile_image_url = ? WHERE user_id = ?`,
 };

@@ -1,13 +1,14 @@
 import { pool } from "../../config/db.js";
+import { userLogout } from "./user.controller.js";
 import { sql } from "./user.sql.js";
 import jwt from "jsonwebtoken";
-const JWT_SECRET = `cloudoort`;
+const { JWT_SECRET, JWT_REFRESH_SECRET } = process.env;
 
 export const UserModel = {
   findById: async (userId) => {
     try {
       console.log(sql.findUserById);
-      console.log(userId);
+      console.log("userID:", userId);
       const [results] = await pool.query(sql.findUserById, userId);
       return results[0];
     } catch (error) {
@@ -17,9 +18,6 @@ export const UserModel = {
 
   updateNickname: async (userId, nicknameData) => {
     try {
-      console.log(sql.updateNicknameSQL);
-      console.log(userId);
-      console.log(nicknameData);
       await pool.query(sql.updateNicknameSQL, [nicknameData, userId]);
     } catch (error) {
       throw new Error("닉네임 변경 실패");
@@ -28,8 +26,6 @@ export const UserModel = {
 
   patchStatus: async (userId) => {
     try {
-      console.log(sql.updateStatusSQL);
-      console.log(userId);
       await pool.query(sql.updateStatusSQL, ["inactive", userId]);
     } catch (error) {
       throw new Error("회원 탈퇴 실패");
@@ -70,7 +66,9 @@ export const UserModel = {
           email: userInfo[0][0].email,
         };
         const accessToken = jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" });
-        const refreshToken = jwt.sign(payload, JWT_SECRET, { expiresIn: "7d" });
+        const refreshToken = jwt.sign(payload, JWT_REFRESH_SECRET, {
+          expiresIn: "7d",
+        });
         await pool.query(sql.postRefreshToken, [
           refreshToken,
           userInfo[0][0].user_id,
@@ -81,6 +79,24 @@ export const UserModel = {
       }
     } catch (error) {
       throw new Error("로그인 실패");
+    }
+  },
+
+  logoutUser: async (userId) => {
+    try {
+      console.log(sql.logoutUserSQL);
+      console.log(userId);
+      await pool.query(sql.logoutUserSQL, ["", userId]);
+    } catch {
+      throw new Error("로그인 실패");
+    }
+  },
+
+  updateProfile: async (userId, profileURL) => {
+    try {
+      await pool.query(sql.updateProfileSQL, [profileURL, userId]);
+    } catch (error) {
+      throw new Error("프로필변경 실패");
     }
   },
 };

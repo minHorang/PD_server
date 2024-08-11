@@ -1,8 +1,9 @@
 export const getInfoResponseDTO = (userInfo) => ({
-  id: userInfo.id,
+  id: userInfo.user_id,
   nickname: userInfo.nickname,
   name: userInfo.name,
   provider: userInfo.social_provider,
+  email: userInfo.email,
 });
 
 export const errorResponseDTO = (message) => ({
@@ -24,4 +25,12 @@ export const singupUserDTO = (message) => ({
 export const loginUserDTO = (token) => ({
   accesstoken: token.accessToken,
   refreshtoken: token.refreshToken,
+});
+
+export const userLogoutDTO = (message) => ({
+  message,
+});
+
+export const patchProfileResponseDTO = (message) => ({
+  message,
 });

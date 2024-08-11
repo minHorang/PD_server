@@ -1,5 +1,6 @@
 import { BaseError } from "../../config/error.js";
 import { status } from "../../config/response.status.js";
+import { userLogout } from "./user.controller.js";
 import { UserModel } from "./user.model.js";
 
 export const UserService = {
@@ -19,7 +20,7 @@ export const UserService = {
     try {
       await UserModel.updateNickname(userId, nicknameData);
     } catch (error) {
-      throw new BaseError(status.BAD_REQUEST, "문제 수정 실패");
+      throw new BaseError(status.BAD_REQUEST, "닉네임 변경 실패");
     }
   },
 
@@ -52,6 +53,22 @@ export const UserService = {
       }
     } catch (error) {
       throw new BaseError(status.BAD_REQUEST, "로그인 실패");
+    }
+  },
+
+  logoutUser: async (userId) => {
+    try {
+      await UserModel.logoutUser(userId);
+    } catch (error) {
+      throw new BaseError(status.BAD_REQUEST, "로그인 실패");
+    }
+  },
+
+  editProfile: async (userId, profileURL) => {
+    try {
+      await UserModel.updateProfile(userId, profileURL);
+    } catch (error) {
+      throw new BaseError(status.BAD_REQUEST, "프로필 변경 실패");
     }
   },
 };

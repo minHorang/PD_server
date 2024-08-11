@@ -10,12 +10,12 @@ paths:
         - 사용자
       summary: 계정 정보 가져오기
       parameters:
-        - name: token
+        - name: authorization
           in: header
           required: true
           schema:
             properties:
-              Authorization:
+              authorization:
                 type: string
                 description: 헤더에 토큰을 입력
       responses:
@@ -67,12 +67,12 @@ paths:
         - 사용자
       summary: 닉네임 변경하기
       parameters:
-        - name: token
+        - name: authorization
           in: header
           required: true
           schema:
             properties:
-              Authorization:
+              authorization:
                 type: string
                 description: 헤더에 토큰을 입력
         - name: newNickname
@@ -119,18 +119,76 @@ paths:
                     type: string
                     example: "Invalid request"
 
+  /users/info/profileImage:
+    patch:
+      tags:
+        - 사용자
+      summary: 프로필 사진 변경하기
+      parameters:
+        - name: authorization
+          in: header
+          required: true
+          schema:
+            properties:
+              authorization:
+                type: string
+                description: 헤더에 토큰을 입력
+        - name: profileURL
+          in: body
+          description: 변경할 프로필 url을 입력합니다
+          required: true
+          schema:
+            properties:
+              profileURL:
+                type: string
+                description: 변경할 프로필 url
+                example: www.asdfsdfe.asdf
+      responses:
+        "200":
+          description: 프로필 사진 변경 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  issuccess:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "프로필 사진 변경 성공"
+                  result:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      nickname:
+                        type: string
+                        example: "Halyn"
+        "400":
+          description: 프로필 사진 변경 실패
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errorMessage:
+                    type: string
+                    example: "Invalid request"
+
   /users/subscription:
     post:
       tags:
         - 사용자
       summary: 구독하기
       parameters:
-        - name: token
+        - name: authorization
           in: header
           required: true
           schema:
             properties:
-              Authorization:
+              authorization:
                 type: string
                 description: 헤더에 토큰을 입력
       responses:
@@ -184,12 +242,12 @@ paths:
         - 사용자
       summary: 구독 취소
       parameters:
-        - name: token
+        - name: authorization
           in: header
           required: true
           schema:
             properties:
-              Authorization:
+              authorization:
                 type: string
                 description: 헤더에 토큰을 입력
       responses:
@@ -243,7 +301,7 @@ paths:
         - 사용자
       summary: 회원 탈퇴
       parameters:
-        - name: token
+        - name: authorization
           in: header
           description: redis에 저장된 refresh token과 db에 저장된 유저 관련 데이터들을 삭제
           required: true
@@ -274,12 +332,12 @@ paths:
                     example: "Invalid request"
 
   /users/logout:
-    get:
+    patch:
       tags:
         - 사용자
       summary: 로그아웃
       parameters:
-        - name: token
+        - name: authorization
           in: header
           description: redis에 저장된 refreshToken을 삭제
           required: true

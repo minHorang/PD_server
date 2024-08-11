@@ -105,6 +105,30 @@ export const ProblemModel = {
     } catch (error) {
       throw new Error("소분류 조회 실패");
     }
-  }
+  },
+
+  addMainType: async (typeName) => {
+    try {
+      await pool.query(sql.addMainType, [typeName]);
+    } catch (error) {
+      throw new Error("대분류 추가 실패");
+    }
+  },
+
+  addMidType: async (typeName, parentTypeId) => {
+    try {
+      await pool.query(sql.addMidType, [typeName, parentTypeId]);
+    } catch (error) {
+      throw new Error("중분류 추가 실패");
+    }
+  },
+
+  addSubType: async (typeName, parentTypeId) => {
+    try {
+      await pool.query(sql.addSubType, [typeName, parentTypeId]);
+    } catch (error) {
+      throw new Error("소분류 추가 실패");
+    }
+  },
   
 };

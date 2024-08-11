@@ -36,5 +36,20 @@ export const sql = {
     SELECT type_id, type_name FROM PROBLEMTYPE
     WHERE parent_type_id = ? AND type_level = 3
   `,
-  };
+
+  addMainType: `
+    INSERT INTO PROBLEMTYPE (type_name, type_level) 
+    VALUES (?, 1)
+  `,
+
+  addMidType: `
+    INSERT INTO PROBLEMTYPE (type_name, parent_type_id, type_level) 
+    VALUES (?, ?, 2)
+  `,
+
+  addSubType: `
+    INSERT INTO PROBLEMTYPE (type_name, parent_type_id, type_level) 
+    VALUES (?, ?, 3)
+  `,
+};
   

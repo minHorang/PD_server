@@ -71,7 +71,31 @@ export const ProblemService = {
     } catch (error) {
       throw new BaseError(status.BAD_REQUEST, "소분류 조회 실패");
     }
-  }
+  },
+
+  addMainType: async (typeName) => {
+    try {
+      await ProblemModel.addMainType(typeName);
+    } catch (error) {
+      throw new BaseError(status.BAD_REQUEST, "대분류 추가 실패");
+    }
+  },
+
+  addMidType: async (typeName, parentTypeId) => {
+    try {
+      await ProblemModel.addMidType(typeName, parentTypeId);
+    } catch (error) {
+      throw new BaseError(status.BAD_REQUEST, "중분류 추가 실패");
+    }
+  },
+
+  addSubType: async (typeName, parentTypeId) => {
+    try {
+      await ProblemModel.addSubType(typeName, parentTypeId);
+    } catch (error) {
+      throw new BaseError(status.BAD_REQUEST, "소분류 추가 실패");
+    }
+  },
 
 
 };

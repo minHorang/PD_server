@@ -1,5 +1,5 @@
 import express from "express";
-import { setScale, searchProblems, getProblem, editProblem, addProblem, getMainTypes, getMidTypes, getSubTypes} from "./problem.controller.js";
+import { setScale, searchProblems, getProblem, editProblem, addProblem, getMainTypes, getMidTypes, getSubTypes, addMainType, addMidType, addSubType } from "./problem.controller.js";
 
 export const problemRouter = express.Router();
 
@@ -11,3 +11,6 @@ problemRouter.post("/", addProblem);
 problemRouter.get("/types/main", getMainTypes);
 problemRouter.get("/types/mid/:parentTypeId", getMidTypes);
 problemRouter.get("/types/sub/:parentTypeId", getSubTypes);
+problemRouter.post('/types/main', addMainType);
+problemRouter.post('/types/mid', addMidType);
+problemRouter.post('/types/sub', addSubType);

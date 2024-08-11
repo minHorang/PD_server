@@ -43,3 +43,7 @@ export const setScaleResponseDTO = (scale) => ({
   export const problemTypeResponseDTO = (types) => ({
     types,
   });
+
+  export const addProblemTypeResponseDTO = (message) => ({
+    message,
+  });

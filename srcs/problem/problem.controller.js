@@ -8,7 +8,8 @@ import {
   editProblemResponseDTO, 
   errorResponseDTO,
   addProblemResponseDTO,
-  problemTypeResponseDTO 
+  problemTypeResponseDTO ,
+  addProblemTypeResponseDTO
 } from "./problem.reponse.dto.js";
 
 export const setScale = async (req, res) => {
@@ -115,6 +116,40 @@ export const getSubTypes = async (req, res) => {
   try {
     const subTypes = await ProblemService.getSubTypes(parentTypeId);
     res.send(response(status.SUCCESS, problemTypeResponseDTO(subTypes)));
+  } catch (error) {
+    res.send(response(status.BAD_REQUEST, errorResponseDTO("잘못된 요청 본문")));
+  }
+};
+
+// 대분류 추가
+export const addMainType = async (req, res) => {
+  try {
+    const { typeName } = req.body;
+    await ProblemService.addMainType(typeName);
+    res.send(response(status.SUCCESS, addProblemTypeResponseDTO("대분류 추가 성공")));
+  } catch (error) {
+    console.error("대분류 추가 중 오류:", error.message);
+    res.send(response(status.BAD_REQUEST, errorResponseDTO("잘못된 요청 본문")));
+  }
+};
+
+// 중분류 추가
+export const addMidType = async (req, res) => {
+  try {
+    const { typeName, parentTypeId } = req.body;
+    await ProblemService.addMidType(typeName, parentTypeId);
+    res.send(response(status.SUCCESS, addProblemTypeResponseDTO("중분류 추가 성공")));
+  } catch (error) {
+    res.send(response(status.BAD_REQUEST, errorResponseDTO("잘못된 요청 본문")));
+  }
+};
+
+// 소분류 추가
+export const addSubType = async (req, res) => {
+  try {
+    const { typeName, parentTypeId } = req.body;
+    await ProblemService.addSubType(typeName, parentTypeId);
+    res.send(response(status.SUCCESS, addProblemTypeResponseDTO("소분류 추가 성공")));
   } catch (error) {
     res.send(response(status.BAD_REQUEST, errorResponseDTO("잘못된 요청 본문")));
   }

@@ -298,59 +298,10 @@ paths:
                     type: string
                     example: Invalid request
 
-  /problems/scale:
-    patch:
-      summary: 문제 미리보기 스케일 설정
-      description: 특정 폴더 안 문제들을 조회할 수 있는 화면에서 확대 축소하여 가로 줄에서 디스플레이할 문제 수를 조절합니다.
-      tags:
-        - 홈
-      parameters:
-        - name: scale
-          in: query
-          required: true
-          schema:
-            type: number
-            format: float
-            description: 확대/축소 비율. 예를 들어, 1은 기본 크기, 2는 2배 확대, 0.5는 50% 축소를 의미합니다.
-      responses:
-        '200':
-          description: 스케일 설정 성공
-          content:
-           application/json:
-             schema:
-               type: object
-               properties:
-                 scale:
-                   type: number
-                   format: float
-                   description: 현재 설정된 확대/축소 비율
-               example:
-                 scale: 1.5              
-        '400':
-          description: 잘못된 요청
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "잘못된 요청 본문"
-        '404':
-          description: 찾을 수 없음
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "데이터를 찾을 수 없습니다."
-
   /problems/search:
     get:
       summary: 문제 검색하기 (구독)
-      description: 전체 문제 또는 특정 폴더 안 문제를 검색합니다. `folderId` 파라미터가 제공되지 않으면 전체 문제를 검색하며, 제공되면 해당 폴더 내 문제만 검색합니다.
+      description: 전체 문제 또는 특정 폴더 안 문제를 검색합니다. `folderId` 파라미터가 제공되지 않으면 전체 문제를 검색하며, 제공되면 해당 폴더 내에서만 검색합니다.
       tags:
         - 홈
       parameters:
@@ -379,12 +330,12 @@ paths:
                       type: string
                       description: 문제 ID
                     problemImage:
-                        type: string
-                        format: uri
-                        description: 문제 이미지 URL
+                      type: string
+                      format: uri
+                      description: 문제 이미지 URL
                     problemText:
-                        type: string
-                        description: 문제 텍스트
+                      type: string
+                      description: 문제 텍스트
         '400':
           description: 잘못된 요청
           content:
@@ -414,7 +365,8 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: "데이터를 찾을 수 없습니다."             
+                    example: "데이터를 찾을 수 없습니다."
+
 
   /problems/{problemId}:
     get:
@@ -459,9 +411,21 @@ paths:
                   problemText:
                     type: string
                     description: (구독) 문제 텍스트
+                  gpt_session_key:
+                    type: string  
+                    description: ChatGPT 세션 키
                   problemType:
-                    type: string
-                    description: 문제 유형
+                    type: object
+                    properties:
+                      major:
+                        type: string
+                        description: 대분류
+                      minor:
+                        type: string
+                        description: 중분류
+                      sub:
+                        type: string
+                        description: 소분류
                   statistics:
                     type: object
                     properties:
@@ -591,81 +555,3 @@ paths:
                   message:
                     type: string
                     example: "데이터를 찾을 수 없습니다."
-
-  /problems/{problemId}/ai-solution:
-    post:
-      summary: AI 문제 풀이 (구독)
-      description: ChatGPT API를 활용하여 문제 풀이를 제공합니다.
-      tags:
-        - 홈
-      parameters:
-        - name: problemId
-          in: path
-          required: true
-          schema:
-            type: string
-            description: 문제 ID
-        - name: prompt
-          in: query
-          required: false
-          schema:
-            type: string
-            description: 텍스트 프롬프트
-        - name: image
-          in: query
-          required: false
-          schema:
-            type: string
-            format: binary
-            description: 문제 이미지를 업로드합니다. 카메라 촬영 또는 갤러리에서 선택된 이미지를 포함할 수 있습니다.
-      responses:
-        '200':
-          description: AI 문제 풀이 성공
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  response:
-                    type: string
-                    description: AI가 생성한 문제 풀이 텍스트
-        '400':
-          description: 잘못된 요청
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "잘못된 요청 본문"
-        '403':
-         description: 구독 계정이 아닐 경우 접근 거부
-         content:
-           application/json:
-             schema:
-               type: object
-               properties:
-                 message:
-                   type: string
-                   example: "구독 계정만 이용 가능합니다."
-        '404':
-          description: 찾을 수 없음
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "데이터를 찾을 수 없습니다."
-        '500':
-          description: 서버 오류 (예-ChatGPT API 호출 실패)
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "서버 오류가 발생했습니다. 잠시 후 다시 시도해 주세요."

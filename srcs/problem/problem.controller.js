@@ -3,10 +3,11 @@ import { ProblemService } from "./problem.service.js";
 import { response } from "../../config/response.js";
 import { 
   setScaleResponseDTO, 
-  searchProblemsResponseDTO, 
+  getProblemListResponseDTO, 
   getProblemResponseDTO, 
   editProblemResponseDTO, 
-  errorResponseDTO 
+  errorResponseDTO,
+  addProblemResponseDTO, 
 } from "./problem.reponse.dto.js";
 
 export const setScale = async (req, res) => {
@@ -22,12 +23,19 @@ export const setScale = async (req, res) => {
 export const searchProblems = async (req, res) => {
   try {
     const { query, folderId } = req.query;
-    const problems = await ProblemService.searchProblems(query, folderId);
-    res.send(response(status.SUCCESS, searchProblemsResponseDTO(problems)));
+    const userId = 1; // TODO : jwt 토큰에서 userId 추출
+    const problems = await ProblemService.searchProblems(query, folderId, userId);
+    res.send(response(status.SUCCESS, getProblemListResponseDTO(problems)));
   } catch (error) {
-    res.send(response(status.BAD_REQUEST, errorResponseDTO("잘못된 요청 본문")));
+    if (error.message === "구독 계정만 이용 가능합니다.") {
+      res.status(403).send(response(status.FORBIDDEN, errorResponseDTO(error.message)));
+    } else {
+      console.log(error);
+      res.status(400).send(response(status.BAD_REQUEST, errorResponseDTO("잘못된 요청 본문")));
+    }
   }
 };
+
 
 export const getProblem = async (req, res) => {
   try {
@@ -51,5 +59,16 @@ export const editProblem = async (req, res) => {
     res.send(response(status.SUCCESS, editProblemResponseDTO("문제 수정 성공")));
   } catch (error) {
     res.send(response(status.BAD_REQUEST, errorResponseDTO("잘못된 요청 본문")));
+  }
+};
+
+// 문제 등록
+export const addProblem = async (req, res) => {
+  try {
+    const problemData = req.body;
+    await ProblemService.addProblem(problemData);
+    res.send(response(status.SUCCESS, addProblemResponseDTO("문제 등록 성공")));
+  } catch (error) {
+    res.send(response(status.BAD_REQUEST, errorResponseDTO("문제 등록 실패")));
   }
 };

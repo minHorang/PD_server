@@ -19,8 +19,8 @@ const handleLogin = async (providerLogin, providerName, req, res) => {
         ));
     } catch (error) {
         console.error(`${providerName} login error:`, error);
-        return res.status(500).json(response(
-            { isSuccess: false, code: 500, message: `${providerName} 로그인 실패` },
+        return res.status(400).json(response(
+            { isSuccess: false, code: 400, message: `${providerName} 로그인 실패` },
             {}
         ));
     }
@@ -47,8 +47,8 @@ const handleTokenRefresh = async (req, res) => {
         ));
     } catch (error) {
         console.error("Token refresh error:", error);
-        return res.status(500).json(response(
-            { isSuccess: false, code: 500, message: "토큰 재발급 실패" },
+        return res.status(400).json(response(
+            { isSuccess: false, code: 400, message: "토큰 재발급 실패" },
             {}
         ));
     }

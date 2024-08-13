@@ -64,7 +64,7 @@ export const editProblem = async (req, res) => {
   }
 };
 
-// 문제 등록
+// 문제 추가
 export const addProblem = async (req, res) => {
   try {
     const problemData = req.body;
@@ -90,7 +90,7 @@ export const addProblem = async (req, res) => {
       }
     }
     await ProblemService.addProblem(problemData);
-    res.send(response(status.SUCCESS, addProblemResponseDTO("문제 등록 성공")));
+    res.send(response(status.SUCCESS, addProblemResponseDTO("문제 추가 성공")));
   } catch (error) {
     res.send(response(status.BAD_REQUEST, errorResponseDTO("잘못된 요청 본문")));
   }

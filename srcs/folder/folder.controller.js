@@ -23,7 +23,7 @@ export const orderFolders = async (req, res) => {
   try {
     const { order } = req.body;
     await FolderService.orderFolders(order);
-    res.send(response(status.SUCCESS, orderFoldersResponseDTO("폴더 조정 성공")));
+    res.send(response(status.SUCCESS, orderFoldersResponseDTO("폴더 순서 조정 성공")));
   } catch (error) {
     res.send(response(status.BAD_REQUEST, errorResponseDTO("잘못된 요청 본문")));
   }

@@ -153,28 +153,17 @@ export const ProblemModel = {
     }
   },
 
-  addMainType: async (typeName) => {
+  addProblemType: async (typeName, parentTypeId, typeLevel) => {
     try {
-      await pool.query(sql.addMainType, [typeName]);
+      if (typeLevel === 1) {
+        await pool.query(sql.addProblemType, [typeName, typeLevel]);
+      } else if (typeLevel === 2) {
+        await pool.query(sql.addProblemType, [typeName, parentTypeId, typeLevel]);
+      } else if (typeLevel === 3) {
+        await pool.query(sql.addProblemType, [typeName, parentTypeId, typeLevel]);
+      }
     } catch (error) {
-      throw new Error("대분류 추가 실패");
+      throw new Error(`문제 유형 추가 실패`);
     }
   },
-
-  addMidType: async (typeName, parentTypeId) => {
-    try {
-      await pool.query(sql.addMidType, [typeName, parentTypeId]);
-    } catch (error) {
-      throw new Error("중분류 추가 실패");
-    }
-  },
-
-  addSubType: async (typeName, parentTypeId) => {
-    try {
-      await pool.query(sql.addSubType, [typeName, parentTypeId]);
-    } catch (error) {
-      throw new Error("소분류 추가 실패");
-    }
-  },
-  
 };

@@ -357,7 +357,7 @@ paths:
                     type: boolean
                     example: false
                   code:
-                    type: strinf
+                    type: string
                     example: "COMMON005"
                   message:
                     type: string
@@ -493,6 +493,211 @@ paths:
                   result:
                     type: string
                     example: "잘못된 요청 본문"
+
+  /problems/types:
+    post:
+      tags:
+        - 홈
+      summary: 문제 유형 추가
+      description: >
+        문제 유형을 추가합니다
+        
+        - `typeLevel`이 `1`일 경우: 대분류 문제 유형 추가
+        - `typeLevel`이 `2`일 경우: 중분류 문제 유형 추가 (`parentTypeId` 필요)
+        - `typeLevel`이 `3`일 경우: 소분류 문제 유형 추가 (`parentTypeId` 필요)
+      parameters:
+        - in: body
+          name: body
+          description: 문제 유형 추가 요청 본문
+          required: true
+          schema:
+            type: object
+            properties:
+              typeName:
+                type: string
+                description: 문제 유형 이름
+                example: "국어"
+              parentTypeId:
+                type: integer
+                description: 상위 문제 유형의 ID (중분류와 소분류에서 필요)
+                example: 1
+              typeLevel:
+                type: integer
+                description: 문제 유형 레벨
+                enum:
+                  - 1
+                  - 2
+                  - 3
+                example: 2
+      responses:
+        '200':
+          description: 문제 유형 조회 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 2000
+                  message:
+                    type: string
+                    example: "success!"
+                  result:
+                    type: array
+                    items:
+                        type: object
+                        properties:
+                          typeId:
+                            type: integer
+                            description: 유형 ID
+                            example: 1
+                          typeName:
+                            type: string
+                            description: 대분류 이름
+                            example: "국어"
+        '400':
+          description: 잘못된 요청
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: false
+                  code:
+                    type: string
+                    example: "COMMON001"
+                  message:
+                    type: string
+                    example: "잘못된 요청입니다."
+                  result:
+                    type: string
+                    example: "잘못된 요청 본문"
+        '404':
+          description: 찾을 수 없음
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: false
+                  code:
+                    type: string
+                    example: "COMMON005"
+                  message:
+                    type: string
+                    example: "데이터를 찾을 수 없습니다."
+                  result:
+                    type: string
+                    example: "데이터를 찾을 수 없습니다."
+  
+  /problems/types/{typeLevel}:
+    get:
+      tags:
+        - 홈
+      summary: 문제 유형 조회
+      description: >
+        typeLevel 따라 문제 유형을 조회합니다.
+        
+        - `1`: 대분류 문제 유형 조회 (`parentTypeId` 필요 없음)
+        - `2`: 중분류 문제 유형 조회 (`parentTypeId` 쿼리 파라미터 필요)
+        - `3`: 소분류 문제 유형 조회 (`parentTypeId` 쿼리 파라미터 필요)
+      parameters:
+        - in: path
+          name: typeLevel
+          required: true
+          schema:
+            type: integer
+            enum:
+              - 1
+              - 2
+              - 3
+          description: >
+            조회할 문제 유형 ID:
+            - `1`: 대분류 문제 유형
+            - `2`: 중분류 문제 유형
+            - `3`: 소분류 문제 유형
+        - in: query
+          name: parentTypeId
+          required: false
+          schema:
+            type: integer
+          description: 상위 문제 유형의 ID
+      responses:
+        '200':
+          description: 문제 유형 조회 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 2000
+                  message:
+                    type: string
+                    example: "success!"
+                  result:
+                    type: array
+                    items:
+                        type: object
+                        properties:
+                          typeId:
+                            type: integer
+                            description: 유형 ID
+                            example: 1
+                          typeName:
+                            type: string
+                            description: 대분류 이름
+                            example: "국어"
+        '400':
+          description: 잘못된 요청
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: false
+                  code:
+                    type: string
+                    example: "COMMON001"
+                  message:
+                    type: string
+                    example: "잘못된 요청입니다."
+                  result:
+                    type: string
+                    example: "잘못된 요청 본문"
+        '404':
+          description: 찾을 수 없음
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: false
+                  code:
+                    type: string
+                    example: "COMMON005"
+                  message:
+                    type: string
+                    example: "데이터를 찾을 수 없습니다."
+                  result:
+                    type: string
+                    example: "데이터를 찾을 수 없습니다."
 
   /problems/search:
     get:

@@ -81,29 +81,17 @@ export const ProblemService = {
     }
   },
 
-  addMainType: async (typeName) => {
+  addProblemType: async (typeName, parentTypeId, typeLevel) => {
     try {
-      await ProblemModel.addMainType(typeName);
+      await ProblemModel.addProblemType(typeName, parentTypeId, typeLevel);
     } catch (error) {
-      throw new BaseError(status.BAD_REQUEST, "대분류 추가 실패");
+      if (typeLevel === 1) {
+        throw new BaseError(status.BAD_REQUEST, "대분류 추가 실패");
+      } else if (typeLevel === 2) {
+        throw new BaseError(status.BAD_REQUEST, "중분류 추가 실패");
+      } else if (typeLevel === 3) {
+        throw new BaseError(status.BAD_REQUEST, "소분류 추가 실패");
+      }
     }
   },
-
-  addMidType: async (typeName, parentTypeId) => {
-    try {
-      await ProblemModel.addMidType(typeName, parentTypeId);
-    } catch (error) {
-      throw new BaseError(status.BAD_REQUEST, "중분류 추가 실패");
-    }
-  },
-
-  addSubType: async (typeName, parentTypeId) => {
-    try {
-      await ProblemModel.addSubType(typeName, parentTypeId);
-    } catch (error) {
-      throw new BaseError(status.BAD_REQUEST, "소분류 추가 실패");
-    }
-  },
-
-
 };

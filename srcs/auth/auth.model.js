@@ -12,8 +12,17 @@ const getUserBySocialId = async (socialId, provider) => {
 };
 
 export const generateRandomNickname = () => {
-    const adjectives = ['빨간', '빛나는', '활발한', '멋진', '재미있는', '빠른', '귀여운'];
-    const nouns = ['호랑이', '여우', '사자', '독수리', '거북이', '곰', '토끼', '고양이'];
+    const adjectives = [
+        '빨간', '빛나는', '활발한', '멋진', '재미있는', '빠른', '귀여운',
+        '강한', '용감한', '부드러운', '영리한', '재빠른', '창의적인', '따뜻한',
+        '매력적인', '스마트한', '고요한', '신비로운', '우아한', '열정적인'
+    ];
+    
+    const nouns = [
+        '호랑이', '여우', '사자', '독수리', '거북이', '곰', '토끼', '고양이',
+        '물고기', '올빼미', '늑대', '코끼리', '기린', '펭귄', '사슴',
+        '거위', '원숭이', '늑대', '다람쥐', '여우', '토끼', '해바라기', '바람'
+    ];
     
     const randomAdjective = adjectives[Math.floor(Math.random() * adjectives.length)];
     const randomNoun = nouns[Math.floor(Math.random() * nouns.length)];

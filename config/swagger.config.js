@@ -12,6 +12,11 @@ const options = {
     servers: [
       {
         url: "http://localhost:3000",
+        description: "로컬 서버",
+      },
+      {
+        url: "https://dev.team-wash.store",
+        description: "개발 서버",
       },
     ],
     components: {

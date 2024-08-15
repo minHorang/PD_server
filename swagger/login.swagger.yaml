@@ -96,52 +96,6 @@ paths:
                     type: string
                     example: "Invalid request"
 
-  paths:
-  /auth/naver:
-    post:
-      tags:
-        - 로그인
-      summary: 네이버 로그인
-      parameters:
-        - name: Authorization
-          in: header
-          description: "액세스 토큰을 포함한 Authorization 헤더를 입력합니다. 예: Bearer YOUR_ACCESS_TOKEN"
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: 네이버 로그인 성공
-          headers:
-            Authorization:
-              description: "새로 발급된 액세스 토큰을 포함한 Authorization 헤더"
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  isSuccess:
-                    type: boolean
-                    example: true
-                  message:
-                    type: string
-                    example: 네이버 로그인 성공
-                  result:
-                    type: string
-                    example: "${refreshToken}"
-        "400":
-          description: 네이버 로그인 실패
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  errorMessage:
-                    type: string
-                    example: "Invalid request"
-
   /auth/kakao:
     post:
       tags:
@@ -170,12 +124,18 @@ paths:
                   isSuccess:
                     type: boolean
                     example: true
+                  code:
+                    type: integer
+                    example: 200
                   message:
                     type: string
-                    example: 카카오 로그인 성공
+                    example: kakao 로그인 성공
                   result:
-                    type: string
-                    example: "${refreshToken}"
+                    type: object
+                    properties:
+                      refreshToken:
+                        type: string
+                        example: "RefreshToken"
         "400":
           description: 카카오 로그인 실패
           content:
@@ -183,15 +143,89 @@ paths:
               schema:
                 type: object
                 properties:
-                  errorMessage:
+                  isSuccess:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 400
+                  message:
                     type: string
-                    example: "Invalid request"
-                    
+                    example: kakao 로그인 실패
+                  result:
+                    type: object
+                    properties:
+                      refreshToken:
+                        type: string
+                        example: {}
+  /auth/naver:
+    post:
+      tags:
+        - 로그인
+      summary: 네이버 로그인
+      parameters:
+        - name: Authorization
+          in: header
+          description: "액세스 토큰을 포함한 Authorization 헤더를 입력합니다. 예: Bearer YOUR_ACCESS_TOKEN"
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: 카카오 로그인 성공
+          headers:
+            Authorization:
+              description: "새로 발급된 액세스 토큰을 포함한 Authorization 헤더"
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: naver 로그인 성공
+                  result:
+                    type: object
+                    properties:
+                      refreshToken:
+                        type: string
+                        example: "RefreshToken"
+        "400":
+          description: 카카오 로그인 실패
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: naver 로그인 실패
+                  result:
+                    type: object
+                    properties:
+                      refreshToken:
+                        type: string
+                        example: {}
+
   /auth/refresh:
     post:
       tags:
         - 로그인
-      summary: 토큰 재발급(임시)
+      summary: 토큰 재발급
       requestBody:
         description: 리프레시 토큰을 포함한 요청 본문
         required: true
@@ -203,7 +237,6 @@ paths:
                 refreshToken:
                   type: string
                   description: "리프레시 토큰"
-                  
       responses:
         "200":
           description: 토큰 재발급 성공
@@ -220,12 +253,18 @@ paths:
                   isSuccess:
                     type: boolean
                     example: true
+                  code:
+                    type: integer
+                    example: 200
                   message:
                     type: string
                     example: 토큰 재발급 성공
                   result:
-                    type: string
-                    example: "${newRefreshToken}"
+                    type: object
+                    properties:
+                      refreshToken:
+                        type: string
+                        example: "RefreshToken"
         "400":
           description: 토큰 재발급 실패
           content:
@@ -233,6 +272,18 @@ paths:
               schema:
                 type: object
                 properties:
-                  errorMessage:
+                  isSuccess:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 400
+                  message:
                     type: string
-                    example: "Invalid request"
+                    example: 토큰 재발급 실패
+                  result:
+                    type: object
+                    properties:
+                      refreshToken:
+                        type: string
+                        example: {}

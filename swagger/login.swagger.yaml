@@ -186,22 +186,24 @@ paths:
                   errorMessage:
                     type: string
                     example: "Invalid request"
-
+                    
   /auth/refresh:
     post:
       tags:
         - 로그인
       summary: 토큰 재발급(임시)
-      parameters:
-        - name:
-          in: body
-          required: true
-          schema:
-            properties:
-              refreshToken:
-                type: string
-                description: Request Body에 refreshToken을 입력합니다.
-                example: refreshToken
+      requestBody:
+        description: 리프레시 토큰을 포함한 요청 본문
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refreshToken:
+                  type: string
+                  description: "리프레시 토큰"
+                  
       responses:
         "200":
           description: 토큰 재발급 성공

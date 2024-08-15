@@ -96,30 +96,33 @@ paths:
                     type: string
                     example: "Invalid request"            
   
-  /auth/naver: 
+  paths:
+  /auth/naver:
     post:
       tags:
         - 로그인
       summary: 네이버 로그인
       parameters:
-      - name: token
-        in: body
-        description: 로그인 후 받은 id 토큰을 입력합니다.
-        required: true
-        schema:
-          properties:
-            idToken:
-              type: string
-               
+        - name: Authorization
+          in: header
+          description: "액세스 토큰을 포함한 Authorization 헤더를 입력합니다. 예: Bearer YOUR_ACCESS_TOKEN"
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: 네이버 로그인 성공
+          headers:
+            Authorization:
+              description: "새로 발급된 액세스 토큰을 포함한 Authorization 헤더"
+              schema:
+                type: string
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  issuccess:
+                  isSuccess:
                     type: boolean
                     example: true
                   message:
@@ -137,7 +140,7 @@ paths:
                 properties:
                   errorMessage:
                     type: string
-                    example: "Invalid request"            
+                    example: "Invalid request"
 
   /auth/kakao:
     post:
@@ -145,24 +148,26 @@ paths:
         - 로그인
       summary: 카카오 로그인
       parameters:
-      - name: token
-        in: body
-        description: 로그인 후 받은 id 토큰을 입력합니다.
-        required: true
-        schema:
-          properties:
-            idToken:
-              type: string
-
+        - name: Authorization
+          in: header
+          description: "액세스 토큰을 포함한 Authorization 헤더를 입력합니다. 예: Bearer YOUR_ACCESS_TOKEN"
+          required: true
+          schema:
+            type: string
       responses:
         '200':
-          description: 카카오 로그인
+          description: 카카오 로그인 성공
+          headers:
+            Authorization:
+              description: "새로 발급된 액세스 토큰을 포함한 Authorization 헤더"
+              schema:
+                type: string
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  issuccess:
+                  isSuccess:
                     type: boolean
                     example: true
                   message:
@@ -171,7 +176,6 @@ paths:
                   result:
                     type: string
                     example: "${refreshToken}"
-                  
         '400':
           description: 카카오 로그인 실패
           content:
@@ -189,19 +193,29 @@ paths:
         - 로그인
       summary: 토큰 재발급(임시)
       parameters:
-      - name: token
-        in: header
-        description: accessToken을 입력합니다.
-        required: true
+        - name: 
+          in: body
+          required: true
+          schema:
+            properties:
+              refreshToken:
+                type: string
+                description: Request Body에 refreshToken을 입력합니다.
+                example: refreshToken
       responses:
         '200':
-          description: 토큰 재발급
+          description: 토큰 재발급 성공
+          headers:
+            Authorization:
+              description: "새로 발급된 액세스 토큰을 포함한 Authorization 헤더"
+              schema:
+                type: string
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  issuccess:
+                  isSuccess:
                     type: boolean
                     example: true
                   message:
@@ -209,8 +223,7 @@ paths:
                     example: 토큰 재발급 성공
                   result:
                     type: string
-                    example: "${refreshToken}"
-                  
+                    example: "${newRefreshToken}"
         '400':
           description: 토큰 재발급 실패
           content:

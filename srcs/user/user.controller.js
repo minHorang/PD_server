@@ -35,7 +35,7 @@ export const getInfo = async (req, res) => {
 //닉네임 변경
 export const patchNickname = async (req, res) => {
   try {
-    const userId = req.userId; 
+    const userId = req.userId;
     const nicknameData = req.body.newNickname;
     await UserService.editNickname(userId, nicknameData);
     res.send(

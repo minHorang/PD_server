@@ -4,28 +4,28 @@ info:
   version: 1.0.0
 
 paths:
-  /users/login/signUp:
+  /auth/login/signUp:
     post:
       tags:
         - 로그인
       summary: 회원가입
       parameters:
-      - name: singUp
-        in: body
-        required: true
-        schema:
-          properties:
-            email:
-              type: string
-              description: 가입하려는 이메일
-              example: dhrwodms@naver.com
-            password:
-              type: string
-              description: 가입 비밀번호
-              example: 1234
-            
+        - name: singUp
+          in: body
+          required: true
+          schema:
+            properties:
+              email:
+                type: string
+                description: 가입하려는 이메일
+                example: dhrwodms@naver.com
+              password:
+                type: string
+                description: 가입 비밀번호
+                example: 1234
+
       responses:
-        '200':
+        "200":
           description: 회원가입 성공
           content:
             application/json:
@@ -37,8 +37,8 @@ paths:
                     example: true
                   message:
                     type: string
-                    example: 회원가입 성공      
-        '400':
+                    example: 회원가입 성공
+        "400":
           description: 계정 정보 가져오기 실패
           content:
             application/json:
@@ -49,27 +49,27 @@ paths:
                     type: string
                     example: "Invalid request"
 
-  /users/login/general:
+  /auth/login/general:
     post:
       tags:
         - 로그인
       summary: 일반 로그인
       parameters:
-      - name: Login
-        in: body
-        required: true
-        schema:
-          properties:
-            email:
-              type: string
-              description: 로그인하려는 이메일
-              example: dhrwodms@naver.com
-            password:
-              type: string
-              description: 로그인 비밀번호
-              example: 1234
+        - name: Login
+          in: body
+          required: true
+          schema:
+            properties:
+              email:
+                type: string
+                description: 로그인하려는 이메일
+                example: dhrwodms@naver.com
+              password:
+                type: string
+                description: 로그인 비밀번호
+                example: 1234
       responses:
-        '200':
+        "200":
           description: 일반 로그인 성공
           content:
             application/json:
@@ -85,7 +85,7 @@ paths:
                   # result:
                   #   type: string
                   #   example: "${refreshToken}"
-        '400':
+        "400":
           description: 일반 로그인 실패
           content:
             application/json:
@@ -94,8 +94,8 @@ paths:
                 properties:
                   errorMessage:
                     type: string
-                    example: "Invalid request"            
-  
+                    example: "Invalid request"
+
   paths:
   /auth/naver:
     post:
@@ -110,7 +110,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: 네이버 로그인 성공
           headers:
             Authorization:
@@ -131,7 +131,7 @@ paths:
                   result:
                     type: string
                     example: "${refreshToken}"
-        '400':
+        "400":
           description: 네이버 로그인 실패
           content:
             application/json:
@@ -155,7 +155,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: 카카오 로그인 성공
           headers:
             Authorization:
@@ -176,7 +176,7 @@ paths:
                   result:
                     type: string
                     example: "${refreshToken}"
-        '400':
+        "400":
           description: 카카오 로그인 실패
           content:
             application/json:
@@ -193,7 +193,7 @@ paths:
         - 로그인
       summary: 토큰 재발급(임시)
       parameters:
-        - name: 
+        - name:
           in: body
           required: true
           schema:
@@ -203,7 +203,7 @@ paths:
                 description: Request Body에 refreshToken을 입력합니다.
                 example: refreshToken
       responses:
-        '200':
+        "200":
           description: 토큰 재발급 성공
           headers:
             Authorization:
@@ -224,7 +224,7 @@ paths:
                   result:
                     type: string
                     example: "${newRefreshToken}"
-        '400':
+        "400":
           description: 토큰 재발급 실패
           content:
             application/json:

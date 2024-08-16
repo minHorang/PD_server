@@ -1,5 +1,5 @@
 import express from "express";
-import { setScale, searchProblems, getProblem, editProblem, addProblem, getProblemTypes, addProblemType } from "./problem.controller.js";
+import { setScale, searchProblems, getProblem, editProblem, addProblem, deleteProblem, getProblemTypes, addProblemType } from "./problem.controller.js";
 import authenticateToken from "../../config/jwt.middleware.js";
 
 export const problemRouter = express.Router();
@@ -14,3 +14,4 @@ problemRouter.patch("/:problemId/edit", editProblem);
 problemRouter.post("/", addProblem);
 problemRouter.get("/types/:typeLevel", getProblemTypes);
 problemRouter.post('/types', addProblemType);
+problemRouter.delete("/:problemId", deleteProblem);

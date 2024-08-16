@@ -918,6 +918,77 @@ paths:
                   message:
                     type: string
                     example: "데이터를 찾을 수 없습니다."
+    delete:
+      summary: 문제 삭제하기
+      description: 문제 ID를 사용해 문제를 삭제한다.
+      tags:
+        - 홈
+      parameters:
+        - name: problemId
+          in: path
+          required: true
+          schema:
+            type: integer
+            description: 문제 ID
+            example: 1
+      responses:
+        '200':
+          description: 문제 삭제 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 2000
+                  message:
+                    type: string
+                    example: "success!"
+                  result:
+                    type: string
+                    example: "문제 삭제 성공"
+        '400':
+          description: 잘못된 요청
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: false
+                  code:
+                    type: string
+                    example: "COMMON001"
+                  message:
+                    type: string
+                    example: "잘못된 요청입니다."
+                  result:
+                    type: string
+                    example: "잘못된 요청 본문"
+        '404':
+          description: 찾을 수 없음
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: false
+                  code:
+                    type: string
+                    example: "COMMON005"
+                  message:
+                    type: string
+                    example: "데이터를 찾을 수 없습니다."
+                  result:
+                    type: string
+                    example: "데이터를 찾을 수 없습니다."
 
   /problems/{problemId}/edit:
     patch:

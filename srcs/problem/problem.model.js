@@ -166,4 +166,15 @@ export const ProblemModel = {
       throw new Error(`문제 유형 추가 실패`);
     }
   },
+
+  delete: async (problemId, userId) => {
+    try {
+      console.log("Deleting problem with ID:", problemId, "for user:", userId);
+      const [result] = await pool.query(sql.deleteProblem, [problemId, userId]);
+      return result.affectedRows > 0;
+    } catch (error) {
+      throw new Error("문제 삭제 실패");
+    }
+  },
+
 };

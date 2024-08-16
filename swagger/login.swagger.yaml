@@ -101,13 +101,6 @@ paths:
       tags:
         - 로그인
       summary: 카카오 로그인
-      parameters:
-        - name: Authorization
-          in: header
-          description: "액세스 토큰을 포함한 Authorization 헤더를 입력합니다. 예: Bearer YOUR_ACCESS_TOKEN"
-          required: true
-          schema:
-            type: string
       responses:
         "200":
           description: 카카오 로그인 성공

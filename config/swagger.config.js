@@ -7,7 +7,7 @@ const options = {
       title: "WASH API",
       version: "1.0.0",
       description:
-        "wash api / 헤더로 토큰 넣으실때 {Bearer AcessToken} 형식으로 중괄호 내부 값만 넣으셔야 합니다",
+        "wash api / 헤더로 토큰 넣으실때 {AcessToken} 형식으로 중괄호 내부 값만 넣으셔야 합니다",
     },
     servers: [
       {

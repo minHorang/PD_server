@@ -97,7 +97,7 @@ paths:
                     example: "Invalid request"
 
   /auth/kakao:
-    post:
+    get:
       tags:
         - 로그인
       summary: 카카오 로그인
@@ -159,20 +159,13 @@ paths:
                         type: string
                         example: {}
   /auth/naver:
-    post:
+    get:
       tags:
         - 로그인
       summary: 네이버 로그인
-      parameters:
-        - name: Authorization
-          in: header
-          description: "액세스 토큰을 포함한 Authorization 헤더를 입력합니다. 예: Bearer YOUR_ACCESS_TOKEN"
-          required: true
-          schema:
-            type: string
       responses:
         "200":
-          description: 카카오 로그인 성공
+          description: 네이버 로그인 성공
           headers:
             Authorization:
               description: "새로 발급된 액세스 토큰을 포함한 Authorization 헤더"
@@ -199,7 +192,7 @@ paths:
                         type: string
                         example: "RefreshToken"
         "400":
-          description: 카카오 로그인 실패
+          description: 네이버 로그인 실패
           content:
             application/json:
               schema:

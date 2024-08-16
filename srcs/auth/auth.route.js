@@ -9,8 +9,8 @@ import { loginUser, signupUser } from "../user/user.controller.js";
 
 const authRouter = express.Router();
 
-authRouter.get("/kakao", handleKakaoLogin);
-authRouter.get("/naver", handleNaverLogin);
+authRouter.post("/kakao", handleKakaoLogin);
+authRouter.post("/naver", handleNaverLogin);
 authRouter.post("/refresh", handleTokenRefresh);
 
 authRouter.post("/login/signUp", signupUser);

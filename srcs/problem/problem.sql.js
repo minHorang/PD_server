@@ -97,4 +97,6 @@ export const sql = {
   VALUES (?, ?, ?, ?)
 `,
 
+deleteProblem: 'DELETE FROM problem WHERE problem_id = ? AND user_id = ?',
+
 };

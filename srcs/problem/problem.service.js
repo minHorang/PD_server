@@ -94,4 +94,13 @@ export const ProblemService = {
       }
     }
   },
+
+  deleteProblem: async (problemId, userId) => {
+    try {
+      const deleted = await ProblemModel.delete(problemId, userId);
+      return deleted;
+    } catch (error) {
+      throw new BaseError(status.BAD_REQUEST, "문제 삭제 실패");
+    }
+  },
 };

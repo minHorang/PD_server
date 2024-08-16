@@ -9,7 +9,8 @@ import {
   errorResponseDTO,
   addProblemResponseDTO,
   problemTypeResponseDTO ,
-  addProblemTypeResponseDTO
+  addProblemTypeResponseDTO,
+  deleteProblemResponseDTO
 } from "./problem.reponse.dto.js";
 
 export const setScale = async (req, res) => {
@@ -162,6 +163,22 @@ export const addProblemType = async (req, res) => {
     }
   } catch (error) {
     console.error("문제 유형 추가 중 에러:", error.message);
+    res.send(response(status.BAD_REQUEST, errorResponseDTO("잘못된 요청 본문")));
+  }
+};
+
+export const deleteProblem = async (req, res) => {
+  try {
+    const { problemId } = req.params;
+    // const userId = req.userId;
+    const userId = 1;
+    const deleted = await ProblemService.deleteProblem(problemId, userId);
+    if (deleted) {
+      res.send(response(status.SUCCESS, deleteProblemResponseDTO("문제 삭제 성공")));
+    } else {
+      res.send(response(status.NOT_FOUND, errorResponseDTO("데이터를 찾을 수 없습니다.")));
+    }
+  } catch (error) {
     res.send(response(status.BAD_REQUEST, errorResponseDTO("잘못된 요청 본문")));
   }
 };

@@ -70,6 +70,9 @@ export const addProblem = async (req, res) => {
     const problemData = req.body;
     const { mainTypeId, midTypeId, subTypeIds } = problemData;
 
+    //problemData.userId = req.userId;
+    problemData.userId = 1;
+
     if (mainTypeId !== undefined && mainTypeId !== null && typeof mainTypeId !== 'number') {
       return res.send(response(status.BAD_REQUEST, errorResponseDTO("잘못된 요청 본문")));
     }
@@ -101,21 +104,23 @@ export const getProblemTypes = async (req, res) => {
   try {
     const { typeLevel } = req.params;
     const { parentTypeId } = req.query;
+    // const userId = req.userId;
+    const userId = 1;
 
     let types;
 
     if (typeLevel === '1') {
-      types = await ProblemService.getMainTypes();
+      types = await ProblemService.getMainTypes(userId);
     } else if (typeLevel === '2') {
       if (!parentTypeId) {
         return res.send(response(status.BAD_REQUEST, errorResponseDTO("잘못된 요청 본문")));
       }
-      types = await ProblemService.getMidTypes(parentTypeId);
+      types = await ProblemService.getMidTypes(parentTypeId, userId);
     } else if (typeLevel === '3') {
       if (!parentTypeId) {
         return res.send(response(status.BAD_REQUEST, errorResponseDTO("잘못된 요청 본문")));
       }
-      types = await ProblemService.getSubTypes(parentTypeId);
+      types = await ProblemService.getSubTypes(parentTypeId, userId);
     } else {
       return res.send(response(status.BAD_REQUEST, errorResponseDTO("잘못된 요청 본문")));
     }
@@ -134,21 +139,23 @@ export const getProblemTypes = async (req, res) => {
 export const addProblemType = async (req, res) => {
   try {
     const { typeName, parentTypeId, typeLevel } = req.body;
+    // const userId = req.userId;
+    const userId = 1;
 
     if (typeLevel === 1) {
-      await ProblemService.addProblemType(typeName, null, typeLevel);
+      await ProblemService.addProblemType(typeName, null, typeLevel, userId);
       res.send(response(status.SUCCESS, addProblemTypeResponseDTO("대분류 추가 성공")));
     } else if (typeLevel === 2) {
       if (!parentTypeId) {
         return res.send(response(status.BAD_REQUEST, errorResponseDTO("잘못된 요청 본문")));
       }
-      await ProblemService.addProblemType(typeName, parentTypeId, typeLevel);
+      await ProblemService.addProblemType(typeName, parentTypeId, typeLevel, userId);
       res.send(response(status.SUCCESS, addProblemTypeResponseDTO("중분류 추가 성공")));
     } else if (typeLevel === 3) {
       if (!parentTypeId) {
         return res.send(response(status.BAD_REQUEST, errorResponseDTO("잘못된 요청 본문")));
       }
-      await ProblemService.addProblemType(typeName, parentTypeId, typeLevel);
+      await ProblemService.addProblemType(typeName, parentTypeId, typeLevel, userId);
       res.send(response(status.SUCCESS, addProblemTypeResponseDTO("소분류 추가 성공")));
     } else {
       res.send(response(status.BAD_REQUEST, errorResponseDTO("잘못된 요청 본문")));

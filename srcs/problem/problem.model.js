@@ -126,41 +126,41 @@ export const ProblemModel = {
     }
   },
 
-  getMainTypes: async () => {
+  getMainTypes: async (userId) => {
     try {
-      const [results] = await pool.query(sql.getMainTypes);
+      const [results] = await pool.query(sql.getMainTypes, [userId]);
       return results;
     } catch (error) {
       throw new Error("대분류 조회 실패");
     }
   },
 
-  getMidTypes: async (parentTypeId) => {
+  getMidTypes: async (parentTypeId, userId) => {
     try {
-      const [results] = await pool.query(sql.getMidTypes, [parentTypeId]);
+      const [results] = await pool.query(sql.getMidTypes, [parentTypeId, userId]);
       return results;
     } catch (error) {
       throw new Error("중분류 조회 실패");
     }
   },
 
-  getSubTypes: async (parentTypeId) => {
+  getSubTypes: async (parentTypeId, userId) => {
     try {
-      const [results] = await pool.query(sql.getSubTypes, [parentTypeId]);
+      const [results] = await pool.query(sql.getSubTypes, [parentTypeId, userId]);
       return results;
     } catch (error) {
       throw new Error("소분류 조회 실패");
     }
   },
 
-  addProblemType: async (typeName, parentTypeId, typeLevel) => {
+  addProblemType: async (typeName, parentTypeId, typeLevel, userId) => {
     try {
       if (typeLevel === 1) {
-        await pool.query(sql.addProblemType, [typeName, typeLevel]);
+        await pool.query(sql.addProblemType, [typeName, null, typeLevel, userId]);
       } else if (typeLevel === 2) {
-        await pool.query(sql.addProblemType, [typeName, parentTypeId, typeLevel]);
+        await pool.query(sql.addProblemType, [typeName, parentTypeId, typeLevel, userId]);
       } else if (typeLevel === 3) {
-        await pool.query(sql.addProblemType, [typeName, parentTypeId, typeLevel]);
+        await pool.query(sql.addProblemType, [typeName, parentTypeId, typeLevel, userId]);
       }
     } catch (error) {
       throw new Error(`문제 유형 추가 실패`);

@@ -54,36 +54,36 @@ export const ProblemService = {
     }
   },
 
-  getMainTypes: async () => {
+  getMainTypes: async (userId) => {
     try {
-      const mainTypes = await ProblemModel.getMainTypes();
+      const mainTypes = await ProblemModel.getMainTypes(userId);
       return mainTypes;
     } catch (error) {
       throw new BaseError(status.BAD_REQUEST, "대분류 조회 실패");
     }
   },
 
-  getMidTypes: async (parentTypeId) => {
+  getMidTypes: async (parentTypeId, userId) => {
     try {
-      const midTypes = await ProblemModel.getMidTypes(parentTypeId);
+      const midTypes = await ProblemModel.getMidTypes(parentTypeId, userId);
       return midTypes;
     } catch (error) {
       throw new BaseError(status.BAD_REQUEST, "중분류 조회 실패");
     }
   },
 
-  getSubTypes: async (parentTypeId) => {
+  getSubTypes: async (parentTypeId, userId) => {
     try {
-      const subTypes = await ProblemModel.getSubTypes(parentTypeId);
+      const subTypes = await ProblemModel.getSubTypes(parentTypeId, userId);
       return subTypes;
     } catch (error) {
       throw new BaseError(status.BAD_REQUEST, "소분류 조회 실패");
     }
   },
 
-  addProblemType: async (typeName, parentTypeId, typeLevel) => {
+  addProblemType: async (typeName, parentTypeId, typeLevel, userId) => {
     try {
-      await ProblemModel.addProblemType(typeName, parentTypeId, typeLevel);
+      await ProblemModel.addProblemType(typeName, parentTypeId, typeLevel, userId);
     } catch (error) {
       if (typeLevel === 1) {
         throw new BaseError(status.BAD_REQUEST, "대분류 추가 실패");

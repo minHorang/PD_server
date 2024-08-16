@@ -3,7 +3,7 @@ export const sql = {
   updateNicknameSQL: `UPDATE user SET nickname = ? WHERE user_id = ?`,
   updateStatusSQL: `UPDATE user SET status = ? WHERE user_id = ?`,
   checkIdOverlap: `SELECT email FROM user WHERE email = ?`,
-  postNewUser: ` INSERT INTO user (email, password, nickname,status,phone_number) VALUES (?,?,?,?,?)`,
+  postNewUser: `INSERT INTO user (email, password, nickname, status,name) VALUES (?, ?, ?, ?,?)`,
   loginGeneralSQL: `SELECT user_id, email FROM user WHERE email = ? AND password = ?;`,
   findUserByEmail: `SELECT user_id, email FROM user WHERE email= ?`,
   postRefreshToken: `UPDATE user SET refresh_token = ? WHERE user_id = ?`,

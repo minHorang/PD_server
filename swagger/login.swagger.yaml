@@ -9,20 +9,20 @@ paths:
       tags:
         - 로그인
       summary: 회원가입
-      parameters:
-        - name: singUp
-          in: body
-          required: true
-          schema:
-            properties:
-              email:
-                type: string
-                description: 가입하려는 이메일
-                example: dhrwodms@naver.com
-              password:
-                type: string
-                description: 가입 비밀번호
-                example: 1234
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                email:
+                  type: string
+                  description: 가입하려는 이메일
+                  example: dhrwodms@naver.com
+                password:
+                  type: string
+                  description: 가입 비밀번호
+                  example: 1234
 
       responses:
         "200":
@@ -54,20 +54,20 @@ paths:
       tags:
         - 로그인
       summary: 일반 로그인
-      parameters:
-        - name: Login
-          in: body
-          required: true
-          schema:
-            properties:
-              email:
-                type: string
-                description: 로그인하려는 이메일
-                example: dhrwodms@naver.com
-              password:
-                type: string
-                description: 로그인 비밀번호
-                example: 1234
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                email:
+                  type: string
+                  description: 가입하려는 이메일
+                  example: dhrwodms@naver.com
+                password:
+                  type: string
+                  description: 가입 비밀번호
+                  example: 1234
       responses:
         "200":
           description: 일반 로그인 성공

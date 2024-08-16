@@ -1,5 +1,6 @@
 // srcs/auth/auth.service.js
 import axios from 'axios';
+import qs from 'qs';
 import jwt from 'jsonwebtoken';
 import { getUserBySocialId, signUp, updateRefreshToken } from './auth.model.js';
 import { generateTokens } from '../utils/jwt.utils.js';
@@ -8,10 +9,13 @@ const { JWT_REFRESH_SECRET } = process.env;
 
 const authenticateWithProvider = async (token, url, provider) => {
     try {
-        const response = await axios.get(url, {
-            headers: { Authorization: `Bearer ${token}` }
+        const response = await axios.post(url, qs.stringify({ access_token: token }), {
+            headers: { 
+                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
+                'Authorization': `Bearer ${token}`
+            }
         });
-        console.log('API Response:', response.data); 
+        console.log('API Response:', response.data);
 
         const data = response.data;
         let providerId, name, email;

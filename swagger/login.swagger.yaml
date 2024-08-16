@@ -97,7 +97,7 @@ paths:
                     example: "Invalid request"
 
   /auth/kakao:
-    get:
+    post:
       tags:
         - 로그인
       summary: 카카오 로그인
@@ -152,7 +152,7 @@ paths:
                         type: string
                         example: {}
   /auth/naver:
-    get:
+    post:
       tags:
         - 로그인
       summary: 네이버 로그인

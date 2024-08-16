@@ -71,20 +71,20 @@ paths:
           in: header
           required: true
           schema:
-            properties:
-              authorization:
-                type: string
-                description: 헤더에 토큰을 입력
-        - name: newNickname
-          in: body
-          description: 변경할 닉네임을 입력합니다.
-          required: true
-          schema:
-            properties:
-              newNickname:
-                type: string
-                description: 변경할 닉네임
-                example: 모오
+            type: string
+            description: Bearer 토큰을 입력하세요
+            example: "Bearer your_jwt_token_here"
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                newNickname:
+                  type: string
+                  description: 변경할 닉네임
+                  example: 모오
       responses:
         "200":
           description: 닉네임 변경 성공
@@ -133,16 +133,17 @@ paths:
               authorization:
                 type: string
                 description: 헤더에 토큰을 입력
-        - name: profileURL
-          in: body
-          description: 변경할 프로필 url을 입력합니다
-          required: true
-          schema:
-            properties:
-              profileURL:
-                type: string
-                description: 변경할 프로필 url
-                example: www.asdfsdfe.asdf
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                profileURL:
+                  type: string
+                  description: 변경할 프로필 url
+                  example: ww.asdfa.af
+
       responses:
         "200":
           description: 프로필 사진 변경 성공

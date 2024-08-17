@@ -4,6 +4,7 @@ import { Storage } from "@google-cloud/storage";
 import dotenv from 'dotenv';
 import { response } from "../../../config/response.js";
 import { status } from "../../../config/response.status.js";
+import path from 'path';
 
 dotenv.config();
 

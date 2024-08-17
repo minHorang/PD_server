@@ -81,20 +81,47 @@ export const ProblemModel = {
 
 
   create: async (problemData) => {
-    try {
-      const {
-        folderId, folderName, subscriptionPlan, problemText, answer,
-        mainCategory, category, subCategory, problemImage,
-        solutionImage, passageImage, additionalProblemImage
-      } = problemData;
+    const {
+      folderId, userId, problemText, answer, status,
+      correctCount, incorrectCount, orderValue, photos, memo,
+      mainTypeId, midTypeId, subTypeIds
+    } = problemData;
 
-      await pool.query(sql.addProblem, [
-        folderId, folderName, subscriptionPlan, problemText, answer,
-        mainCategory, category, subCategory, problemImage,
-        solutionImage, passageImage, additionalProblemImage
+    try {
+      const [result] = await pool.query(sql.addProblem, [
+        folderId, userId, problemText, answer, status,
+        correctCount, incorrectCount, orderValue, memo
       ]);
+
+      const problemId = result.insertId;
+
+      if (mainTypeId) {
+        await pool.query(sql.addProblemTypeAssignment, [problemId, mainTypeId]);
+      }
+  
+      if (midTypeId) {
+        await pool.query(sql.addProblemTypeAssignment, [problemId, midTypeId]);
+      }
+  
+      if (subTypeIds) {
+        if (Array.isArray(subTypeIds)) {
+          if (subTypeIds.length > 0) {
+            const subtypeAssignments = subTypeIds.map(subTypeId => [problemId, subTypeId]);
+            await pool.query(sql.addProblemTypeAssignments, [subtypeAssignments]);
+          }
+        } else {
+          await pool.query(sql.addProblemTypeAssignment, [problemId, subTypeIds]);
+        }
+      }
+
+      if (photos && photos.length > 0) {
+        const photoValues = photos.map(photo => [
+          problemId, photo.photoUrl, photo.photoType
+        ]);
+
+        await pool.query(sql.addPhotos, [photoValues]);
+      }
     } catch (error) {
-      console.error("문제 추가 실패: ", error);
       throw new Error("문제 추가 실패");
     }
   },
@@ -126,4 +153,56 @@ export const ProblemModel = {
     }
   },
   
+
+  getMainTypes: async (userId) => {
+    try {
+      const [results] = await pool.query(sql.getMainTypes, [userId]);
+      return results;
+    } catch (error) {
+      throw new Error("대분류 조회 실패");
+    }
+  },
+
+  getMidTypes: async (parentTypeId, userId) => {
+    try {
+      const [results] = await pool.query(sql.getMidTypes, [parentTypeId, userId]);
+      return results;
+    } catch (error) {
+      throw new Error("중분류 조회 실패");
+    }
+  },
+
+  getSubTypes: async (parentTypeId, userId) => {
+    try {
+      const [results] = await pool.query(sql.getSubTypes, [parentTypeId, userId]);
+      return results;
+    } catch (error) {
+      throw new Error("소분류 조회 실패");
+    }
+  },
+
+  addProblemType: async (typeName, parentTypeId, typeLevel, userId) => {
+    try {
+      if (typeLevel === 1) {
+        await pool.query(sql.addProblemType, [typeName, null, typeLevel, userId]);
+      } else if (typeLevel === 2) {
+        await pool.query(sql.addProblemType, [typeName, parentTypeId, typeLevel, userId]);
+      } else if (typeLevel === 3) {
+        await pool.query(sql.addProblemType, [typeName, parentTypeId, typeLevel, userId]);
+      }
+    } catch (error) {
+      throw new Error(`문제 유형 추가 실패`);
+    }
+  },
+
+  delete: async (problemId, userId) => {
+    try {
+      console.log("Deleting problem with ID:", problemId, "for user:", userId);
+      const [result] = await pool.query(sql.deleteProblem, [problemId, userId]);
+      return result.affectedRows > 0;
+    } catch (error) {
+      throw new Error("문제 삭제 실패");
+    }
+  },
+
 };

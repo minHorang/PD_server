@@ -49,6 +49,18 @@ export const addProblemResponseDTO = (message) => ({
     message,
   });
 
+  export const problemTypeResponseDTO = (types) => ({
+    types,
+  });
+
+  export const addProblemTypeResponseDTO = (message) => ({
+    message,
+  });
+
+  export const deleteProblemResponseDTO = (message) => ({
+    message,
+  });
+
 export const getStatisticIncorrectProblemDTO = (problems) => problems.map(problem => ({
   problemId: problem.problem_id,
   problemImage: problem.problem_image,

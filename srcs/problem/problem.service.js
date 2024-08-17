@@ -49,10 +49,60 @@ export const ProblemService = {
     try {
       await ProblemModel.create(problemData);
     } catch (error) {
+      console.error("문제 추가 실패:", error);
       throw new BaseError(status.BAD_REQUEST, "문제 추가 실패");
     }
   },
 
+  getMainTypes: async (userId) => {
+    try {
+      const mainTypes = await ProblemModel.getMainTypes(userId);
+      return mainTypes;
+    } catch (error) {
+      throw new BaseError(status.BAD_REQUEST, "대분류 조회 실패");
+    }
+  },
+
+  getMidTypes: async (parentTypeId, userId) => {
+    try {
+      const midTypes = await ProblemModel.getMidTypes(parentTypeId, userId);
+      return midTypes;
+    } catch (error) {
+      throw new BaseError(status.BAD_REQUEST, "중분류 조회 실패");
+    }
+  },
+
+  getSubTypes: async (parentTypeId, userId) => {
+    try {
+      const subTypes = await ProblemModel.getSubTypes(parentTypeId, userId);
+      return subTypes;
+    } catch (error) {
+      throw new BaseError(status.BAD_REQUEST, "소분류 조회 실패");
+    }
+  },
+
+  addProblemType: async (typeName, parentTypeId, typeLevel, userId) => {
+    try {
+      await ProblemModel.addProblemType(typeName, parentTypeId, typeLevel, userId);
+    } catch (error) {
+      if (typeLevel === 1) {
+        throw new BaseError(status.BAD_REQUEST, "대분류 추가 실패");
+      } else if (typeLevel === 2) {
+        throw new BaseError(status.BAD_REQUEST, "중분류 추가 실패");
+      } else if (typeLevel === 3) {
+        throw new BaseError(status.BAD_REQUEST, "소분류 추가 실패");
+      }
+    }
+  },
+
+  deleteProblem: async (problemId, userId) => {
+    try {
+      const deleted = await ProblemModel.delete(problemId, userId);
+      return deleted;
+    } catch (error) {
+      throw new BaseError(status.BAD_REQUEST, "문제 삭제 실패");
+    }
+  },
   getStatisticIncorrectProblem: async () => {
     try{
       const userId = 1;

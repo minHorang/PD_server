@@ -9,7 +9,7 @@ dotenv.config();
 
 const storage = new Storage({
     projectId: process.env.PROJECT_ID,
-    keyFilename: process.env.KEY_FILE_NAME,
+    keyFilename: path.resolve(process.env.KEY_FILE_NAME),
 });
 
 export const createMulter = (folder) => {

@@ -126,6 +126,34 @@ export const ProblemModel = {
     }
   },
 
+  getIncorrectProblemStatistic: async (userId) => {
+    try{
+      const [result] = await pool.query(sql.getIncorrectProblemStatistic, [userId]);
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  getIncorrectTypeStatistic: async (userId) => {
+    try{
+      const [result] = await pool.query(sql.getIncorrectTypeStatistic, [userId]);
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  getIncorrectRatioStatistic: async (userId) => {
+    try{
+      const [result] = await pool.query(sql.getIncorrectRatioStatistic, [userId]);
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  },
+  
+
   getMainTypes: async (userId) => {
     try {
       const [results] = await pool.query(sql.getMainTypes, [userId]);

@@ -99,4 +99,25 @@ export const sql = {
 
 deleteProblem: 'DELETE FROM problem WHERE problem_id = ? AND user_id = ?',
 
-};
+
+  addProblem:
+    "INSERT INTO problem (folder_id, folder_name, subscription_plan, problem_text, answer, main_category, category, sub_category, problem_image, solution_image, passage_image, additional_problem_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+
+
+
+    getIncorrectProblemStatistic: `SELECT * FROM problem WHERE user_id = ? ORDER BY incorrect_count DESC LIMIT 5;`,
+
+    getIncorrectTypeStatistic:`SELECT sub_category, SUM(incorrect_count) AS total_incorrect 
+    FROM problem 
+    WHERE user_id = ?
+    GROUP BY sub_category 
+    ORDER BY total_incorrect DESC 
+    LIMIT 5;`,
+
+    getIncorrectRatioStatistic:`SELECT sub_category, (SUM(incorrect_count) * 100.0 / (SELECT SUM(incorrect_count) FROM problem )) AS incorrect_percentage 
+    FROM problem 
+    WHERE user_id = ?
+    GROUP BY sub_category 
+    ORDER BY incorrect_percentage DESC;`,
+  };
+  

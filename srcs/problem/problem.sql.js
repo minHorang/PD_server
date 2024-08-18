@@ -106,17 +106,30 @@ deleteProblem: 'DELETE FROM problem WHERE problem_id = ? AND user_id = ?',
 
     getIncorrectProblemStatistic: `SELECT * FROM problem WHERE user_id = ? ORDER BY incorrect_count DESC LIMIT 5;`,
 
-    getIncorrectTypeStatistic:`SELECT sub_category, SUM(incorrect_count) AS total_incorrect 
-    FROM problem 
-    WHERE user_id = ?
-    GROUP BY sub_category 
-    ORDER BY total_incorrect DESC 
-    LIMIT 5;`,
+    getIncorrectTypeStatistic:`SELECT pt.type_name AS sub_category, 
+    SUM(p.incorrect_count) AS total_incorrect 
+FROM problemtypeassignment pta
+JOIN problemtype pt ON pta.type_id = pt.type_id
+JOIN problem p ON p.problem_id = pta.problem_id
+WHERE p.user_id = ? 
+AND pt.type_level = 3
+GROUP BY pt.type_name 
+ORDER BY total_incorrect DESC 
+LIMIT 5;
+`,
 
-    getIncorrectRatioStatistic:`SELECT sub_category, (SUM(incorrect_count) * 100.0 / (SELECT SUM(incorrect_count) FROM problem )) AS incorrect_percentage 
-    FROM problem 
-    WHERE user_id = ?
-    GROUP BY sub_category 
+    getIncorrectRatioStatistic:`SELECT pt.type_name AS sub_category, 
+    (SUM(p.incorrect_count) * 100.0 / 
+     (SELECT SUM(p2.incorrect_count)
+      FROM problem p2
+      WHERE p2.user_id = ?)
+    ) AS incorrect_percentage 
+    FROM problemtypeassignment pta
+    JOIN problemtype pt ON pta.type_id = pt.type_id
+    JOIN problem p ON p.problem_id = pta.problem_id
+    WHERE p.user_id = ? 
+    AND pt.type_level = 3
+    GROUP BY pt.type_name 
     ORDER BY incorrect_percentage DESC;`,
   };
   

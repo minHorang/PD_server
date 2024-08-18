@@ -4,6 +4,8 @@ import authenticateToken from "../../config/jwt.middleware.js";
 
 export const problemRouter = express.Router();
 
+problemRouter.use(authenticateToken);
+
 problemRouter.patch("/scale", setScale);
 problemRouter.get("/search", searchProblems);
 problemRouter.get("/:problemId", getProblem);

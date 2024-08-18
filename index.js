@@ -12,6 +12,7 @@ import { folderRouter } from "./srcs/folder/folder.route.js";
 import cors from "cors";
 import { userRouter } from "./srcs/user/user.route.js";
 import  authRouter  from "./srcs/auth/auth.route.js";
+import { subscriptionRouter } from "./srcs/subscription/subscription.route.js";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -38,6 +39,8 @@ app.use("/upload", imageRouter);
 app.use("/users", userRouter);
 
 app.use("/auth", authRouter);
+
+app.use("/subscription", subscriptionRouter);
 
 //swagger
 app.use("/api-docs", SwaggerUi.serve, SwaggerUi.setup(specs));

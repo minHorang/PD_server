@@ -112,13 +112,15 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
+              type: object
               properties:
-                profileURL:
+                file:
                   type: string
-                  description: 변경할 프로필 url
-                  example: ww.asdfa.af
+                  description: 파일 formdata 형식으로
+                  format: binary
+                  example: 프로필사진.jpeg
 
       responses:
         "200":

@@ -11,6 +11,7 @@ import {
   userLogoutDTO,
   patchProfileResponseDTO,
 } from "./user.response.dto.js";
+import { createMulter, getPublicUrl } from "../utils/image/image.upload.js";
 
 //유저 정보 가져오기
 export const getInfo = async (req, res) => {
@@ -99,11 +100,23 @@ export const loginUser = async (req, res) => {
 export const patchProfile = async (req, res) => {
   try {
     const userId = req.userId;
-    const profileURL = req.body.profileURL;
-    await UserService.editProfile(userId, profileURL);
-    res.send(
-      response(status.SUCCESS, patchProfileResponseDTO("프로필 사진 변경 성공"))
-    );
+    const folder = "profile";
+    console.log(folder);
+
+    //이미지 업로드 코드
+    const upload = createMulter(folder);
+
+    upload.single("file")(req, res, async (err) => {
+      if (err) {
+        console.error("Upload Error:", err);
+        return next(err);
+      }
+      const publicUrl = getPublicUrl(req.file.filename);
+      //이미지 업로드 완료
+
+      await UserService.editProfile(userId, publicUrl);
+      res.send(response(status.SUCCESS, patchProfileResponseDTO(publicUrl)));
+    });
   } catch (error) {
     res.send(response(status.BAD_REQUEST, errorResponseDTO("Invalid request")));
   }

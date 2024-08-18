@@ -11,8 +11,7 @@ problemRouter.get("/search", searchProblems);
 problemRouter.get("/:problemId", getProblem);
 problemRouter.patch("/:problemId/edit", editProblem);
 
-
-problemRouter.post("/folders/problems", addProblem);
+// problemRouter.use(authenticateToken);
 problemRouter.get("/statistics/mistakes",getStatisticIncorrectProblem);
 problemRouter.get("/statistics/types",getStatisticIncorrectType);
 problemRouter.get("/statistics/ratios",getStatisticIncorrectRatio);

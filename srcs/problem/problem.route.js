@@ -10,7 +10,6 @@ problemRouter.get("/:problemId", getProblem);
 problemRouter.patch("/:problemId/edit", editProblem);
 
 // problemRouter.use(authenticateToken);
-problemRouter.post("/folders/problems", addProblem);
 problemRouter.get("/statistics/mistakes",getStatisticIncorrectProblem);
 problemRouter.get("/statistics/types",getStatisticIncorrectType);
 problemRouter.get("/statistics/ratios",getStatisticIncorrectRatio);

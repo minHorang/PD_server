@@ -103,16 +103,18 @@ export const patchProfile = async (req, res) => {
     const folder = "profile";
     console.log(folder);
 
-    //이미지 업로드 코드
+    //이미지 처리 코드
     const upload = createMulter(folder);
 
+    //S3에 업로드
     upload.single("file")(req, res, async (err) => {
       if (err) {
         console.error("Upload Error:", err);
         return next(err);
       }
+      //Url 반환
       const publicUrl = getPublicUrl(req.file.filename);
-      //이미지 업로드 완료
+      //이미지 처리 완료
 
       await UserService.editProfile(userId, publicUrl);
       res.send(response(status.SUCCESS, patchProfileResponseDTO(publicUrl)));

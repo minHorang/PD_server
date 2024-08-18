@@ -22,6 +22,20 @@ export const status = {
     message: "사용자 문제 통계 조회 성공입니다."
   },
 
+  //subscription
+  SUBSCRIPTION_SUCCESS: {
+    status: StatusCodes.OK,
+    isSuccess: true,
+    code: "SUBSCRIPTION2001",
+    message: "구독하기 성공입니다."
+  },
+  SUBSCRIPTION_CANCEL_SUCCESS: {
+    status: StatusCodes.OK,
+    isSuccess: true,
+    code: "SUBSCRIPTION2002",
+    message: "구독하기 취소 성공입니다."
+  },
+
   // error
   // common err
   INTERNAL_SERVER_ERROR: {

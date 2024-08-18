@@ -190,7 +190,8 @@ export const deleteProblem = async (req, res) => {
 // 가장 많이 틀린 문제 가져오기
 export const getStatisticIncorrectProblem = async (req, res) => {
     try{
-    const statistic = await ProblemService.getStatisticIncorrectProblem();
+    const userId = req.userId;
+    const statistic = await ProblemService.getStatisticIncorrectProblem(userId);
 
     res.send(response(status.PROBLEM_STATISTIC_SUCCESS,statistic));
     //res.send(response(status.PROBLEM_STATISTIC_SUCCESS,getStatisticIncorrectProblemDTO(statistic)));
@@ -206,7 +207,8 @@ export const getStatisticIncorrectProblem = async (req, res) => {
 //가장 많이 틀린 유형 가져오기
 export const getStatisticIncorrectType = async (req, res) => {
   try{
-    const statistic = await ProblemService.getStatisticIncorrectType();
+    const userId = req.userId;
+    const statistic = await ProblemService.getStatisticIncorrectType(userId);
 
     //res.send(response(status.PROBLEM_STATISTIC_SUCCESS,getStatisticIncorrectTypeDTO(statistic)));
     res.send(response(status.PROBLEM_STATISTIC_SUCCESS,statistic));
@@ -218,9 +220,10 @@ export const getStatisticIncorrectType = async (req, res) => {
 //틀린 문제 유형 비율 가져오기
 export const getStatisticIncorrectRatio = async (req, res) => {
   try{
-    const statistic = await ProblemService.getStatisticIncorrectRatio();
+    const userId = req.userId;
+    const statistic = await ProblemService.getStatisticIncorrectRatio(userId);
 
-    res.send(response(status.PROBLEM_STATISTIC_SUCCESS,getStatisticIncorrectRatioDTO(statistic)));
+    //res.send(response(status.PROBLEM_STATISTIC_SUCCESS,getStatisticIncorrectRatioDTO(statistic)));
     res.send(response(status.PROBLEM_STATISTIC_SUCCESS,statistic));
 
   } catch(error){

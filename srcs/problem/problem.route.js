@@ -4,12 +4,14 @@ import authenticateToken from "../../config/jwt.middleware.js";
 
 export const problemRouter = express.Router();
 
+problemRouter.use(authenticateToken);
+
 problemRouter.patch("/scale", setScale);
 problemRouter.get("/search", searchProblems);
 problemRouter.get("/:problemId", getProblem);
 problemRouter.patch("/:problemId/edit", editProblem);
 
-// problemRouter.use(authenticateToken);
+
 problemRouter.post("/folders/problems", addProblem);
 problemRouter.get("/statistics/mistakes",getStatisticIncorrectProblem);
 problemRouter.get("/statistics/types",getStatisticIncorrectType);

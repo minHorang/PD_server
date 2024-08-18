@@ -31,6 +31,7 @@ export const userLogoutDTO = (message) => ({
   message,
 });
 
-export const patchProfileResponseDTO = (message) => ({
-  message,
+export const patchProfileResponseDTO = (url) => ({
+  message: "이미지 변경 성공",
+  url: url,
 });

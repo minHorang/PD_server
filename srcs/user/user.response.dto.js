@@ -4,6 +4,7 @@ export const getInfoResponseDTO = (userInfo) => ({
   name: userInfo.name,
   provider: userInfo.social_provider,
   email: userInfo.email,
+  name: userInfo.name,
 });
 
 export const errorResponseDTO = (message) => ({

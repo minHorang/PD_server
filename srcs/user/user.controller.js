@@ -100,8 +100,8 @@ export const loginUser = async (req, res) => {
 export const patchProfile = async (req, res) => {
   try {
     const userId = req.userId;
+    //folder 설정 (params로 받아서 설정 가능)
     const folder = "profile";
-    console.log(folder);
 
     //이미지 처리 코드
     const upload = createMulter(folder);

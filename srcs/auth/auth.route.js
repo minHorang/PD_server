@@ -1,16 +1,16 @@
 // srcs/auth/auth.route.js
 import express from "express";
 import {
-  handleKakaoLogin,
-  handleNaverLogin,
+  handleKakaoAuth,
+  handleNaverAuth,
   handleTokenRefresh,
 } from "./auth.controller.js";
 import { loginUser, signupUser } from "../user/user.controller.js";
 
 const authRouter = express.Router();
 
-authRouter.post("/kakao", handleKakaoLogin);
-authRouter.post("/naver", handleNaverLogin);
+authRouter.post("/kakao", handleKakaoAuth);
+authRouter.post("/naver", handleNaverAuth);
 authRouter.post("/refresh", handleTokenRefresh);
 
 authRouter.post("/login/signUp", signupUser);

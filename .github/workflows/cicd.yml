@@ -38,7 +38,7 @@ jobs:
           echo "PROJECT_ID=${{ secrets.PROJECT_ID }}" >> .env
           echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
           echo "JWT_REFRESH_SECRET=${{ secrets.JWT_REFRESH_SECRET }}" >> .env
-          echo ${{ secrets.WASH_JSON_SECRET }} | base64 -d > wash-430400-54296f32cbdf.json
+          echo ${{ secrets.WASH_JSON_SECRET }} >> wash-430400-54296f32cbdf.json
 
 
       - name: Login to DockerHub

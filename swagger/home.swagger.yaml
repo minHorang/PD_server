@@ -850,42 +850,47 @@ paths:
                 properties:
                   problemId:
                     type: string
-                  problemImage:
-                    type: string
-                    format: uri
-                    description: 문제 이미지 URL
-                  answer:
-                    type: string
-                  solutionImage:
-                    type: string
-                    format: uri
-                    description: 풀이 과정 이미지 URL
-                  passageImage:
-                    type: string
-                    format: uri
-                    description: 지문 이미지 URL
-                  additionalProblemImage:
-                    type: string
-                    format: uri
-                    description: 추가 문제 이미지 URL
                   problemText:
                     type: string
-                    description: (구독) 문제 텍스트
-                  gpt_session_key:
-                    type: string  
-                    description: ChatGPT 세션 키
+                    description: 문제 텍스트
+                  folderName:
+                    type: string
+                    description: 폴더의 이름
+                  problemImages:
+                    type: array
+                    items:
+                      type: string
+                      description: 문제 유형 이미지 URL 배열
+                  solutionImages:
+                    type: array
+                    items:
+                      type: string
+                      description: 풀이 유형 이미지 URL 배열
+                  passageImages:
+                    type: array
+                    items:
+                      type: string
+                      description: 지문 유형 이미지 URL 배열
+                  additionalProblemImages:
+                    type: array
+                    items:
+                      type: string
+                      description: 추가 문제 유형 이미지 URL 배열
+                  gptSessionKey:
+                    type: string
+                    description: GPT 세션 키
                   problemType:
                     type: object
                     properties:
-                      major:
+                      대분류:
                         type: string
-                        description: 대분류
-                      minor:
+                        description: 문제의 대분류 유형
+                      중분류:
                         type: string
-                        description: 중분류
-                      sub:
+                        description: 문제의 중분류 유형
+                      소분류:
                         type: string
-                        description: 소분류
+                        description: 문제의 소분류 유형
                   statistics:
                     type: object
                     properties:
@@ -894,7 +899,7 @@ paths:
                         description: 틀린 횟수
                       solvedCount:
                         type: integer
-                        description: 맞은 횟수
+                        description: 맞춘 횟수
                 required:
                   - problemImage
                   - answer

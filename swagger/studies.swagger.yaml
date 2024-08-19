@@ -97,7 +97,6 @@ paths:
                   message:
                     type: string
                     example: "서버 오류 발생"
-
   /studies/folders/{folderId}/problems/{problemId}:
     get:
       summary: 학습용 문제 조회하기
@@ -133,36 +132,60 @@ paths:
                   folderName:
                     type: string
                     description: 폴더의 이름
-                  answerText:
+                  problemImages:
+                    type: array
+                    items:
+                      type: string
+                      description: 문제 유형 이미지 URL 배열
+                  solutionImages:
+                    type: array
+                    items:
+                      type: string
+                      description: 풀이 유형 이미지 URL 배열
+                  passageImages:
+                    type: array
+                    items:
+                      type: string
+                      description: 지문 유형 이미지 URL 배열
+                  additionalProblemImages:
+                    type: array
+                    items:
+                      type: string
+                      description: 추가 문제 유형 이미지 URL 배열
+                  gptSessionKey:
                     type: string
-                    description: 문제 정답
-                  status:
-                    type: string
-                    description: 문제 상태
-                  correctCount:
-                    type: integer
-                    description: 맞춘 횟수
-                  incorrectCount:
-                    type: integer
-                    description: 틀린 횟수
-                  createdAt:
-                    type: string
-                    format: date-time
-                    description: 문제 생성 시간
-                  updatedAt:
-                    type: string
-                    format: date-time
-                    description: 문제 최종 업데이트 시간
+                    description: GPT 세션 키
+                  problemType:
+                    type: object
+                    properties:
+                      대분류:
+                        type: string
+                        description: 문제의 대분류 유형
+                      중분류:
+                        type: string
+                        description: 문제의 중분류 유형
+                      소분류:
+                        type: string
+                        description: 문제의 소분류 유형
+                  statistics:
+                    type: object
+                    properties:
+                      wrongCount:
+                        type: integer
+                        description: 틀린 횟수
+                      solvedCount:
+                        type: integer
+                        description: 맞춘 횟수
                 required:
                   - problemId
                   - problemText
                   - folderName
-                  - answerText
-                  - status
-                  - correctCount
-                  - incorrectCount
-                  - createdAt
-                  - updatedAt
+                  - problemImages
+                  - solutionImages
+                  - passageImages
+                  - additionalProblemImages
+                  - problemType
+                  - statistics
         '404':
           description: 찾을 수 없음
           content:

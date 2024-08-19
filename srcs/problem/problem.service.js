@@ -27,9 +27,19 @@ export const ProblemService = {
 
       const photos = await ProblemModel.findPhotosByProblemId(problemId);
       const types = await ProblemModel.findTypesByProblemId(problemId);
+
+      // photo_type 별로 그룹화
+      const groupedPhotos = photos.reduce((acc, photo) => {
+        if (!acc[photo.photo_type]) {
+          acc[photo.photo_type] = [];
+        }
+        acc[photo.photo_type].push(photo.photo_url);
+        return acc;
+      }, {});
+      
       return {
         ...problem,
-        photos,
+        photos: groupedPhotos,
         types
       };
     } catch (error) {

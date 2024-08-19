@@ -15,11 +15,14 @@ export const setScaleResponseDTO = (scale) => ({
   // 문제 조회 응답 DTO
   export const getProblemResponseDTO = (problem) => ({
     problemId: problem.problem_id.toString(),
-    problemImage: problem.photos.find(photo => photo.photo_type === 'problem')?.photo_url || null,
     answer: problem.answer,
-    solutionImage: problem.photos.find(photo => photo.photo_type === 'solution')?.photo_url || null,
-    passageImage: problem.photos.find(photo => photo.photo_type === 'passage')?.photo_url || null,
-    additionalProblemImage: problem.photos.filter(photo => photo.photo_type === 'additional').map(photo => photo.photo_url),
+
+
+    problemImages: problem.photos.problem || [],
+    solutionImages: problem.photos.solution || [],
+    passageImages: problem.photos.passage || [],
+    additionalProblemImages: problem.photos.additional || [],
+
     problemText: problem.problem_text,
     gptSessionKey: problem.gpt_session_key,
   

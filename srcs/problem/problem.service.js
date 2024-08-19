@@ -37,11 +37,29 @@ export const ProblemService = {
     }
   },
 
-  editProblem: async (problemId, problemData) => {
-    try {
-      await ProblemModel.update(problemId, problemData);
-    } catch (error) {
-      throw new BaseError(status.BAD_REQUEST, "문제 수정 실패");
+  // EDIT 관련
+  updateProblemTextAndAnswer: async (problemId, problemText, answerText) => {
+    await ProblemModel.updateProblem(problemId, problemText, answerText);
+  },
+
+  updateProblemTypes: async (problemId, typeIds) => {
+    // 기존 유형 할당 삭제
+    await ProblemModel.deleteProblemTypeAssignment(problemId);
+
+    // 새로운 유형 할당 추가
+    for (let typeId of typeIds) {
+      if (typeId) {
+        await ProblemModel.addProblemTypeAssignment(problemId, typeId);
+      }
+    }
+  },
+
+  updateProblemPhotos: async (problemId, photos) => {
+    // 기존 이미지 삭제
+    await ProblemModel.deletePhotosByProblemId(problemId);
+    // 새 이미지 저장
+    for (let { url, type } of photos) {
+      await ProblemModel.addPhoto(problemId, url, type);
     }
   },
 

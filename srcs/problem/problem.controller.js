@@ -103,7 +103,7 @@ export const addProblem = async (req, res) => {
     const problemData = req.body;
     const { mainTypeId, midTypeId, subTypeIds } = problemData;
 
-    problemData.userId = req.userId;
+    const userId = req.userId;
 
     if (mainTypeId !== undefined && mainTypeId !== null && typeof mainTypeId !== 'number') {
       return res.send(response(status.BAD_REQUEST, errorResponseDTO("잘못된 요청 본문")));

@@ -2,6 +2,7 @@ import { StudyService } from './study.service.js';
 import { ProblemService } from "../problem/problem.service.js";
 import { response } from '../../config/response.js';
 import { status } from '../../config/response.status.js';
+import authenticateToken from "../../config/jwt.middleware.js";
 
 import { getFolderResponseDTO, getProgressResponseDTO, getProblemResponseDTO, checkAnswerResponseDTO, errorResponseDTO } from './study.dto.js';
 

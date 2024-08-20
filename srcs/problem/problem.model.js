@@ -70,12 +70,62 @@ export const ProblemModel = {
     }
   },
   
-  update: async (problemId, problemData) => {
+// EDIT 관련
+
+  updateProblem: async (problemId, problemText, answerText) => {
     try {
-      const { problemText, problemType } = problemData;
-      await pool.query(sql.updateProblem, [problemText, problemId]);
+      await pool.query(sql.updateProblem, [problemText, answerText, problemId]);
     } catch (error) {
-      throw new Error("문제 수정 실패");
+      console.error("문제 텍스트 및 정답 업데이트 실패:", error.message);
+      throw new Error("문제 텍스트 및 정답 업데이트 실패");
+    }
+  },
+  
+  deleteProblemTypeAssignment: async (problemId) => {
+    try {
+      await pool.query(sql.deleteProblemTypeAssignment, [problemId]);
+    } catch (error) {
+      console.error("유형 할당 삭제 실패:", error.message);
+      throw new Error("유형 할당 삭제 실패");
+    }
+  },
+
+  addProblemTypeAssignment: async (problemId, typeId) => {
+    try {
+      await pool.query(sql.addProblemTypeAssignment, [problemId, typeId]);
+    } catch (error) {
+      console.error("유형 할당 추가 실패:", error.message);
+      throw new Error("유형 할당 추가 실패");
+    }
+  },
+
+  findProblemTypeIdByNameAndLevel: async (typeName, typeLevel) => {
+    try {
+      const [results] = await pool.query(sql.findProblemTypeIdByNameAndLevel, [typeName, typeLevel]);
+      return results[0] ? results[0].type_id : null;
+    } catch (error) {
+      console.error("유형 ID 조회 실패:", error.message);
+      throw new Error("유형 ID 조회 실패");
+    }
+  },
+
+  // 문제와 관련된 기존 이미지 삭제
+  deletePhotosByProblemId: async (problemId) => {
+    try {
+      await pool.query(sql.deletePhotosByProblemId, [problemId]);
+    } catch (error) {
+      console.error("기존 이미지 삭제 실패:", error.message);
+      throw new Error("기존 이미지 삭제 실패");
+    }
+  },
+
+  // 새 이미지 추가
+  addPhoto: async (problemId, photoUrl, photoType) => {
+    try {
+      await pool.query(sql.addPhoto, [problemId, photoUrl, photoType]);
+    } catch (error) {
+      console.error("새 이미지 추가 실패:", error.message);
+      throw new Error("새 이미지 추가 실패");
     }
   },
 

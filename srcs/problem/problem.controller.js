@@ -1,6 +1,7 @@
 import { status } from "../../config/response.status.js";
 import { ProblemService } from "./problem.service.js";
 import { response } from "../../config/response.js";
+import { createMulter, getPublicUrl } from "../utils/image/image.upload.js";
 import { 
   setScaleResponseDTO, 
   getProblemListResponseDTO, 
@@ -57,12 +58,40 @@ export const getProblem = async (req, res) => {
   }
 };
 
-export const editProblem = async (req, res) => {
+export const editProblem = async (req, res, next) => {
   try {
-    const { problemId } = req.params;
-    const problemData = req.body;
-    await ProblemService.editProblem(problemId, problemData);
-    res.send(response(status.SUCCESS, editProblemResponseDTO("문제 수정 성공")));
+    const { problemId, answerText, problemText, mainCategoryId, categoryId, subCategoryId } = JSON.parse(req.body.data);
+    const folders = {
+      problemFolder: "problemImages",
+      solutionFolder: "solutionImages",
+      passageFolder: "passageImages",
+      additionalFolder: "additionalImages",
+  };
+
+  // 실제 이미지 업로드
+  const problemUrl = req.files.problemImage ? getPublicUrl(req.files.problemImage[0].filename) : null;
+  const solutionUrl = req.files.solutionImage ? getPublicUrl(req.files.solutionImage[0].filename) : null;
+  const passageUrl = req.files.passageImage ? getPublicUrl(req.files.passageImage[0].filename) : null;
+  const additionalUrl = req.files.additionalImage ? getPublicUrl(req.files.additionalImage[0].filename) : null;
+
+  // url 더미 데이터
+  // const problemUrl = "https://storage.googleapis.com/quiz-app-2021/problemImages/1626820130000-IMG_20210630_153013.jpg";
+  // const solutionUrl = "https://storage.googleapis.com/quiz-app-2021/solutionImages/1626820130000-IMG_20210630_153013.jpg";
+  // const passageUrl = "https://storage.googleapis.com/quiz-app-2021/passageImages/1626820130000-IMG_20210630_153013.jpg";
+  // const additionalUrl = "https://storage.googleapis.com/quiz-app-2021/additionalImages/1626820130000-IMG_20210630_153013.jpg";
+
+  await ProblemService.updateProblemTextAndAnswer(problemId, problemText, answerText);
+  await ProblemService.updateProblemTypes(problemId, [mainCategoryId, categoryId, subCategoryId]);
+
+  await ProblemService.updateProblemPhotos(problemId, [
+    { url: problemUrl, type: "problem" },
+    { url: solutionUrl, type: "solution" },
+    { url: passageUrl, type: "passage" },
+    { url: additionalUrl, type: "additional" },
+  ]);
+
+
+  res.send(response(status.SUCCESS, editProblemResponseDTO("문제 수정 성공")));
   } catch (error) {
     res.send(response(status.BAD_REQUEST, errorResponseDTO("잘못된 요청 본문")));
   }

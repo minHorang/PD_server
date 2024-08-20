@@ -29,7 +29,7 @@ export const createMulter = (folder) => {
             },
         }),
         limits: {
-            fileSize: 5 * 1024 * 1024, // 최대 파일 크기: 5MB
+            fileSize: 20 * 1024 * 1024, // 최대 파일 크기: 20MB
         },
     });
 };

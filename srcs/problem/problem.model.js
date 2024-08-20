@@ -196,7 +196,8 @@ export const ProblemModel = {
 
   getIncorrectRatioStatistic: async (userId) => {
     try{
-      const [result] = await pool.query(sql.getIncorrectRatioStatistic, [userId]);
+      const [result] = await pool.query(sql.getIncorrectRatioStatistic, [userId,userId]);
+      
       return result;
     } catch (error) {
       throw error;

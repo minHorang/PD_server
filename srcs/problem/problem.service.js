@@ -131,18 +131,18 @@ export const ProblemService = {
       throw new BaseError(status.BAD_REQUEST, "문제 삭제 실패");
     }
   },
-  getStatisticIncorrectProblem: async () => {
+  getStatisticIncorrectProblem: async (userId) => {
     try{
-      const userId = 1;
+      
       return await ProblemModel.getIncorrectProblemStatistic(userId);
     } catch (error) {
       throw new BaseError(status.INTERNAL_SERVER_ERROR,"틀린 문제 통계 조회 실패")
     }
   },
 
-  getStatisticIncorrectType: async () => {
+  getStatisticIncorrectType: async (userId) => {
     try{
-      const userId =1;
+      
       return await ProblemModel.getIncorrectTypeStatistic(userId);
 
     } catch (error) {
@@ -151,9 +151,9 @@ export const ProblemService = {
 
   },
 
-  getStatisticIncorrectRatio: async () => {
+  getStatisticIncorrectRatio: async (userId) => {
     try{
-      const userId =1;
+      
       return await ProblemModel.getIncorrectRatioStatistic(userId);
 
     } catch (error) {

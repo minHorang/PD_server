@@ -33,7 +33,7 @@ const authenticateWithProvider = async (token, url, provider) => {
 
         let user = await getUserBySocialId(providerId, provider);
         const userId = user ? user.user_id : await signUp(name, providerId, provider, email);
-        const { accessToken, refreshToken } = generateTokens(userId, providerId);
+        const { accessToken, refreshToken } = generateTokens(userId, providerId, email);
 
         await updateRefreshToken(userId, refreshToken);
         return { accessToken, refreshToken };
@@ -49,8 +49,8 @@ const naverLogin = (token) => authenticateWithProvider(token, "https://openapi.n
 
 const refreshTokens = async (refreshToken) => {
     try {
-        const { id: userId, socialId } = jwt.verify(refreshToken, JWT_REFRESH_SECRET);
-        const { accessToken, refreshToken: newRefreshToken } = generateTokens(userId, socialId);
+        const { id: userId, social_id: socialId, email: email } = jwt.verify(refreshToken, JWT_REFRESH_SECRET);
+        const { accessToken, refreshToken: newRefreshToken } = generateTokens(userId, socialId, email);
 
         await updateRefreshToken(userId, newRefreshToken);
         return { accessToken, newRefreshToken };

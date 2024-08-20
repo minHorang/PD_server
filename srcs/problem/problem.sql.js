@@ -56,14 +56,56 @@ export const sql = {
     WHERE 
       pta.problem_id = ?
   `,
+  // EDIT 관련
+
+ // 문제 텍스트 및 정답 업데이트
+  updateProblem: `
+    UPDATE problem
+    SET 
+      problem_text = ?, 
+      answer = ?, 
+      updated_at = NOW()
+    WHERE 
+      problem_id = ?
+  `,
+
+  // 기존 유형 할당 삭제
+  deleteProblemTypeAssignment: `
+    DELETE FROM problemtypeassignment WHERE problem_id = ?
+  `,
 
   updateProblem: `UPDATE problem SET problem_text = ? WHERE problem_id = ?`,
+  
   addProblem: `
     INSERT INTO problem (
       folder_id, user_id, problem_text, answer, status,
       order_value, memo
-    ) VALUES (?, ?, ?, ?, ?, ?, ?)
+    ) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    
+  addProblemTypeAssignment: `
+    INSERT INTO problemtypeassignment (problem_id, type_id)
+    VALUES (?, ?)
   `,
+
+  // 문제 유형 ID 조회
+  findProblemTypeIdByNameAndLevel: `
+    SELECT type_id 
+    FROM problemtype 
+    WHERE type_name = ? AND type_level = ?
+  `,  
+
+
+  // 기존 이미지 삭제
+  deletePhotosByProblemId: `
+    DELETE FROM photo WHERE problem_id = ?
+  `,
+
+  // 새 이미지 추가
+  addPhoto: `
+    INSERT INTO photo (problem_id, photo_url, photo_type, created_at, updated_at)
+    VALUES (?, ?, ?, NOW(), NOW())
+  `,
+
   addPhotos: `
     INSERT INTO photo (problem_id, photo_url, photo_type)
     VALUES ?
@@ -110,11 +152,11 @@ export const sql = {
   
   deleteSubType: `DELETE FROM problemtype WHERE type_id = ? AND user_id = ?;`,
 
-  deleteProblem: 'DELETE FROM problem WHERE problem_id = ? AND user_id = ?',
+  deleteProblem: `DELETE FROM problem WHERE problem_id = ? AND user_id = ?;`,
   
-  deleteProblem: 'DELETE FROM problem WHERE problem_id = ? AND user_id = ?',
+  deleteProblem: `DELETE FROM problem WHERE problem_id = ? AND user_id = ?;`,
   
-  getProblemMaxOrderValue: 'SELECT COALESCE(MAX(order_value), -1) AS maxProblemOrderValue FROM problem WHERE user_id = ? AND folder_id = ?',
+  getProblemMaxOrderValue: `SELECT COALESCE(MAX(order_value), -1) AS maxProblemOrderValue FROM problem WHERE user_id = ? AND folder_id = ?;`,
 
 
 

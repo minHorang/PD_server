@@ -9,6 +9,8 @@ export const problemRouter = express.Router();
 
 const upload = createMulter("uploads");
 
+problemRouter.use(authenticateToken);
+
 problemRouter.patch("/scale", setScale);
 problemRouter.get("/search", searchProblems);
 problemRouter.get("/:problemId", getProblem);
@@ -21,7 +23,6 @@ problemRouter.patch("/edit", upload.fields([
 
 
 // problemRouter.use(authenticateToken);
-problemRouter.post("/folders/problems", addProblem);
 problemRouter.get("/statistics/mistakes",getStatisticIncorrectProblem);
 problemRouter.get("/statistics/types",getStatisticIncorrectType);
 problemRouter.get("/statistics/ratios",getStatisticIncorrectRatio);

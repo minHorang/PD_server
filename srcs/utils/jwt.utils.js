@@ -11,13 +11,13 @@ const extractTokenFromHeader = (req) => {
     return authHeader.split(" ")[1];
 };
 
-const generateTokens = (userId, socialId) => {
+const generateTokens = (userId, socialId, email) => {
     if (!process.env.JWT_SECRET || !process.env.JWT_REFRESH_SECRET) {
         throw new Error('JWT_SECRET or JWT_REFRESH_SECRET is missing');
     }
     return {
-        accessToken: jwt.sign({ id: userId, social_id: socialId }, JWT_SECRET, { expiresIn: "1h" }),
-        refreshToken: jwt.sign({ id: userId, social_id: socialId }, JWT_REFRESH_SECRET, { expiresIn: "30d" })
+        accessToken: jwt.sign({ id: userId, social_id: socialId, email: email }, JWT_SECRET, { expiresIn: "1h" }),
+        refreshToken: jwt.sign({ id: userId, social_id: socialId, email: email }, JWT_REFRESH_SECRET, { expiresIn: "30d" })
     };
 };
 

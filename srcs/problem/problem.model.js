@@ -79,18 +79,27 @@ export const ProblemModel = {
     }
   },
 
+  getProblemMaxOrderValue: async (userId, folderId) => {
+    try {
+      const [results] = await pool.query(sql.getProblemMaxOrderValue, [userId, folderId]);
+      console.log('Max Order Value Query Result:', results);
+      return results[0].maxProblemOrderValue || 0;
+    } catch (error) {
+      console.error("최대 order_value 조회 실패:", error);
+      throw new Error("최대 orderValue 조회 실패");
+    }
+  },
 
   create: async (problemData) => {
     const {
-      folderId, userId, problemText, answer, status,
-      correctCount, incorrectCount, orderValue, photos, memo,
+      folderId, userId, problemText, answer, status, orderValue, photos, memo,
       mainTypeId, midTypeId, subTypeIds
     } = problemData;
 
     try {
+      console.log('Model userId:', userId);
       const [result] = await pool.query(sql.addProblem, [
-        folderId, userId, problemText, answer, status,
-        correctCount, incorrectCount, orderValue, memo
+        folderId, userId, problemText, answer, status, orderValue, memo
       ]);
 
       const problemId = result.insertId;
@@ -122,6 +131,7 @@ export const ProblemModel = {
         await pool.query(sql.addPhotos, [photoValues]);
       }
     } catch (error) {
+      console.error("문제 추가 실패:", error);
       throw new Error("문제 추가 실패");
     }
   },
@@ -206,4 +216,64 @@ export const ProblemModel = {
     }
   },
 
+  getMidTypesByMainType: async (typeId, userId) => {
+    try {
+      console.log('Model - getMidTypesByMainType:', { typeId, userId });
+      const [results] = await pool.query(sql.getMidTypesByMainType, [typeId, userId]);
+      return results;
+    } catch (error) {
+      console.error('대분류에 연관된 중분류 조회 실패:', error.message);
+      throw new Error("대분류에 연관된 중분류 조회 실패");
+    }
+  },
+
+  deleteSubTypesByMidType: async (midTypeId, userId) => {
+    try {
+      console.log('Model - deleteSubTypesByMidType:', { midTypeId, userId });
+      await pool.query(sql.deleteSubTypesByMidType, [midTypeId, userId]);
+    } catch (error) {
+      console.error('중분류에 연관된 소분류 삭제 실패:', error.message);
+      throw new Error("중분류에 연관된 소분류 삭제 실패");
+    }
+  },
+
+  deleteMidTypesByMainType: async (typeId, userId) => {
+    try {
+      console.log('Model - deleteMidTypesByMainType:', { typeId, userId });
+      await pool.query(sql.deleteMidTypesByMainType, [typeId, userId]);
+    } catch (error) {
+      console.error('대분류에 연관된 중분류 삭제 실패:', error.message);
+      throw new Error("대분류에 연관된 중분류 삭제 실패");
+    }
+  },
+
+  deleteMainType: async (typeId, userId) => {
+    try {
+      console.log('Model - deleteMainType:', { typeId, userId });
+      await pool.query(sql.deleteMainType, [typeId, userId]);
+    } catch (error) {
+      console.error('대분류 삭제 실패:', error.message);
+      throw new Error("대분류 삭제 실패");
+    }
+  },
+
+  deleteMidType: async (typeId, userId) => {
+    try {
+      console.log('Model - deleteMidType:', { typeId, userId });
+      await pool.query(sql.deleteMidType, [typeId, userId]);
+    } catch (error) {
+      console.error('중분류 삭제 실패:', error.message);
+      throw new Error("중분류 삭제 실패");
+    }
+  },
+
+  deleteSubType: async (typeId, userId) => {
+    try {
+      console.log('Model - deleteSubType:', { typeId, userId });
+      await pool.query(sql.deleteSubType, [typeId, userId]);
+    } catch (error) {
+      console.error('소분류 삭제 실패:', error.message);
+      throw new Error("소분류 삭제 실패");
+    }
+  },
 };

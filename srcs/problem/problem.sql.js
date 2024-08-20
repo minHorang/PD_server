@@ -61,8 +61,8 @@ export const sql = {
   addProblem: `
     INSERT INTO problem (
       folder_id, user_id, problem_text, answer, status,
-      correct_count, incorrect_count, order_value, memo
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      order_value, memo
+    ) VALUES (?, ?, ?, ?, ?, ?, ?)
   `,
   addPhotos: `
     INSERT INTO photo (problem_id, photo_url, photo_type)
@@ -93,11 +93,28 @@ export const sql = {
   `,
 
   addProblemType: `
-  INSERT INTO problemtype (type_name, parent_type_id, type_level, user_id) 
-  VALUES (?, ?, ?, ?)
-`,
+    INSERT INTO problemtype (type_name, parent_type_id, type_level, user_id) VALUES (?, ?, ?, ?)
+  `, 
 
-deleteProblem: 'DELETE FROM problem WHERE problem_id = ? AND user_id = ?',
+  getMidTypesByMainType: `SELECT type_id FROM problemtype WHERE parent_type_id = ? AND user_id = ?;`,
+  
+  deleteSubTypesByMainType: `DELETE FROM problemtype WHERE parent_type_id = ? AND user_id = ?;`,
+  
+  deleteMidTypesByMainType: `DELETE FROM problemtype WHERE parent_type_id = ? AND user_id = ?;`,
+  
+  deleteMainType: `DELETE FROM problemtype WHERE type_id = ? AND user_id = ?;`,
+
+  deleteSubTypesByMidType: `DELETE FROM problemtype WHERE parent_type_id = ? AND user_id = ?;`,
+  
+  deleteMidType: `DELETE FROM problemtype WHERE type_id = ? AND user_id = ?;`,
+  
+  deleteSubType: `DELETE FROM problemtype WHERE type_id = ? AND user_id = ?;`,
+
+  deleteProblem: 'DELETE FROM problem WHERE problem_id = ? AND user_id = ?',
+  
+  deleteProblem: 'DELETE FROM problem WHERE problem_id = ? AND user_id = ?',
+  
+  getProblemMaxOrderValue: 'SELECT COALESCE(MAX(order_value), -1) AS maxProblemOrderValue FROM problem WHERE user_id = ? AND folder_id = ?',
 
 
 

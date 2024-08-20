@@ -857,10 +857,8 @@ paths:
                     type: string
                     description: 폴더의 이름
                   problemImages:
-                    type: array
-                    items:
-                      type: string
-                      description: 문제 유형 이미지 URL 배열
+                    type: string
+                    description: 문제 유형 이미지 URL 배열
                   solutionImages:
                     type: array
                     items:

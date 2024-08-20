@@ -16,7 +16,7 @@ export const getProblemResponseDTO = (problem, folderName) => ({
   folderName: folderName,
   answer: problem.answer,
 
-  problemImages: problem.photos.problem || [],
+  problemImage: problem.photos.problem ? problem.photos.problem[0] : "",
   solutionImages: problem.photos.solution || [],
   passageImages: problem.photos.passage || [],
   additionalProblemImages: problem.photos.additional || [],

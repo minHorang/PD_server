@@ -2,6 +2,7 @@
 export const getFoldersResponseDTO = (folders) => folders.map(folder => ({
     folderId: folder.folderId,
     folderName: folder.folderName,
+    orderValue: folder.orderValue
 }));
 
 // 폴더 순서 조정 응답 DTO
@@ -26,6 +27,7 @@ export const getFolderProblemsResponseDTO = (problems) => ({
       problemId: problem.problemId,
       problemText: problem.problemText,
       problemImage: problem.problemImage,
+      orderValue: problem.orderValue
     }))
 });  
 

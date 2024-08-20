@@ -73,9 +73,21 @@ export const ProblemService = {
     }
   },
 
-  addProblem: async (problemData) => {
+  addProblem: async (problemData, userId) => {
     try {
-      await ProblemModel.create(problemData);
+      const {folderId} = problemData;
+      console.log('Service problemData:', problemData);
+      console.log('Service userId:', userId);
+      const problemMaxOrderValue = await ProblemModel.getProblemMaxOrderValue(userId, folderId);
+      console.log('Current Max Order Value:', problemMaxOrderValue);
+      const newProblemOrderValue = problemMaxOrderValue + 1;
+      console.log('New Problem Order Value:', newProblemOrderValue);
+      const newProblem = await ProblemModel.create({
+        ...problemData,
+        orderValue: newProblemOrderValue,
+        userId
+      });
+      return newProblem;
     } catch (error) {
       console.error("문제 추가 실패:", error);
       throw new BaseError(status.BAD_REQUEST, "문제 추가 실패");
@@ -131,6 +143,64 @@ export const ProblemService = {
       throw new BaseError(status.BAD_REQUEST, "문제 삭제 실패");
     }
   },
+
+  deleteMainType: async (typeId, userId) => {
+    try {
+      console.log('Service - deleteMainType:', { typeId, userId });
+  
+      // 1. 대분류에 연결된 중분류 찾기
+      const midTypes = await ProblemModel.getMidTypesByMainType(typeId, userId);
+      
+      // 2. 각 중분류에 연결된 소분류 삭제
+      for (const midType of midTypes) {
+        await ProblemModel.deleteSubTypesByMidType(midType.type_id, userId);
+      }
+      
+      // 3. 대분류에 연결된 중분류 삭제
+      await ProblemModel.deleteMidTypesByMainType(typeId, userId);
+      
+      // 4. 대분류 삭제
+      await ProblemModel.deleteMainType(typeId, userId);
+  
+    } catch (error) {
+      console.error('대분류 삭제 실패:', error.message);
+      throw new BaseError(status.BAD_REQUEST, "대분류 삭제 실패");
+    }
+  },  
+
+  deleteSubTypesByMidType: async (midTypeId, userId) => {
+    try {
+      console.log('Service - deleteSubTypesByMidType:', { midTypeId, userId });
+
+      await ProblemModel.deleteSubTypesByMidType(midTypeId, userId);
+    } catch (error) {
+      console.error('중분류에 연관된 소분류 삭제 실패:', error.message);
+      throw new BaseError(status.BAD_REQUEST, "중분류에 연관된 소분류 삭제 실패");
+    }
+  },
+
+  deleteMidType: async (typeId, userId) => {
+    try {
+      console.log('Service - deleteMidType:', { typeId, userId });
+
+      await ProblemModel.deleteMidType(typeId, userId);
+    } catch (error) {
+      console.error('중분류 삭제 실패:', error.message);
+      throw new BaseError(status.BAD_REQUEST, "중분류 삭제 실패");
+    }
+  },
+
+  deleteSubType: async (typeId, userId) => {
+    try {
+      console.log('Service - deleteSubType:', { typeId, userId });
+
+      await ProblemModel.deleteSubType(typeId, userId);
+    } catch (error) {
+      console.error('소분류 삭제 실패:', error.message);
+      throw new BaseError(status.BAD_REQUEST, "소분류 삭제 실패");
+    }
+  },
+
   getStatisticIncorrectProblem: async (userId) => {
     try{
       

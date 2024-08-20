@@ -103,8 +103,7 @@ export const addProblem = async (req, res) => {
     const problemData = req.body;
     const { mainTypeId, midTypeId, subTypeIds } = problemData;
 
-    //problemData.userId = req.userId;
-    problemData.userId = 1;
+    problemData.userId = req.userId;
 
     if (mainTypeId !== undefined && mainTypeId !== null && typeof mainTypeId !== 'number') {
       return res.send(response(status.BAD_REQUEST, errorResponseDTO("잘못된 요청 본문")));
@@ -125,7 +124,7 @@ export const addProblem = async (req, res) => {
         return res.send(response(status.BAD_REQUEST, errorResponseDTO("잘못된 요청 본문")));
       }
     }
-    await ProblemService.addProblem(problemData);
+    await ProblemService.addProblem(problemData, userId);
     res.send(response(status.SUCCESS, addProblemResponseDTO("문제 추가 성공")));
   } catch (error) {
     res.send(response(status.BAD_REQUEST, errorResponseDTO("잘못된 요청 본문")));
@@ -137,8 +136,7 @@ export const getProblemTypes = async (req, res) => {
   try {
     const { typeLevel } = req.params;
     const { parentTypeId } = req.query;
-    // const userId = req.userId;
-    const userId = 1;
+    const userId = req.userId;
 
     let types;
 
@@ -172,8 +170,7 @@ export const getProblemTypes = async (req, res) => {
 export const addProblemType = async (req, res) => {
   try {
     const { typeName, parentTypeId, typeLevel } = req.body;
-    // const userId = req.userId;
-    const userId = 1;
+    const userId = req.userId;
 
     if (typeLevel === 1) {
       await ProblemService.addProblemType(typeName, null, typeLevel, userId);
@@ -199,11 +196,11 @@ export const addProblemType = async (req, res) => {
   }
 };
 
+// 문제 삭제
 export const deleteProblem = async (req, res) => {
   try {
     const { problemId } = req.params;
-    // const userId = req.userId;
-    const userId = 1;
+    const userId = req.userId;
     const deleted = await ProblemService.deleteProblem(problemId, userId);
     if (deleted) {
       res.send(response(status.SUCCESS, deleteProblemResponseDTO("문제 삭제 성공")));
@@ -215,6 +212,44 @@ export const deleteProblem = async (req, res) => {
   }
 };
 
+// 문제 유형 삭제
+export const deleteProblemType = async (req, res) => {
+  try {
+    const { typeId } = req.params;
+    const { typeLevel } = req.query;
+    const userId = req.userId;
+
+    if (!typeId || !typeLevel) {
+      res.send(response(status.BAD_REQUEST, "잘못된 요청 본문"));
+    }
+
+    switch (parseInt(typeLevel, 10)) {
+      case 1:
+        // 대분류 삭제
+        await ProblemService.deleteMainType(typeId, userId);
+        res.send(response(status.SUCCESS, "대분류 삭제 성공"));
+        break;
+      case 2:
+        // 중분류에 연관된 소분류 삭제
+        await ProblemService.deleteSubTypesByMidType(typeId, userId);
+        // 중분류 삭제
+        await ProblemService.deleteMidType(typeId, userId);
+        res.send(response(status.SUCCESS, "중분류 삭제 성공"));
+        break;
+      case 3:
+        // 소분류 삭제
+        await ProblemService.deleteSubType(typeId, userId);
+        res.send(response(status.SUCCESS, "소분류 삭제 성공"));
+        break;
+      default:
+        res.send(response(status.BAD_REQUEST, "잘못된 요청 본문"));
+        break;
+    }
+  } catch (error) {
+    console.error("문제 유형 삭제 중 에러:", error.message);
+    res.send(response(status.INTERNAL_SERVER_ERROR));
+  }
+};
 
 // 가장 많이 틀린 문제 가져오기
 export const getStatisticIncorrectProblem = async (req, res) => {

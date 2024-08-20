@@ -74,7 +74,14 @@ export const sql = {
     DELETE FROM problemtypeassignment WHERE problem_id = ?
   `,
 
-  // 새로운 유형 할당 추가
+  updateProblem: `UPDATE problem SET problem_text = ? WHERE problem_id = ?`,
+  
+  addProblem: `
+    INSERT INTO problem (
+      folder_id, user_id, problem_text, answer, status,
+      order_value, memo
+    ) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    
   addProblemTypeAssignment: `
     INSERT INTO problemtypeassignment (problem_id, type_id)
     VALUES (?, ?)
@@ -128,11 +135,28 @@ export const sql = {
   `,
 
   addProblemType: `
-  INSERT INTO problemtype (type_name, parent_type_id, type_level, user_id) 
-  VALUES (?, ?, ?, ?)
-`,
+    INSERT INTO problemtype (type_name, parent_type_id, type_level, user_id) VALUES (?, ?, ?, ?)
+  `, 
 
-deleteProblem: 'DELETE FROM problem WHERE problem_id = ? AND user_id = ?',
+  getMidTypesByMainType: `SELECT type_id FROM problemtype WHERE parent_type_id = ? AND user_id = ?;`,
+  
+  deleteSubTypesByMainType: `DELETE FROM problemtype WHERE parent_type_id = ? AND user_id = ?;`,
+  
+  deleteMidTypesByMainType: `DELETE FROM problemtype WHERE parent_type_id = ? AND user_id = ?;`,
+  
+  deleteMainType: `DELETE FROM problemtype WHERE type_id = ? AND user_id = ?;`,
+
+  deleteSubTypesByMidType: `DELETE FROM problemtype WHERE parent_type_id = ? AND user_id = ?;`,
+  
+  deleteMidType: `DELETE FROM problemtype WHERE type_id = ? AND user_id = ?;`,
+  
+  deleteSubType: `DELETE FROM problemtype WHERE type_id = ? AND user_id = ?;`,
+
+  deleteProblem: `DELETE FROM problem WHERE problem_id = ? AND user_id = ?;`,
+  
+  deleteProblem: `DELETE FROM problem WHERE problem_id = ? AND user_id = ?;`,
+  
+  getProblemMaxOrderValue: `SELECT COALESCE(MAX(order_value), -1) AS maxProblemOrderValue FROM problem WHERE user_id = ? AND folder_id = ?;`,
 
 
 

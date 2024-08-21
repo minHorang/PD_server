@@ -30,7 +30,7 @@ export const setScale = async (req, res) => {
 export const searchProblems = async (req, res) => {
   try {
     const { query, folderId } = req.query;
-    const userId = 1; // TODO : jwt 토큰에서 userId 추출
+    const userId = req.userId;
     const problems = await ProblemService.searchProblems(query, folderId, userId);
     res.send(response(status.SUCCESS, getProblemListResponseDTO(problems)));
   } catch (error) {
@@ -60,36 +60,64 @@ export const getProblem = async (req, res) => {
 
 export const editProblem = async (req, res, next) => {
   try {
-    const { problemId, answerText, problemText, mainCategoryId, categoryId, subCategoryId } = JSON.parse(req.body.data);
-    const folders = {
-      problemFolder: "problemImages",
-      solutionFolder: "solutionImages",
-      passageFolder: "passageImages",
-      additionalFolder: "additionalImages",
-  };
+    const {
+      problemId,
+      problemText,
+      answer,
+      status: problemStatus,
+      memo,
+      mainTypeId,
+      midTypeId,
+      subTypeIds
+    } = JSON.parse(req.body.data);
+    const userId = req.userId;
+    await ProblemService.deleteTotalProblem(problemId);
 
-  // 실제 이미지 업로드
-  const problemUrl = req.files.problemImage ? getPublicUrl(req.files.problemImage[0].filename) : null;
-  const solutionUrl = req.files.solutionImage ? getPublicUrl(req.files.solutionImage[0].filename) : null;
-  const passageUrl = req.files.passageImage ? getPublicUrl(req.files.passageImage[0].filename) : null;
-  const additionalUrl = req.files.additionalImage ? getPublicUrl(req.files.additionalImage[0].filename) : null;
+    if (subTypeIds !== undefined && subTypeIds !== null) {
+      if (typeof subTypeIds === 'number') {
+        problemData.subTypeIds = [subTypeIds];
+      } else if (Array.isArray(subTypeIds)) {
+        if (subTypeIds.length > 5) {
+          return res.send(response(status.BAD_REQUEST, errorResponseDTO("잘못된 요청 본문")));
+        }
+      } else {
+        return res.send(response(status.BAD_REQUEST, errorResponseDTO("잘못된 요청 본문")));
+      }
+    }
 
-  // url 더미 데이터
-  // const problemUrl = "https://storage.googleapis.com/quiz-app-2021/problemImages/1626820130000-IMG_20210630_153013.jpg";
-  // const solutionUrl = "https://storage.googleapis.com/quiz-app-2021/solutionImages/1626820130000-IMG_20210630_153013.jpg";
-  // const passageUrl = "https://storage.googleapis.com/quiz-app-2021/passageImages/1626820130000-IMG_20210630_153013.jpg";
-  // const additionalUrl = "https://storage.googleapis.com/quiz-app-2021/additionalImages/1626820130000-IMG_20210630_153013.jpg";
+    const getPublicUrls = (files, minCount, maxCount) => {
+      if (!files || files.length < minCount || files.length > maxCount) {
+        throw new Error(`사진은 ${minCount}장 이상 ${maxCount}장 이하로 제공되어야 합니다.`);
+      }
+      return files.map(file => getPublicUrl(file.filename));
+    };
 
-  await ProblemService.updateProblemTextAndAnswer(problemId, problemText, answerText);
-  await ProblemService.updateProblemTypes(problemId, [mainCategoryId, categoryId, subCategoryId]);
 
-  await ProblemService.updateProblemPhotos(problemId, [
-    { url: problemUrl, type: "problem" },
-    { url: solutionUrl, type: "solution" },
-    { url: passageUrl, type: "passage" },
-    { url: additionalUrl, type: "additional" },
-  ]);
+    const problemPhoto = getPublicUrls(req.files.problemImage, 1, 1);
+    const solutionPhotos = getPublicUrls(req.files.solutionImages || [], 0, 5);
+    const passagePhotos = getPublicUrls(req.files.passageImages || [], 0, 10);
+    const additionalPhotos = getPublicUrls(req.files.additionalImages || [], 0, 2);
 
+    const photos = [
+      ...problemPhoto.map(url => ({ photoUrl: url, photoType: 'problem' })),
+      ...solutionPhotos.map(url => ({ photoUrl: url, photoType: 'solution' })),
+      ...passagePhotos.map(url => ({ photoUrl: url, photoType: 'passage' })),
+      ...additionalPhotos.map(url => ({ photoUrl: url, photoType: 'additional' }))
+    ];
+
+    const problemData = {
+      problemId,
+      problemText,
+      answer,
+      status: problemStatus,
+      memo,
+      mainTypeId,
+      midTypeId,
+      subTypeIds,
+      photos
+    };
+
+    await ProblemService.updateProblem(problemData, userId);
 
   res.send(response(status.SUCCESS, editProblemResponseDTO("문제 수정 성공")));
   } catch (error) {

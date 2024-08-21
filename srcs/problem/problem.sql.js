@@ -74,7 +74,17 @@ export const sql = {
     DELETE FROM problemtypeassignment WHERE problem_id = ?
   `,
 
-  updateProblem: `UPDATE problem SET problem_text = ? WHERE problem_id = ?`,
+  updateProblem: `
+    UPDATE PROBLEM
+    SET
+      problem_text = ?,
+      answer = ?,
+      status = ?,
+      memo = ?,
+      updated_at = NOW()
+    WHERE
+      problem_id = ?
+  `,
   
   addProblem: `
     INSERT INTO problem (

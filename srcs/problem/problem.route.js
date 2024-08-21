@@ -16,9 +16,9 @@ problemRouter.get("/search", searchProblems);
 problemRouter.get("/:problemId", getProblem);
 problemRouter.patch("/edit", upload.fields([
     { name: 'problemImage', maxCount: 1 },
-    { name: 'solutionImage', maxCount: 1 },
-    { name: 'passageImage', maxCount: 1 },
-    { name: 'additionalImage', maxCount: 4 }
+    { name: 'solutionImages', maxCount: 5 },
+    { name: 'passageImages', maxCount: 10},
+    { name: 'additionalImages', maxCount: 2 }
   ]), editProblem);
 
 

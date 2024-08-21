@@ -1084,37 +1084,48 @@ paths:
       required: true
       content:
         multipart/form-data:
-          schema:
-            type: object
-            properties:
-              problemImage:
-                type: string
-                format: binary
-                description: 문제 이미지 파일
-              solutionImage:
-                type: string
-                format: binary
-                description: 풀이 과정 이미지 파일
-              passageImage:
-                type: string
-                format: binary
-                description: 지문 이미지 파일
-              additionalImage:
-                type: string
-                format: binary
-                description: 추가 문제 이미지 파일
-              data:
-                type: string
-                description: 문제 정보(JSON 형식의 문자열)
-                example: |
-                  {
-                    "problemId": "1",
-                    "answerText": "정답",
-                    "problemText": "문제 텍스트",
-                    "mainCategoryId": "1",
-                    "categoryId": "4",
-                    "subCategoryId": "7"
-                  }
+            schema:
+              type: object
+              properties:
+                problemImage:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                  description: 문제 사진 (최소 1장 필수, 최대 1장)
+                solutionImages:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                  description: 풀이 사진들 (최대 5장)
+                passageImages:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                  description: 지문 사진들 (최대 10장)
+                additionalImages:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                  description: 추가 사진들 (최대 2장)
+                data:
+                  type: string
+                  description: 문제 정보(JSON 형식의 문자열)
+                  example: |
+                    {
+                      "problemId": "1",
+                      "problemText": "이것은 테스트 문제 텍스트입니다.",
+                      "answer": "정답 예시",
+                      "status": "active",
+                      "memo": "이것은 문제에 대한 메모입니다.",
+                      "mainTypeId": "2",
+                      "midTypeId": "4",
+                      "subTypeIds": ["7", "12"]
+                    }
+
     responses:
       '200':
         description: 문제 수정 성공

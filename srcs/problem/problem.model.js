@@ -72,9 +72,9 @@ export const ProblemModel = {
   
 // EDIT 관련
 
-  updateProblem: async (problemId, problemText, answerText) => {
+  updateProblem: async (problemId, problemText, answer, status, memo) => {
     try {
-      await pool.query(sql.updateProblem, [problemText, answerText, problemId]);
+      await pool.query(sql.updateProblem, [problemText, answer, status, memo, problemId]);
     } catch (error) {
       console.error("문제 텍스트 및 정답 업데이트 실패:", error.message);
       throw new Error("문제 텍스트 및 정답 업데이트 실패");

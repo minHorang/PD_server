@@ -27,7 +27,12 @@ problemRouter.get("/statistics/mistakes",getStatisticIncorrectProblem);
 problemRouter.get("/statistics/types",getStatisticIncorrectType);
 problemRouter.get("/statistics/ratios",getStatisticIncorrectRatio);
 
-problemRouter.post("/", addProblem);
+problemRouter.post("/", upload.fields([
+    { name: 'problemImage', maxCount: 1 },
+    { name: 'solutionImages', maxCount: 5 },
+    { name: 'passageImages', maxCount: 10 },
+    { name: 'additionalImages', maxCount: 2 }
+  ]), addProblem);
 problemRouter.get("/types/:typeLevel", getProblemTypes);
 problemRouter.post('/types', addProblemType);
 problemRouter.delete("/:problemId", deleteProblem);

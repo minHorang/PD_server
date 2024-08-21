@@ -75,18 +75,49 @@ export const ProblemService = {
 
   addProblem: async (problemData, userId) => {
     try {
-      const {folderId} = problemData;
-      console.log('Service problemData:', problemData);
-      console.log('Service userId:', userId);
+      const {
+        folderId,
+        problemText,
+        answer,
+        status,
+        memo,
+        mainTypeId,
+        midTypeId,
+        subTypeIds,
+        photos
+      } = problemData;
       const problemMaxOrderValue = await ProblemModel.getProblemMaxOrderValue(userId, folderId);
-      console.log('Current Max Order Value:', problemMaxOrderValue);
       const newProblemOrderValue = problemMaxOrderValue + 1;
-      console.log('New Problem Order Value:', newProblemOrderValue);
+  
       const newProblem = await ProblemModel.create({
-        ...problemData,
+        folderId,
+        userId,
+        problemText,
+        answer,
+        status,
         orderValue: newProblemOrderValue,
-        userId
+        memo
       });
+  
+      if (mainTypeId) {
+        await ProblemModel.addProblemTypeAssignment(newProblem.problemId, mainTypeId);
+      }
+  
+      if (midTypeId) {
+        await ProblemModel.addProblemTypeAssignment(newProblem.problemId, midTypeId);
+      }
+  
+      if (subTypeIds && Array.isArray(subTypeIds)) {
+        for (const subTypeId of subTypeIds) {
+          await ProblemModel.addProblemTypeAssignment(newProblem.problemId, subTypeId);
+        }
+      }
+  
+      // 문제 사진 추가
+      if (photos && photos.length > 0) {
+        await ProblemModel.addPhotos(newProblem.problemId, photos);
+      }
+  
       return newProblem;
     } catch (error) {
       console.error("문제 추가 실패:", error);

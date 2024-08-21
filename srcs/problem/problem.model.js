@@ -142,47 +142,33 @@ export const ProblemModel = {
 
   create: async (problemData) => {
     const {
-      folderId, userId, problemText, answer, status, orderValue, photos, memo,
-      mainTypeId, midTypeId, subTypeIds
+      folderId, userId, problemText, answer, status, orderValue, memo
     } = problemData;
-
+  
     try {
-      console.log('Model userId:', userId);
       const [result] = await pool.query(sql.addProblem, [
         folderId, userId, problemText, answer, status, orderValue, memo
       ]);
-
+  
       const problemId = result.insertId;
-
-      if (mainTypeId) {
-        await pool.query(sql.addProblemTypeAssignment, [problemId, mainTypeId]);
-      }
   
-      if (midTypeId) {
-        await pool.query(sql.addProblemTypeAssignment, [problemId, midTypeId]);
-      }
-  
-      if (subTypeIds) {
-        if (Array.isArray(subTypeIds)) {
-          if (subTypeIds.length > 0) {
-            const subtypeAssignments = subTypeIds.map(subTypeId => [problemId, subTypeId]);
-            await pool.query(sql.addProblemTypeAssignments, [subtypeAssignments]);
-          }
-        } else {
-          await pool.query(sql.addProblemTypeAssignment, [problemId, subTypeIds]);
-        }
-      }
-
-      if (photos && photos.length > 0) {
-        const photoValues = photos.map(photo => [
-          problemId, photo.photoUrl, photo.photoType
-        ]);
-
-        await pool.query(sql.addPhotos, [photoValues]);
-      }
+      return { problemId };
     } catch (error) {
       console.error("문제 추가 실패:", error);
       throw new Error("문제 추가 실패");
+    }
+  },
+
+  addPhotos: async (problemId, photos) => {
+    try {
+      const photoData = photos.map(({ photoUrl, photoType }) => [problemId, photoUrl, photoType]);
+  
+      if (photoData.length > 0) {
+        await pool.query(sql.addPhotos, [photoData]);
+      }
+    } catch (error) {
+      console.error("문제 추가하기에서 사진 추가 실패:", error);
+      throw new Error("문제 추가하기에서 사진 추가 실패");
     }
   },
 

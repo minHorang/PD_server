@@ -9,6 +9,8 @@ import { getFolderResponseDTO, getProgressResponseDTO, getProblemResponseDTO, ch
 export const selectFolder = async (req, res) => {
   try {
     const { folderId } = req.params;
+    // 폴더 내의 모든 문제 미완료로 수정
+    await StudyService.updateAllProblemsStatus(folderId, "미완료");
     const folder = await StudyService.selectFolder(folderId);
     res.send(response(status.SUCCESS, getFolderResponseDTO(folder)));
   } catch (error) {

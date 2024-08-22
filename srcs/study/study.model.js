@@ -12,6 +12,15 @@ export const StudyModel = {
     }
   },
 
+  updateAllProblemsStatus : async (folderId, progress) => {
+    try {
+      await pool.query(sql.updateAllProblemsStatus, [progress, folderId]);
+    } catch (error) {
+      console.error("문제 상태 업데이트 실패:", error.message);
+      throw new Error("문제 상태 업데이트 실패");
+    }
+  },
+
   findProblemIdsByFolderId: async (folderId) => {
     try {
       const [results] = await pool.query(sql.findProblemIdsByFolderId, [folderId]);

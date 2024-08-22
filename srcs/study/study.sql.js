@@ -14,6 +14,14 @@ export const sql = {
     WHERE 
       folder_id = ?
   `,
+  updateAllProblemsStatus: `
+    UPDATE
+      problem
+    SET
+      progress = ?
+    WHERE
+      folder_id = ?
+  `,
 
   // 폴더 ID로 문제 ID 조회
   // TODO : folder 도메인으로 이동

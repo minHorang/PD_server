@@ -85,24 +85,12 @@ export const editProblem = async (req, res, next) => {
       }
     }
 
-    const getPublicUrls = (files, minCount, maxCount) => {
-      if (!files || files.length < minCount || files.length > maxCount) {
-        throw new Error(`사진은 ${minCount}장 이상 ${maxCount}장 이하로 제공되어야 합니다.`);
-      }
-      return files.map(file => getPublicUrl(file.filename));
-    };
-
-
-    const problemPhoto = getPublicUrls(req.files.problemImage, 1, 1);
-    const solutionPhotos = getPublicUrls(req.files.solutionImages || [], 0, 5);
-    const passagePhotos = getPublicUrls(req.files.passageImages || [], 0, 10);
-    const additionalPhotos = getPublicUrls(req.files.additionalImages || [], 0, 2);
-
+    const { problemImage, solutionImages, passageImages, additionalImages } = res.locals.publicUrls;
     const photos = [
-      ...problemPhoto.map(url => ({ photoUrl: url, photoType: 'problem' })),
-      ...solutionPhotos.map(url => ({ photoUrl: url, photoType: 'solution' })),
-      ...passagePhotos.map(url => ({ photoUrl: url, photoType: 'passage' })),
-      ...additionalPhotos.map(url => ({ photoUrl: url, photoType: 'additional' }))
+      ...problemImage.map(url => ({ photoUrl: url, photoType: 'problem' })),
+      ...solutionImages.map(url => ({ photoUrl: url, photoType: 'solution' })),
+      ...passageImages.map(url => ({ photoUrl: url, photoType: 'passage' })),
+      ...additionalImages.map(url => ({ photoUrl: url, photoType: 'additional' }))
     ];
 
     const problemData = {

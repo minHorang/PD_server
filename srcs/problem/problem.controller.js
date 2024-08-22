@@ -196,9 +196,9 @@ export const addProblem = async (req, res) => {
       photos
     };
 
-    await ProblemService.addProblem(problemData, userId);
+    const addedProblem = await ProblemService.addProblem(problemData, userId);
   
-    res.send(response(status.SUCCESS, addProblemResponseDTO("문제 추가 성공")));
+    res.send(response(status.SUCCESS, addProblemResponseDTO(addedProblem.problemId)));
   } catch (error) {
     console.error("문제 추가 실패:", error);
     res.send(response(status.BAD_REQUEST, errorResponseDTO("잘못된 요청 본문")));
@@ -247,20 +247,20 @@ export const addProblemType = async (req, res) => {
     const userId = req.userId;
 
     if (typeLevel === 1) {
-      await ProblemService.addProblemType(typeName, null, typeLevel, userId);
-      res.send(response(status.SUCCESS, addProblemTypeResponseDTO("대분류 추가 성공")));
+      const newType = await ProblemService.addProblemType(typeName, null, typeLevel, userId);
+      res.send(response(status.SUCCESS, addProblemTypeResponseDTO(newType.typeId, typeName)));
     } else if (typeLevel === 2) {
       if (!parentTypeId) {
         return res.send(response(status.BAD_REQUEST, errorResponseDTO("잘못된 요청 본문")));
       }
-      await ProblemService.addProblemType(typeName, parentTypeId, typeLevel, userId);
-      res.send(response(status.SUCCESS, addProblemTypeResponseDTO("중분류 추가 성공")));
+      const newType = await ProblemService.addProblemType(typeName, parentTypeId, typeLevel, userId);
+      res.send(response(status.SUCCESS, addProblemTypeResponseDTO(newType.typeId, typeName)));
     } else if (typeLevel === 3) {
       if (!parentTypeId) {
         return res.send(response(status.BAD_REQUEST, errorResponseDTO("잘못된 요청 본문")));
       }
-      await ProblemService.addProblemType(typeName, parentTypeId, typeLevel, userId);
-      res.send(response(status.SUCCESS, addProblemTypeResponseDTO("소분류 추가 성공")));
+      const newType = await ProblemService.addProblemType(typeName, parentTypeId, typeLevel, userId);
+      res.send(response(status.SUCCESS, addProblemTypeResponseDTO(newType.typeId, typeName)));
     } else {
       res.send(response(status.BAD_REQUEST, errorResponseDTO("잘못된 요청 본문")));
     }

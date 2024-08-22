@@ -5,7 +5,6 @@ import authenticateToken from "../../config/jwt.middleware.js";
 import { createMulter } from "../utils/image/image.upload.js";
 import { uploadProblemImages } from "../utils/image/image.upload.js";
 
-  
 export const problemRouter = express.Router();
 
 const upload = createMulter("uploads");
@@ -15,13 +14,7 @@ problemRouter.use(authenticateToken);
 problemRouter.patch("/scale", setScale);
 problemRouter.get("/search", searchProblems);
 problemRouter.get("/:problemId", getProblem);
-problemRouter.patch("/edit", upload.fields([
-    { name: 'problemImage', maxCount: 1 },
-    { name: 'solutionImages', maxCount: 5 },
-    { name: 'passageImages', maxCount: 10},
-    { name: 'additionalImages', maxCount: 2 }
-  ]), editProblem);
-
+problemRouter.patch("/edit", uploadProblemImages, editProblem);
 
 
 problemRouter.get("/statistics/mistakes",getStatisticIncorrectProblem);

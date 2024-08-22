@@ -150,9 +150,7 @@ export const ProblemModel = {
         folderId, userId, problemText, answer, status, orderValue, memo
       ]);
   
-      const problemId = result.insertId;
-  
-      return { problemId };
+      return { problemId: result.insertId }
     } catch (error) {
       console.error("문제 추가 실패:", error);
       throw new Error("문제 추가 실패");
@@ -230,15 +228,12 @@ export const ProblemModel = {
 
   addProblemType: async (typeName, parentTypeId, typeLevel, userId) => {
     try {
-      if (typeLevel === 1) {
-        await pool.query(sql.addProblemType, [typeName, null, typeLevel, userId]);
-      } else if (typeLevel === 2) {
-        await pool.query(sql.addProblemType, [typeName, parentTypeId, typeLevel, userId]);
-      } else if (typeLevel === 3) {
-        await pool.query(sql.addProblemType, [typeName, parentTypeId, typeLevel, userId]);
-      }
+      const [result] = await pool.query(sql.addProblemType, [typeName, parentTypeId, typeLevel, userId]);
+      const typeId = result.insertId;
+      return { typeId, typeName };
     } catch (error) {
-      throw new Error(`문제 유형 추가 실패`);
+      console.error("문제 유형 추가 실패:", error.message);
+      throw new Error("문제 유형 추가 실패");
     }
   },
 

@@ -118,7 +118,7 @@ export const ProblemService = {
         await ProblemModel.addPhotos(newProblem.problemId, photos);
       }
   
-      return newProblem;
+      return { problemId: newProblem.problemId };
     } catch (error) {
       console.error("문제 추가 실패:", error);
       throw new BaseError(status.BAD_REQUEST, "문제 추가 실패");
@@ -193,7 +193,8 @@ export const ProblemService = {
 
   addProblemType: async (typeName, parentTypeId, typeLevel, userId) => {
     try {
-      await ProblemModel.addProblemType(typeName, parentTypeId, typeLevel, userId);
+      const newType = await ProblemModel.addProblemType(typeName, parentTypeId, typeLevel, userId);
+      return newType;
     } catch (error) {
       if (typeLevel === 1) {
         throw new BaseError(status.BAD_REQUEST, "대분류 추가 실패");

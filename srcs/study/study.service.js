@@ -13,6 +13,10 @@ export const StudyService = {
     };
   },
 
+  updateAllProblemsStatus: async (folderId, progress) => {
+    await StudyModel.updateAllProblemsStatus(folderId, progress);
+  },
+
   getProgressByFolder: async (folderId) => {
     const folder = await StudyModel.findFolderById(folderId);
     if (!folder) {

@@ -138,7 +138,7 @@ export const addProblem = async (req, res) => {
       midTypeId,
       subTypeIds
     } = JSON.parse(req.body.data);
-
+    
     const userId = req.userId;
 
     if (mainTypeId !== undefined && mainTypeId !== null && typeof mainTypeId !== 'number') {
@@ -161,29 +161,6 @@ export const addProblem = async (req, res) => {
       }
     }
 
-    if (!req.files || !req.files.problemImage || req.files.problemImage.length === 0) {
-      return res.send(response(status.BAD_REQUEST, errorResponseDTO("문제 이미지 누락")));
-    }
-
-    const getPublicUrls = (files, minCount, maxCount) => {
-      if (!files || files.length < minCount || files.length > maxCount) {
-        throw new Error(`사진은 ${minCount}장 이상 ${maxCount}장 이하로 제공되어야 합니다.`);
-      }
-      return files.map(file => getPublicUrl(file.filename));
-    };
-
-    const problemPhoto = getPublicUrls(req.files.problemImage, 1, 1);
-    const solutionPhotos = getPublicUrls(req.files.solutionImages || [], 0, 5);
-    const passagePhotos = getPublicUrls(req.files.passageImages || [], 0, 10);
-    const additionalPhotos = getPublicUrls(req.files.additionalImages || [], 0, 2);
-
-    const photos = [
-      ...problemPhoto.map(url => ({ photoUrl: url, photoType: 'problem' })),
-      ...solutionPhotos.map(url => ({ photoUrl: url, photoType: 'solution' })),
-      ...passagePhotos.map(url => ({ photoUrl: url, photoType: 'passage' })),
-      ...additionalPhotos.map(url => ({ photoUrl: url, photoType: 'additional' }))
-    ];
-
     const problemData = {
       folderId,
       problemText,
@@ -193,14 +170,17 @@ export const addProblem = async (req, res) => {
       mainTypeId,
       midTypeId,
       subTypeIds,
-      photos
+      photos: res.locals.publicUrls // 업로드된 사진 URL 포함
     };
 
+    console.log("Problem Data:", problemData);
+
     const addedProblem = await ProblemService.addProblem(problemData, userId);
-  
-    res.send(response(status.SUCCESS, addProblemResponseDTO(addedProblem.problemId)));
+    console.log("추가된 문제:", addedProblem);
+
+    res.send(response(status.SUCCESS, { problemId: addedProblem.problemId }));
   } catch (error) {
-    console.error("문제 추가 실패:", error);
+    console.error('문제 추가 실패:', error);
     res.send(response(status.BAD_REQUEST, errorResponseDTO("잘못된 요청 본문")));
   }
 };

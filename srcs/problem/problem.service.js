@@ -84,8 +84,10 @@ export const ProblemService = {
         mainTypeId,
         midTypeId,
         subTypeIds,
-        photos
+        photos // photos는 컨트롤러에서 `res.locals.publicUrls`로 설정된 이미지 URL이 포함됩니다.
       } = problemData;
+  
+      // 문제 생성
       const problemMaxOrderValue = await ProblemModel.getProblemMaxOrderValue(userId, folderId);
       const newProblemOrderValue = problemMaxOrderValue + 1;
   
@@ -99,6 +101,7 @@ export const ProblemService = {
         memo
       });
   
+      // 문제 유형 추가
       if (mainTypeId) {
         await ProblemModel.addProblemTypeAssignment(newProblem.problemId, mainTypeId);
       }
@@ -114,8 +117,30 @@ export const ProblemService = {
       }
   
       // 문제 사진 추가
-      if (photos && photos.length > 0) {
-        await ProblemModel.addPhotos(newProblem.problemId, photos);
+      const { problemImage, solutionImages, passageImages, additionalImages } = photos;
+  
+      // 필수 이미지 추가
+      if (problemImage && problemImage.length > 0) {
+        console.log("Adding problem image:", problemImage);
+        await ProblemModel.addPhotos(newProblem.problemId, [{ photoUrl: problemImage[0], photoType: 'problem' }]);
+      } else {
+        throw new BaseError(status.BAD_REQUEST, "문제 이미지는 필수입니다.");
+      }
+  
+      // 선택적 이미지 추가
+      if (solutionImages && solutionImages.length > 0) {
+        console.log("Adding solution images:", solutionImages);
+        await ProblemModel.addPhotos(newProblem.problemId, solutionImages.map(url => ({ photoUrl: url, photoType: 'solution' })));
+      }
+  
+      if (passageImages && passageImages.length > 0) {
+        console.log("Adding passage images:", passageImages);
+        await ProblemModel.addPhotos(newProblem.problemId, passageImages.map(url => ({ photoUrl: url, photoType: 'passage' })));
+      }
+  
+      if (additionalImages && additionalImages.length > 0) {
+        console.log("Adding additional images:", additionalImages);
+        await ProblemModel.addPhotos(newProblem.problemId, additionalImages.map(url => ({ photoUrl: url, photoType: 'additional' })));
       }
   
       return { problemId: newProblem.problemId };
@@ -123,7 +148,7 @@ export const ProblemService = {
       console.error("문제 추가 실패:", error);
       throw new BaseError(status.BAD_REQUEST, "문제 추가 실패");
     }
-  },
+  },   
 
   updateProblem : async (problemData, userId) => {
     try {

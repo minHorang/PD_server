@@ -75,7 +75,7 @@ export const sql = {
   `,
 
   updateProblem: `
-    UPDATE PROBLEM
+    UPDATE problem
     SET
       problem_text = ?,
       answer = ?,

@@ -5,6 +5,8 @@ export const getInfoResponseDTO = (userInfo) => ({
   provider: userInfo.social_provider,
   email: userInfo.email,
   name: userInfo.name,
+  profile_image_url: userInfo.profile_image_url,
+  subscribe: userInfo.subscribe,
 });
 
 export const errorResponseDTO = (message) => ({

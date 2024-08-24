@@ -841,7 +841,6 @@ paths:
                   result:
                     type: string
                     example: "서버 오류 발생"
-
   /problems/search:
     get:
       summary: 문제 검색하기 (구독)
@@ -866,20 +865,32 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    problemId:
-                      type: string
-                      description: 문제 ID
-                    problemImage:
-                      type: string
-                      format: uri
-                      description: 문제 이미지 URL
-                    problemText:
-                      type: string
-                      description: 문제 텍스트
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "문제 검색 성공"
+                  result:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        problemId:
+                          type: string
+                          description: 문제 ID
+                        problemImage:
+                          type: string
+                          format: uri
+                          description: 문제 이미지 URL
+                        problemText:
+                          type: string
+                          description: 문제 텍스트
         '400':
           description: 잘못된 요청
           content:
@@ -887,9 +898,21 @@ paths:
               schema:
                 type: object
                 properties:
+                  isSuccess:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 400
                   message:
                     type: string
-                    example: "잘못된 요청 본문"
+                    example: "금지된 요청입니다."
+                  result:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "잘못된 요청 본문입니다."
         '403':
           description: 구독 계정이 아닐 경우 접근 거부
           content:
@@ -897,9 +920,21 @@ paths:
               schema:
                 type: object
                 properties:
+                  isSuccess:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 403
                   message:
                     type: string
-                    example: "구독 계정만 이용 가능합니다."
+                    example: "금지된 요청입니다."
+                  result:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "구독 계정만 이용 가능합니다."
         '404':
           description: 찾을 수 없음
           content:
@@ -907,10 +942,21 @@ paths:
               schema:
                 type: object
                 properties:
+                  isSuccess:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 404
                   message:
                     type: string
-                    example: "데이터를 찾을 수 없습니다."
-
+                    example: "금지된 요청입니다."
+                  result:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "데이터를 찾을 수 없습니다."
 
   /problems/{problemId}:
     get:
@@ -924,6 +970,7 @@ paths:
           required: true
           schema:
             type: string
+            description: 문제 ID
       responses:
         '200':
           description: 문제 조회 성공
@@ -932,69 +979,90 @@ paths:
               schema:
                 type: object
                 properties:
-                  problemId:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  message:
                     type: string
-                  problemText:
-                    type: string
-                    description: 문제 텍스트
-                  folderName:
-                    type: string
-                    description: 폴더의 이름
-                  problemImages:
-                    type: string
-                    description: 문제 유형 이미지 URL 배열
-                  solutionImages:
-                    type: array
-                    items:
-                      type: string
-                      description: 풀이 유형 이미지 URL 배열
-                  passageImages:
-                    type: array
-                    items:
-                      type: string
-                      description: 지문 유형 이미지 URL 배열
-                  additionalProblemImages:
-                    type: array
-                    items:
-                      type: string
-                      description: 추가 문제 유형 이미지 URL 배열
-                  gptSessionKey:
-                    type: string
-                    description: GPT 세션 키
-                  problemType:
+                    example: "문제 조회 성공"
+                  result:
                     type: object
                     properties:
-                      대분류:
+                      problemId:
                         type: string
-                        description: 문제의 대분류 유형
-                      중분류:
+                      problemText:
                         type: string
-                        description: 문제의 중분류 유형
-                      소분류:
+                        description: 문제 텍스트
+                      folderName:
                         type: string
-                        description: 문제의 소분류 유형
-                  statistics:
-                    type: object
-                    properties:
-                      wrongCount:
-                        type: integer
-                        description: 틀린 횟수
-                      solvedCount:
-                        type: integer
-                        description: 맞춘 횟수
-                required:
-                  - problemImage
-                  - answer
+                        description: 폴더의 이름
+                      problemImages:
+                        type: string
+                        description: 문제 유형 이미지 URL 배열
+                      solutionImages:
+                        type: array
+                        items:
+                          type: string
+                          description: 풀이 유형 이미지 URL 배열
+                      passageImages:
+                        type: array
+                        items:
+                          type: string
+                          description: 지문 유형 이미지 URL 배열
+                      additionalProblemImages:
+                        type: array
+                        items:
+                          type: string
+                          description: 추가 문제 유형 이미지 URL 배열
+                      gptSessionKey:
+                        type: string
+                        description: GPT 세션 키
+                      problemType:
+                        type: object
+                        properties:
+                          대분류:
+                            type: string
+                            description: 문제의 대분류 유형
+                          중분류:
+                            type: string
+                            description: 문제의 중분류 유형
+                          소분류:
+                            type: string
+                            description: 문제의 소분류 유형
+                      statistics:
+                        type: object
+                        properties:
+                          wrongCount:
+                            type: integer
+                            description: 틀린 횟수
+                          solvedCount:
+                            type: integer
+                            description: 맞춘 횟수
         '403':
-         description: 구독 계정이 아닐 경우 접근 거부
-         content:
-           application/json:
-             schema:
-               type: object
-               properties:
-                 message:
-                   type: string
-                   example: "구독 계정만 이용 가능합니다."
+          description: 구독 계정이 아닐 경우 접근 거부
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 403
+                  message:
+                    type: string
+                    example: "금지된 요청입니다."
+                  result:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "구독 계정만 이용 가능합니다."
         '404':
           description: 찾을 수 없음
           content:
@@ -1002,9 +1070,21 @@ paths:
               schema:
                 type: object
                 properties:
+                  isSuccess:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 404
                   message:
                     type: string
-                    example: "데이터를 찾을 수 없습니다."
+                    example: "금지된 요청입니다."
+                  result:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "데이터를 찾을 수 없습니다."
     delete:
       summary: 문제 삭제하기
       description: 문제 ID를 사용해 문제를 삭제한다.
@@ -1077,16 +1157,17 @@ paths:
                     type: string
                     example: "데이터를 찾을 수 없습니다."
 
-/problems/edit:
-  patch:
-    summary: 문제 수정하기
-    description: 문제의 세부 정보를 수정합니다.
-    tags:
-      - 홈
-    requestBody:
-      required: true
-      content:
-        multipart/form-data:
+
+  /problems/edit:
+    patch:
+      summary: 문제 수정하기
+      description: 문제의 세부 정보를 수정합니다.
+      tags:
+        - 홈
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
             schema:
               type: object
               properties:
@@ -1128,45 +1209,88 @@ paths:
                       "midTypeId": "4",
                       "subTypeIds": ["7", "12"]
                     }
-
-    responses:
-      '200':
-        description: 문제 수정 성공
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                message:
-                  type: string
-                  example: "문제 수정 성공"
-      '400':
-        description: 잘못된 요청
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                message:
-                  type: string
-                  example: "잘못된 요청 본문"
-      '403':
-        description: 구독 계정이 아닐 경우 접근 거부
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                message:
-                  type: string
-                  example: "구독 계정만 이용 가능합니다."
-      '404':
-        description: 찾을 수 없음
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                message:
-                  type: string
-                  example: "데이터를 찾을 수 없습니다."
+      responses:
+        '200':
+          description: 문제 수정 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "문제 수정 성공"
+                  result:
+                    type: object
+        '400':
+          description: 잘못된 요청
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: "금지된 요청입니다."
+                  result:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "잘못된 요청 본문입니다."
+        '403':
+          description: 구독 계정이 아닐 경우 접근 거부
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 403
+                  message:
+                    type: string
+                    example: "금지된 요청입니다."
+                  result:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "구독 계정만 이용 가능합니다."
+        '404':
+          description: 찾을 수 없음
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: false
+                  code:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: "금지된 요청입니다."
+                  result:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "데이터를 찾을 수 없습니다."

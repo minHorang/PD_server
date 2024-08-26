@@ -13,7 +13,7 @@ export const setScaleResponseDTO = (scale) => ({
   };
   
   // 문제 조회 응답 DTO
-  export const getProblemResponseDTO = (problem) => ({
+  export const getProblemResponseDTO = (problem, sessionKey) => ({
     problemId: problem.problem_id.toString(),
     answer: problem.answer,
 
@@ -24,7 +24,7 @@ export const setScaleResponseDTO = (scale) => ({
     additionalProblemImages: problem.photos.additional || [],
 
     problemText: problem.problem_text,
-    gptSessionKey: problem.gpt_session_key,
+    gptSessionKey: sessionKey,
   
     problemType: {
       대분류: problem.types.filter(type => type.type_level === 1).map(type => type.type_name).join(', '),

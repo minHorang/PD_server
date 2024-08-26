@@ -1,5 +1,6 @@
 import { StudyService } from './study.service.js';
 import { ProblemService } from "../problem/problem.service.js";
+import { ChatService } from "../chat/chat.service.js";
 import { response } from '../../config/response.js';
 import { status } from '../../config/response.status.js';
 import authenticateToken from "../../config/jwt.middleware.js";
@@ -42,7 +43,8 @@ export const getProblemById = async (req, res) => {
     const problem = await ProblemService.getProblem(problemId);
     const folder = await StudyService.selectFolder(folderId);
     const folderName = folder.folderName;
-    res.send(response(status.SUCCESS, getProblemResponseDTO(problem, folderName)));
+    const sessionKey = await ChatService.getSessionKey(problemId);
+    res.send(response(status.SUCCESS, getProblemResponseDTO(problem, folderName, sessionKey)));
   } catch (error) {
     if (error.message === "데이터를 찾을 수 없습니다.") {
       res.status(404).send(response(status.NOT_FOUND, errorResponseDTO(error.message)));

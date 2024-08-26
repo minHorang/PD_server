@@ -22,6 +22,7 @@ export const setScaleResponseDTO = (scale) => ({
     solutionImages: problem.photos.solution || [],
     passageImages: problem.photos.passage || [],
     additionalProblemImages: problem.photos.additional || [],
+    memo : problem.memo,
 
     problemText: problem.problem_text,
     gptSessionKey: sessionKey,

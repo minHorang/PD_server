@@ -993,6 +993,9 @@ paths:
                     properties:
                       problemId:
                         type: string
+                      memo:
+                        type: string
+                        description: 문제 추가 설명
                       problemText:
                         type: string
                         description: 문제 텍스트

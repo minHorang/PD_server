@@ -11,7 +11,7 @@ export const getProgressResponseDTO = (progress) => {
   }));
 };
 
-export const getProblemResponseDTO = (problem, folderName) => ({
+export const getProblemResponseDTO = (problem, folderName, sessionKey) => ({
   problemId: problem.problem_id.toString(),
   folderName: folderName,
   answer: problem.answer,
@@ -22,7 +22,7 @@ export const getProblemResponseDTO = (problem, folderName) => ({
   additionalProblemImages: problem.photos.additional || [],
 
   problemText: problem.problem_text,
-  gptSessionKey: problem.gpt_session_key,
+  gptSessionKey: sessionKey,
 
   problemType: {
     대분류: problem.types.filter(type => type.type_level === 1).map(type => type.type_name).join(', '),

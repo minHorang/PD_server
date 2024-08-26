@@ -1,5 +1,6 @@
 import { status } from "../../config/response.status.js";
 import { ProblemService } from "./problem.service.js";
+import { ChatService } from "../chat/chat.service.js";
 import { response } from "../../config/response.js";
 import { createMulter, getPublicUrl } from "../utils/image/image.upload.js";
 import { 
@@ -49,7 +50,8 @@ export const getProblem = async (req, res) => {
     const { problemId } = req.params;
     const problem = await ProblemService.getProblem(problemId);
     if (problem) {
-      res.send(response(status.SUCCESS, getProblemResponseDTO(problem)));
+      const sessionKey = await ChatService.getSessionKey(problemId);
+      res.send(response(status.SUCCESS, getProblemResponseDTO(problem, sessionKey)));
     } else {
       res.send(response(status.NOT_FOUND, errorResponseDTO("데이터를 찾을 수 없습니다.")));
     }

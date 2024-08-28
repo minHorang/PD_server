@@ -86,7 +86,9 @@ export const getStatisticIncorrectTypeDTO = (data) => ({
 
 
 
-export const getStatisticIncorrectRatioDTO = (problems) => problems.map(problem => ({
-  sub_category: problem.sub_category,
-  incorrect_percentage: problem.incorrect_percentage,
-}));
+export const getStatisticIncorrectRatioDTO = (data) => ({
+  subCategories: data.map(sub => ({
+      subCategory: sub.sub_category,
+      incorrectPercentage: sub.incorrect_percentage
+  }))
+});

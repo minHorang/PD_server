@@ -333,16 +333,15 @@ export const ProblemService = {
   },
   
 
-  getStatisticIncorrectRatio: async (userId) => {
-    try{
-      
-      return await ProblemModel.getIncorrectRatioStatistic(userId);
-
+  getStatisticIncorrectRatio: async (userId, categoryId) => {
+    try {
+        // 특정 category_id에 대한 하위 subcategory 비율 조회
+        const result = await ProblemModel.getIncorrectRatioByCategoryId(categoryId, userId);
+        return result;
     } catch (error) {
-      throw new BaseError(status.INTERNAL_SERVER_ERROR,"틀린 문제 비율 통계 조회 실패");
+        throw new BaseError(status.INTERNAL_SERVER_ERROR, "틀린 문제 비율 통계 조회 실패");
     }
-
-  },
+},
 
 
 };

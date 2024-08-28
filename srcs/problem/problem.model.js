@@ -187,14 +187,14 @@ export const ProblemModel = {
         throw error;
     }
 },
-  getSubCategoriesByCategoryId: async (categoryId, userId) => {
-    try {
-        const [result] = await pool.query(sql.getSubCategoriesByCategoryId, [categoryId, userId]);
-        return result;
-    } catch (error) {
-        throw error;
-    }
-  },
+getIncorrectRatioByCategoryId: async (categoryId, userId) => {
+  try {
+      const [result] = await pool.query(sql.getIncorrectRatioByCategoryId, [categoryId, userId, categoryId, userId]);
+      return result;
+  } catch (error) {
+      throw error;
+  }
+},
 
   getIncorrectRatioStatistic: async (userId) => {
     try{

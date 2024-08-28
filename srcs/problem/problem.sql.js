@@ -229,18 +229,35 @@ getSubCategoriesByCategoryId: `
 
   
 
-    getIncorrectRatioStatistic:`SELECT pt.type_name AS sub_category, 
-    (SUM(p.incorrect_count) * 100.0 / 
-     (SELECT SUM(p2.incorrect_count)
-      FROM problem p2
-      WHERE p2.user_id = ?)
-    ) AS incorrect_percentage 
-    FROM problemtypeassignment pta
-    JOIN problemtype pt ON pta.type_id = pt.type_id
-    JOIN problem p ON p.problem_id = pta.problem_id
-    WHERE p.user_id = ? 
-    AND pt.type_level = 3
-    GROUP BY pt.type_name 
-    ORDER BY incorrect_percentage DESC;`,
+getIncorrectRatioByCategoryId: `
+    SELECT 
+        pt3.type_name AS sub_category,
+        (SUM(p.incorrect_count) * 100.0 / (
+            SELECT SUM(p2.incorrect_count)
+            FROM problemtypeassignment pta2
+            JOIN problem p2 ON p2.problem_id = pta2.problem_id
+            WHERE pta2.type_id IN (
+                SELECT pt3.type_id
+                FROM problemtype pt3
+                WHERE pt3.parent_type_id = ?
+            )
+            AND p2.user_id = ?
+        )) AS incorrect_percentage
+    FROM 
+        problemtypeassignment pta
+    JOIN 
+        problemtype pt3 ON pta.type_id = pt3.type_id
+    JOIN 
+        problem p ON p.problem_id = pta.problem_id
+    WHERE 
+        pt3.parent_type_id = ?
+        AND p.user_id = ?
+    GROUP BY 
+        pt3.type_name
+    ORDER BY 
+        incorrect_percentage DESC;
+`,
+
+
   };
   

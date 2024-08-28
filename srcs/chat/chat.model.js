@@ -7,7 +7,7 @@ export const ChatModel = {
     try {
       const [rows] = await pool.query(sql.findChatRoom, [problem_id, session_key]);
 
-      return rows[0].room_id; // 채팅방이 없으면 undefined 반환
+      return (rows && rows.length > 0) ? rows[0].room_id : undefined;
     } catch (error) {
       console.error("채팅방 조회 실패:", error.message);
       throw new Error("채팅방 조회 실패");

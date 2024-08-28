@@ -305,7 +305,6 @@ export const ProblemService = {
     try {
         // 1. 가장 많이 틀린 category의 ID와 상위 category 이름 조회
         const mostIncorrectCategory = await ProblemModel.getMostIncorrectCategoryId(userId);
-        console.log('mostIncorrectCategory:', mostIncorrectCategory);
         
         if (!mostIncorrectCategory || mostIncorrectCategory.length === 0) {
             return null;  // 해당 사용자가 틀린 문제가 없는 경우 처리
@@ -315,7 +314,6 @@ export const ProblemService = {
 
         // 2. 해당 category의 하위 카테고리 조회
         const subCategories = await ProblemModel.getSubCategoriesByCategoryId(category_id, userId);
-        console.log('subCategories:', subCategories);
 
         // 3. 최종 데이터 조합
         return {

@@ -195,7 +195,14 @@ getIncorrectRatioByCategoryId: async (categoryId, userId) => {
       throw error;
   }
 },
-
+getSubCategoriesByCategoryId: async (categoryId, userId) => {
+  try {
+      const [result] = await pool.query(sql.getSubCategoriesByCategoryId, [categoryId, userId]);
+      return result;
+  } catch (error) {
+      throw error;
+  }
+},
   getIncorrectRatioStatistic: async (userId) => {
     try{
       const [result] = await pool.query(sql.getIncorrectRatioStatistic, [userId,userId]);

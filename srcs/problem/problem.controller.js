@@ -292,32 +292,44 @@ export const getStatisticIncorrectProblem = async (req, res) => {
   }
 }
 
-  
-
-
-//가장 많이 틀린 유형 가져오기
 export const getStatisticIncorrectType = async (req, res) => {
-  try{
-    const userId = req.userId;
-    const statistic = await ProblemService.getStatisticIncorrectType(userId);
+  try {
+      const userId = req.userId;
+      const statistic = await ProblemService.getStatisticIncorrectType(userId);
+      
+      if (!statistic) {
+          return res.send(response(status.NO_CONTENT, null));  // 틀린 문제가 없는 경우 처리
+      }
 
-    //res.send(response(status.PROBLEM_STATISTIC_SUCCESS,getStatisticIncorrectTypeDTO(statistic)));
-    res.send(response(status.PROBLEM_STATISTIC_SUCCESS,statistic));
+      // DTO로 변환하여 응답
+      const statisticDTO = getStatisticIncorrectTypeDTO(statistic);
+      res.send(response(status.PROBLEM_STATISTIC_SUCCESS, statisticDTO));
   } catch (error) {
-    res.send(response(status.INTERNAL_SERVER_ERROR));
+      res.send(response(status.INTERNAL_SERVER_ERROR));
   }
 }
 
-//틀린 문제 유형 비율 가져오기
+
+
 export const getStatisticIncorrectRatio = async (req, res) => {
-  try{
-    const userId = req.userId;
-    const statistic = await ProblemService.getStatisticIncorrectRatio(userId);
+  try {
+      const userId = req.userId;
+      const { categoryId } = req.params;  // category_id를 파라미터로 받음
 
-    //res.send(response(status.PROBLEM_STATISTIC_SUCCESS,getStatisticIncorrectRatioDTO(statistic)));
-    res.send(response(status.PROBLEM_STATISTIC_SUCCESS,statistic));
+      if (!categoryId) {
+          return res.send(response(status.BAD_REQUEST, "카테고리 ID가 필요합니다."));
+      }
 
-  } catch(error){
-    res.send(response(status.INTERNAL_SERVER_ERROR));
+      const statistic = await ProblemService.getStatisticIncorrectRatio(userId, categoryId);
+
+      if (!statistic || statistic.length === 0) {
+          return res.send(response(status.NO_CONTENT, null));  // 데이터가 없는 경우 처리
+      }
+
+      // DTO로 변환하여 응답
+      const statisticDTO = getStatisticIncorrectRatioDTO(statistic);
+      res.send(response(status.PROBLEM_STATISTIC_SUCCESS, statisticDTO));
+  } catch (error) {
+      res.send(response(status.INTERNAL_SERVER_ERROR));
   }
 }

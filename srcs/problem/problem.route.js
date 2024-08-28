@@ -19,7 +19,7 @@ problemRouter.patch("/edit", uploadProblemImages, editProblem);
 
 problemRouter.get("/statistics/mistakes",getStatisticIncorrectProblem);
 problemRouter.get("/statistics/types",getStatisticIncorrectType);
-problemRouter.get("/statistics/ratios",getStatisticIncorrectRatio);
+problemRouter.get("/statistics/ratios/:categoryId", getStatisticIncorrectRatio);
 
 problemRouter.post("/", uploadProblemImages, addProblem);
 problemRouter.get("/types/:typeLevel", getProblemTypes);

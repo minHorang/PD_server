@@ -179,15 +179,30 @@ export const ProblemModel = {
     }
   },
 
-  getIncorrectTypeStatistic: async (userId) => {
-    try{
-      const [result] = await pool.query(sql.getIncorrectTypeStatistic, [userId]);
-      return result;
+  getMostIncorrectCategoryId: async (userId) => {
+    try {
+        const [result] = await pool.query(sql.getMostIncorrectCategoryId, [userId]);
+        return result;
     } catch (error) {
-      throw error;
+        throw error;
     }
-  },
-
+},
+getIncorrectRatioByCategoryId: async (categoryId, userId) => {
+  try {
+      const [result] = await pool.query(sql.getIncorrectRatioByCategoryId, [categoryId, userId, categoryId, userId]);
+      return result;
+  } catch (error) {
+      throw error;
+  }
+},
+getSubCategoriesByCategoryId: async (categoryId, userId) => {
+  try {
+      const [result] = await pool.query(sql.getSubCategoriesByCategoryId, [categoryId, userId]);
+      return result;
+  } catch (error) {
+      throw error;
+  }
+},
   getIncorrectRatioStatistic: async (userId) => {
     try{
       const [result] = await pool.query(sql.getIncorrectRatioStatistic, [userId,userId]);

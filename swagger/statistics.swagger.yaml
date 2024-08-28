@@ -110,13 +110,20 @@ paths:
                   message:
                     type: string
                     example: "데이터를 찾을 수 없습니다."
-
-  /problems/statistics/ratios:
+  /problems/statistics/ratios/{categoryId}:
     get:
       summary: 문제 유형별 틀린 비율 조회
-      description: 각 문제 유형별 틀린 비율을 조회합니다.
+      description: 특정 카테고리의 하위 문제 유형별 틀린 비율을 조회합니다.
       tags:
         - 통계
+      parameters:
+        - in: path
+          name: categoryId
+          required: true
+          schema:
+            type: integer
+          description: 조회할 카테고리의 ID
+          example: 1
       responses:
         '200':
           description: 문제 유형별 틀린 비율 조회 성공
@@ -136,6 +143,7 @@ paths:
                       type: string
                       description: 틀린 비율 (백분율로 표현)
                       example: "27.27273"
+
         '400':
           description: 잘못된 요청
           content:

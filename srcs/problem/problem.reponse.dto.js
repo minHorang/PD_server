@@ -75,11 +75,20 @@ export const getStatisticIncorrectProblemDTO = (problems) => problems.map(proble
   problemText: problem.problem_text,
 }));
 
-export const getStatisticIncorrectTypeDTO = (problems) => problems.map(problem => ({
-  sub_category: problem.sub_category
-}));
+export const getStatisticIncorrectTypeDTO = (data) => ({
+  mainCategory: data.mainCategory,
+  category: data.category,
+  subCategories: data.subCategories.map(sub => ({
+      subCategory: sub.subCategory,
+      totalIncorrect: sub.totalIncorrect
+  }))
+});
 
-export const getStatisticIncorrectRatioDTO = (problems) => problems.map(problem => ({
-  sub_category: problem.sub_category,
-  incorrect_percentage: problem.incorrect_percentage,
-}));
+
+
+export const getStatisticIncorrectRatioDTO = (data) => ({
+  subCategories: data.map(sub => ({
+      subCategory: sub.sub_category,
+      incorrectPercentage: sub.incorrect_percentage
+  }))
+});

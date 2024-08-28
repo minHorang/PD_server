@@ -292,21 +292,25 @@ export const getStatisticIncorrectProblem = async (req, res) => {
   }
 }
 
-  
-
-
-//가장 많이 틀린 유형 가져오기
 export const getStatisticIncorrectType = async (req, res) => {
-  try{
-    const userId = req.userId;
-    const statistic = await ProblemService.getStatisticIncorrectType(userId);
+  try {
+      const userId = req.userId;
+      const statistic = await ProblemService.getStatisticIncorrectType(userId);
+      
+      if (!statistic) {
+          return res.send(response(status.NO_CONTENT, null));  // 틀린 문제가 없는 경우 처리
+      }
 
-    //res.send(response(status.PROBLEM_STATISTIC_SUCCESS,getStatisticIncorrectTypeDTO(statistic)));
-    res.send(response(status.PROBLEM_STATISTIC_SUCCESS,statistic));
+      // DTO로 변환하여 응답
+      const statisticDTO = getStatisticIncorrectTypeDTO(statistic);
+      res.send(response(status.PROBLEM_STATISTIC_SUCCESS, statisticDTO));
   } catch (error) {
-    res.send(response(status.INTERNAL_SERVER_ERROR));
+      res.send(response(status.INTERNAL_SERVER_ERROR));
   }
 }
+
+
+
 
 //틀린 문제 유형 비율 가져오기
 export const getStatisticIncorrectRatio = async (req, res) => {

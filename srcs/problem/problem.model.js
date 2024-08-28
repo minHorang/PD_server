@@ -179,12 +179,20 @@ export const ProblemModel = {
     }
   },
 
-  getIncorrectTypeStatistic: async (userId) => {
-    try{
-      const [result] = await pool.query(sql.getIncorrectTypeStatistic, [userId]);
-      return result;
+  getMostIncorrectCategoryId: async (userId) => {
+    try {
+        const [result] = await pool.query(sql.getMostIncorrectCategoryId, [userId]);
+        return result;
     } catch (error) {
-      throw error;
+        throw error;
+    }
+},
+  getSubCategoriesByCategoryId: async (categoryId, userId) => {
+    try {
+        const [result] = await pool.query(sql.getSubCategoriesByCategoryId, [categoryId, userId]);
+        return result;
+    } catch (error) {
+        throw error;
     }
   },
 

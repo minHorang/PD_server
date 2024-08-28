@@ -158,26 +158,9 @@ export const ProblemService = {
         answer,
         status,
         memo,
-        mainTypeId,
-        midTypeId,
-        subTypeIds,
         photos
       } = problemData;
       await ProblemModel.updateProblem(problemId, problemText, answer, status, memo);
-  
-      if (mainTypeId) {
-        await ProblemModel.addProblemTypeAssignment(problemId, mainTypeId);
-      }
-  
-      if (midTypeId) {
-        await ProblemModel.addProblemTypeAssignment(problemId, midTypeId);
-      }
-  
-      if (subTypeIds && Array.isArray(subTypeIds)) {
-        for (const subTypeId of subTypeIds) {
-          await ProblemModel.addProblemTypeAssignment(problemId, subTypeId);
-        }
-      }
 
       if (photos && photos.length > 0) {
         await ProblemModel.addPhotos(problemId, photos);
@@ -236,10 +219,6 @@ export const ProblemService = {
       // 관련된 사진 삭제
       await ProblemModel.deletePhotosByProblemId(problemId);
       console.log('Service - deleteTotalProblem: 사진 삭제 완료');
-
-      // 관련된 유형 할당 삭제
-      await ProblemModel.deleteProblemTypeAssignment(problemId);
-      console.log('Service - deleteTotalProblem: 유형 할당 삭제 완료');
     } catch (error) {
       console.error("문제 삭제 실패:", error.message);
       throw new Error("문제 삭제 실패");

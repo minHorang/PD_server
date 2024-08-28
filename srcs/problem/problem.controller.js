@@ -68,24 +68,10 @@ export const editProblem = async (req, res, next) => {
       answer,
       status: problemStatus,
       memo,
-      mainTypeId,
-      midTypeId,
-      subTypeIds
     } = JSON.parse(req.body.data);
     const userId = req.userId;
     await ProblemService.deleteTotalProblem(problemId);
 
-    if (subTypeIds !== undefined && subTypeIds !== null) {
-      if (typeof subTypeIds === 'number') {
-        problemData.subTypeIds = [subTypeIds];
-      } else if (Array.isArray(subTypeIds)) {
-        if (subTypeIds.length > 5) {
-          return res.send(response(status.BAD_REQUEST, errorResponseDTO("잘못된 요청 본문")));
-        }
-      } else {
-        return res.send(response(status.BAD_REQUEST, errorResponseDTO("잘못된 요청 본문")));
-      }
-    }
 
     const { problemImage, solutionImages, passageImages, additionalImages } = res.locals.publicUrls;
     const photos = [
@@ -101,9 +87,6 @@ export const editProblem = async (req, res, next) => {
       answer,
       status: problemStatus,
       memo,
-      mainTypeId,
-      midTypeId,
-      subTypeIds,
       photos
     };
 

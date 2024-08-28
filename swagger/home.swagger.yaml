@@ -1207,10 +1207,7 @@ paths:
                       "problemText": "이것은 테스트 문제 텍스트입니다.",
                       "answer": "정답 예시",
                       "status": "active",
-                      "memo": "이것은 문제에 대한 메모입니다.",
-                      "mainTypeId": "2",
-                      "midTypeId": "4",
-                      "subTypeIds": ["7", "12"]
+                      "memo": "이것은 문제에 대한 메모입니다."
                     }
       responses:
         '200':

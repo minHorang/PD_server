@@ -1,7 +1,7 @@
 import { status } from "../../config/response.status.js";
 import { ChatService } from "./chat.service.js";
 import { response } from "../../config/response.js";
-import { setChatRoomResponseDTO, setChatMessageResponseDTO } from './chat.response.dto.js'; // DTO 함수 import
+import { setChatRoomResponseDTO, setChatMessageResponseDTO, errorResponseDTO } from './chat.response.dto.js'; // DTO 함수 import
 
 
 export const getOrCreateChatRoom = async (req, res) => {

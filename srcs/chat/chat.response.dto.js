@@ -18,4 +18,10 @@ export const setChatRoomResponseDTO = (roomId, logs) => {
       chatId: chatId
     };
   };
+
+  export const errorResponseDTO = (message) => {
+    return {
+      message: message
+    };
+  };
   

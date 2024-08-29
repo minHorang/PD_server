@@ -22,7 +22,7 @@ problemRouter.get("/statistics/mistakes",getStatisticIncorrectProblem);
 problemRouter.get("/statistics/types",getStatisticIncorrectType);
 problemRouter.get("/statistics/ratios/:categoryId", getStatisticIncorrectRatio);
 
-problemRouter.post("/upload", uploadImage);
+problemRouter.post("/image", uploadImage);
 problemRouter.post("/", addProblem);
 problemRouter.get("/types/:typeLevel", getProblemTypes);
 problemRouter.post('/types', addProblemType);

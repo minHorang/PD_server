@@ -1,5 +1,6 @@
 import express from "express";
-import { setScale, searchProblems, getProblem, editProblem, addProblem, deleteProblem, getProblemTypes, addProblemType , getStatisticIncorrectProblem, getStatisticIncorrectType, getStatisticIncorrectRatio, deleteProblemType } from "./problem.controller.js";
+import { setScale, searchProblems, getProblem, editProblem, addProblem, deleteProblem, getProblemTypes, addProblemType , deleteProblemType } from "./problem.controller.js";
+import { getStatisticIncorrectProblem, getStatisticIncorrectType, getStatisticIncorrectRatio } from "./statistic.controller.js";
 import authenticateToken from "../../config/jwt.middleware.js";
 
 import { createMulter } from "../utils/image/image.upload.js";

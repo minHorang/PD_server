@@ -169,49 +169,6 @@ export const ProblemModel = {
       throw new Error("문제 추가하기에서 사진 추가 실패");
     }
   },
-
-  getIncorrectProblemStatistic: async (userId) => {
-    try{
-      const [result] = await pool.query(sql.getIncorrectProblemStatistic, [userId]);
-      return result;
-    } catch (error) {
-      throw error;
-    }
-  },
-
-  getMostIncorrectCategoryId: async (userId) => {
-    try {
-        const [result] = await pool.query(sql.getMostIncorrectCategoryId, [userId]);
-        return result;
-    } catch (error) {
-        throw error;
-    }
-},
-getIncorrectRatioByCategoryId: async (categoryId, userId) => {
-  try {
-      const [result] = await pool.query(sql.getIncorrectRatioByCategoryId, [categoryId, userId, categoryId, userId]);
-      return result;
-  } catch (error) {
-      throw error;
-  }
-},
-getSubCategoriesByCategoryId: async (categoryId, userId) => {
-  try {
-      const [result] = await pool.query(sql.getSubCategoriesByCategoryId, [categoryId, userId]);
-      return result;
-  } catch (error) {
-      throw error;
-  }
-},
-  getIncorrectRatioStatistic: async (userId) => {
-    try{
-      const [result] = await pool.query(sql.getIncorrectRatioStatistic, [userId,userId]);
-      
-      return result;
-    } catch (error) {
-      throw error;
-    }
-  },
   
 
   getMainTypes: async (userId) => {

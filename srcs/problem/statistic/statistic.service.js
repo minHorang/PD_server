@@ -1,6 +1,6 @@
 import { StatisticModel } from "./statistic.model.js";
-import { BaseError } from "../../config/error.js";
-import { status } from "../../config/response.status.js";
+import { BaseError } from "../../../config/error.js";
+import { status } from "../../../config/response.status.js";
 
 export const StatisticService = {
     

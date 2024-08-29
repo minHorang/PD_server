@@ -1,6 +1,7 @@
 import express from "express";
-import { searchProblems, getProblem, editProblem, addProblem, deleteProblem, getProblemTypes, addProblemType , deleteProblemType } from "./problem.controller.js";
-import { getStatisticIncorrectProblem, getStatisticIncorrectType, getStatisticIncorrectRatio , getAllIncorrectGroupedByCategory } from "./statistic.controller.js";
+import { editProblem, addProblem, deleteProblem, getProblemTypes, addProblemType , deleteProblemType } from "./problem.controller.js";
+import { getStatisticIncorrectProblem, getStatisticIncorrectType, getStatisticIncorrectRatio , getAllIncorrectGroupedByCategory } from "./statistic/statistic.controller.js";
+import { getProblem, searchProblems } from "./search/search.controller.js";
 import authenticateToken from "../../config/jwt.middleware.js";
 
 import { createMulter } from "../utils/image/image.upload.js";
@@ -14,7 +15,6 @@ problemRouter.use(authenticateToken);
 
 problemRouter.get("/search", searchProblems);
 problemRouter.get("/:problemId", getProblem);
-problemRouter.patch("/edit", editProblem);
 
 
 problemRouter.get("/statistics/mistakes",getStatisticIncorrectProblem);
@@ -24,6 +24,8 @@ problemRouter.get("/statistics/incorrects/types", getAllIncorrectGroupedByCatego
 
 problemRouter.post("/image", uploadImage);
 problemRouter.post("/", addProblem);
+problemRouter.patch("/edit", editProblem);
+
 problemRouter.get("/types/:typeLevel", getProblemTypes);
 problemRouter.post('/types', addProblemType);
 problemRouter.delete("/:problemId", deleteProblem);

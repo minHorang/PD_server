@@ -1280,45 +1280,68 @@ paths:
       requestBody:
         required: true
         content:
-          multipart/form-data:
+           application/json:
             schema:
               type: object
               properties:
+                problemId:
+                  type: integer
+                  description: 문제 ID
+                  example: 1
+                problemText:
+                  type: string
+                  description: 문제 텍스트
+                  example: "2+4"
+                answer:
+                  type: string
+                  description: 정답
+                  example: "6"
+                status:
+                  type: string
+                  description: 문제의 현재 상태
+                  example: "작성"
+                  enum:
+                    - "수정"
+                    - "삭제"
+                    - "작성"
+                memo:
+                  type: string
+                  description: 메모
+                  example: "문제에 대한 추가 설명"
                 problemImage:
                   type: array
                   items:
                     type: string
-                    format: binary
-                  description: 문제 사진 (최소 1장 필수, 최대 1장)
+                    format: uri
+                  description: 문제 사진들 (최대 1장)
+                  example:
+                    - "https://storage.googleapis.com/your_bucket_name/problem_image.jpg"
                 solutionImages:
                   type: array
                   items:
                     type: string
                     format: binary
                   description: 풀이 사진들 (최대 5장)
+                  example:
+                    - "https://storage.googleapis.com/your_bucket_name/solution_image1.jpg"
+                    - "https://storage.googleapis.com/your_bucket_name/solution_image2.jpg"
                 passageImages:
                   type: array
                   items:
                     type: string
-                    format: binary
+                    format: uri
                   description: 지문 사진들 (최대 10장)
+                  example:
+                    - "https://storage.googleapis.com/your_bucket_name/passage_image1.jpg"
+                    - "https://storage.googleapis.com/your_bucket_name/passage_image2.jpg"
                 additionalImages:
                   type: array
                   items:
                     type: string
-                    format: binary
+                    format: uri
                   description: 추가 사진들 (최대 2장)
-                data:
-                  type: string
-                  description: 문제 정보(JSON 형식의 문자열)
-                  example: |
-                    {
-                      "problemId": "1",
-                      "problemText": "이것은 테스트 문제 텍스트입니다.",
-                      "answer": "정답 예시",
-                      "status": "active",
-                      "memo": "이것은 문제에 대한 메모입니다."
-                    }
+                  example:
+                    - "https://storage.googleapis.com/your_bucket_name/additional_image1.jpg"
       responses:
         '200':
           description: 문제 수정 성공

@@ -161,11 +161,17 @@ export const ProblemService = {
         photos
       } = problemData;
       await ProblemModel.updateProblem(problemId, problemText, answer, status, memo);
-
-      if (photos && photos.length > 0) {
-        await ProblemModel.addPhotos(problemId, photos);
+      console.log('Service - updateProblem: 문제 수정 완료');
+      if (photos) {
+        const photoTypes = Object.keys(photos);
+        for (const photoType of photoTypes) {
+          const photoUrls = photos[photoType];
+          for (const photoUrl of photoUrls) {
+            await ProblemModel.addPhoto(problemId, photoUrl, photoType);
+          }
+        }
+        console.log('Service - updateProblem: 이미지 저장 완료');
       }
-
     } catch (error) {
       console.error("문제 수정 실패:", error);
       throw new BaseError(status.BAD_REQUEST, "문제 수정 실패");

@@ -1,8 +1,4 @@
-// 문제 스케일 설정 응답 DTO
-export const setScaleResponseDTO = (scale) => ({
-    scale,
-  });
-  
+
   // 문제 검색 응답 DTO
   export const getProblemListResponseDTO = (problems) => {
     return problems.map(problem => ({

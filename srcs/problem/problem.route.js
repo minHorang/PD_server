@@ -1,5 +1,5 @@
 import express from "express";
-import { setScale, searchProblems, getProblem, editProblem, addProblem, deleteProblem, getProblemTypes, addProblemType , deleteProblemType } from "./problem.controller.js";
+import { searchProblems, getProblem, editProblem, addProblem, deleteProblem, getProblemTypes, addProblemType , deleteProblemType } from "./problem.controller.js";
 import { getStatisticIncorrectProblem, getStatisticIncorrectType, getStatisticIncorrectRatio , getAllIncorrectGroupedByCategory } from "./statistic.controller.js";
 import authenticateToken from "../../config/jwt.middleware.js";
 
@@ -12,7 +12,6 @@ const upload = createMulter("uploads");
 
 problemRouter.use(authenticateToken);
 
-problemRouter.patch("/scale", setScale);
 problemRouter.get("/search", searchProblems);
 problemRouter.get("/:problemId", getProblem);
 problemRouter.patch("/edit", editProblem);

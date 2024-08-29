@@ -3,9 +3,6 @@ import { BaseError } from "../../config/error.js";
 import { status } from "../../config/response.status.js";
 
 export const ProblemService = {
-  setScale: async (scale) => {
-    return scale;
-  },
 
   searchProblems: async (query, folderId, userId) => {
     const isSubscribed = await ProblemModel.checkSubscriptionStatus(userId);
@@ -161,7 +158,6 @@ export const ProblemService = {
         photos
       } = problemData;
       await ProblemModel.updateProblem(problemId, problemText, answer, status, memo);
-      console.log('Service - updateProblem: 문제 수정 완료');
       if (photos) {
         const photoTypes = Object.keys(photos);
         for (const photoType of photoTypes) {
@@ -171,7 +167,6 @@ export const ProblemService = {
             await ProblemModel.addPhoto(problemId, photoUrl, cleanedPhotoType);
           }
         }
-        console.log('Service - updateProblem: 이미지 저장 완료');
       }
       
     } catch (error) {

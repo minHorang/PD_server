@@ -3,7 +3,6 @@ import { ProblemService } from "./problem.service.js";
 import { ChatService } from "../chat/chat.service.js";
 import { response } from "../../config/response.js";
 import { 
-  setScaleResponseDTO, 
   getProblemListResponseDTO, 
   getProblemResponseDTO, 
   editProblemResponseDTO, 
@@ -14,15 +13,6 @@ import {
   deleteProblemResponseDTO,
 } from "./problem.reponse.dto.js";
 
-export const setScale = async (req, res) => {
-  try {
-    const { scale } = req.query;
-    const result = await ProblemService.setScale(parseFloat(scale));
-    res.send(response(status.SUCCESS, setScaleResponseDTO(result)));
-  } catch (error) {
-    res.send(response(status.BAD_REQUEST, errorResponseDTO("잘못된 요청 본문")));
-  }
-};
 
 export const searchProblems = async (req, res) => {
   try {

@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import { response } from "../../../config/response.js";
 import { status } from "../../../config/response.status.js";
 import path from 'path';
+import { errorResponseDTO } from "./image.response.dto.js";
 
 dotenv.config();
 
@@ -47,6 +48,11 @@ export const uploadImage = (req, res, next) => {
         if (err) {
             console.error('Upload Error:', err);
             return next(err);
+        }
+
+        // 파일이 없을 때 처리
+        if (!req.file) {
+            return res.status(400).send(response(status.BAD_REQUEST, errorResponseDTO("잘못된 요청 본문")));
         }
 
         const publicUrl = getPublicUrl(req.file.filename);

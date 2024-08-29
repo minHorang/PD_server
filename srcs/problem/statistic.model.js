@@ -37,4 +37,14 @@ export const StatisticModel = {
             throw error;
         }
       },
+    getAllIncorrectGroupedByCategory: async (userId) => {
+        try {
+            const [result] = await pool.query(sql.getAllIncorrectGroupedByCategory, [userId]);
+            return result;
+        } catch (error) {
+            throw error;
+        }
+    },
+
+
 }

@@ -51,7 +51,7 @@ paths:
                     type: string
                     example: "데이터를 찾을 수 없습니다."
           
-  /problems/statistics/types:
+  /problems/statistics/incorrects/types:
     get:
       summary: 자주 틀린 과목 및 유형 조회
       description: 자주 틀린 과목과 문제 유형을 분석하여 표시합니다.

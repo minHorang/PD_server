@@ -23,7 +23,7 @@ export const getStatisticIncorrectProblem = async (req, res) => {
     } catch (error){
       res.send(response(status.INTERNAL_SERVER_ERROR));
   }
-}
+};
 
 export const getStatisticIncorrectType = async (req, res) => {
   try {
@@ -40,7 +40,7 @@ export const getStatisticIncorrectType = async (req, res) => {
   } catch (error) {
       res.send(response(status.INTERNAL_SERVER_ERROR));
   }
-}
+};
 
 
 
@@ -65,4 +65,19 @@ export const getStatisticIncorrectRatio = async (req, res) => {
   } catch (error) {
       res.send(response(status.INTERNAL_SERVER_ERROR));
   }
-}
+};
+
+export const getAllIncorrectGroupedByCategory = async (req, res) => {
+    try {
+        const userId = req.userId;
+        const result = await StatisticService.getAllIncorrectGroupedByCategory(userId);
+
+        if (!result || result.length === 0) {
+            return res.send(response(status.NO_CONTENT, null));  // 데이터가 없는 경우 처리
+        }
+
+        res.send(response(status.PROBLEM_STATISTIC_SUCCESS, result));
+    } catch (error) {
+        res.send(response(status.INTERNAL_SERVER_ERROR));
+    }
+};

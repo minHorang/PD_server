@@ -17,8 +17,10 @@ export const getStatisticIncorrectProblem = async (req, res) => {
     const userId = req.userId;
     const statistic = await StatisticService.getStatisticIncorrectProblem(userId);
 
+    if (!statistic || statistic.length === 0) {
+        return res.send(response(status.NO_CONTENT, null));  // 데이터가 없는 경우 처리
+    }
     res.send(response(status.PROBLEM_STATISTIC_SUCCESS,statistic));
-    //res.send(response(status.PROBLEM_STATISTIC_SUCCESS,getStatisticIncorrectProblemDTO(statistic)));
 
     } catch (error){
       res.send(response(status.INTERNAL_SERVER_ERROR));

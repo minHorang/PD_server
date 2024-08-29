@@ -3,7 +3,7 @@ import { setScale, searchProblems, getProblem, editProblem, addProblem, deletePr
 import authenticateToken from "../../config/jwt.middleware.js";
 
 import { createMulter } from "../utils/image/image.upload.js";
-import { uploadProblemImages, uploadImage } from "../utils/image/image.upload.js";
+import { uploadImage } from "../utils/image/image.upload.js";
 
 export const problemRouter = express.Router();
 
@@ -14,7 +14,7 @@ problemRouter.use(authenticateToken);
 problemRouter.patch("/scale", setScale);
 problemRouter.get("/search", searchProblems);
 problemRouter.get("/:problemId", getProblem);
-problemRouter.patch("/edit", uploadProblemImages, editProblem);
+problemRouter.patch("/edit", editProblem);
 
 
 problemRouter.get("/statistics/mistakes",getStatisticIncorrectProblem);

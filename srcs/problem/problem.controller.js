@@ -68,18 +68,13 @@ export const editProblem = async (req, res, next) => {
       answer,
       status: problemStatus,
       memo,
-    } = JSON.parse(req.body.data);
+      problemImage,
+      solutionImages,
+      passageImages,
+      additionalImages
+    } = req.body;
     const userId = req.userId;
     await ProblemService.deleteTotalProblem(problemId);
-
-
-    const { problemImage, solutionImages, passageImages, additionalImages } = res.locals.publicUrls;
-    const photos = [
-      ...problemImage.map(url => ({ photoUrl: url, photoType: 'problem' })),
-      ...solutionImages.map(url => ({ photoUrl: url, photoType: 'solution' })),
-      ...passageImages.map(url => ({ photoUrl: url, photoType: 'passage' })),
-      ...additionalImages.map(url => ({ photoUrl: url, photoType: 'additional' }))
-    ];
 
     const problemData = {
       problemId,
@@ -87,7 +82,12 @@ export const editProblem = async (req, res, next) => {
       answer,
       status: problemStatus,
       memo,
-      photos
+      photos: {
+          problemImage,
+          solutionImages,
+          passageImages,
+          additionalImages
+      }
     };
 
     await ProblemService.updateProblem(problemData, userId);

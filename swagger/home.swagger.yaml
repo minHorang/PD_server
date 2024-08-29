@@ -443,6 +443,70 @@ paths:
                     type: string
                     example: "데이터를 찾을 수 없습니다."
 
+  /problems/image:
+    post:
+      tags:
+        - 홈
+      summary: 이미지 업로드하기
+      description: 이미지 업로드하기
+      requestBody:
+        description: 이미지 업로드를 위한 데이터
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: 업로드할 이미지 파일
+
+      responses:
+        '200':
+          description: 이미지 업로드 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: true
+                  code:
+                    type: integer
+                    example: 2001
+                  message:
+                    type: string
+                    example: "이미지 저장 성공입니다."
+                  result:
+                    type: array
+                    items:
+                      type: string
+                      example: "https://storage.googleapis.com/your_bucket_name/your_image_name.jpg"
+        '400':
+          description: 잘못된 요청
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isSuccess:
+                    type: boolean
+                    example: false
+                  code:
+                    type: string
+                    example: "COMMON001"
+                  message:
+                    type: string
+                    example: "잘못된 요청입니다."
+                  result:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "잘못된 요청 본문"
+
   /problems:
     post:
       tags:
@@ -453,39 +517,82 @@ paths:
         description: 문제 추가를 위한 데이터
         required: true
         content:
-          multipart/form-data:
+           application/json:
             schema:
               type: object
               properties:
+                folderId:
+                  type: integer
+                  description: 폴더 ID
+                  example: 1
+                problemText:
+                  type: string
+                  description: 문제 텍스트
+                  example: "2+4"
+                answer:
+                  type: string
+                  description: 정답
+                  example: "6"
+                status:
+                  type: string
+                  description: 문제의 현재 상태
+                  example: "작성"
+                  enum:
+                    - "수정"
+                    - "삭제"
+                    - "작성"
+                memo:
+                  type: string
+                  description: 메모
+                  example: "문제에 대한 추가 설명"
+                mainTypeId:
+                  type: integer
+                  description: 대분류 유형 ID
+                  example: 1
+                midTypeId:
+                  type: integer
+                  description: 중분류 유형 ID
+                  example: 2
+                subTypeIds:
+                  type: array
+                  items:
+                    type: integer
+                  description: 소분류 유형 ID 배열 (최대 5개)
+                  example: [3, 4]
                 problemImage:
                   type: array
                   items:
                     type: string
-                    format: binary
-                  description: 문제 사진 (최소 1장 필수, 최대 1장)
+                    format: uri
+                  description: 문제 사진들 (최대 1장)
+                  example:
+                    - "https://storage.googleapis.com/your_bucket_name/problem_image.jpg"
                 solutionImages:
                   type: array
                   items:
                     type: string
                     format: binary
                   description: 풀이 사진들 (최대 5장)
+                  example:
+                    - "https://storage.googleapis.com/your_bucket_name/solution_image1.jpg"
+                    - "https://storage.googleapis.com/your_bucket_name/solution_image2.jpg"
                 passageImages:
                   type: array
                   items:
                     type: string
-                    format: binary
+                    format: uri
                   description: 지문 사진들 (최대 10장)
+                  example:
+                    - "https://storage.googleapis.com/your_bucket_name/passage_image1.jpg"
+                    - "https://storage.googleapis.com/your_bucket_name/passage_image2.jpg"
                 additionalImages:
                   type: array
                   items:
                     type: string
-                    format: binary
+                    format: uri
                   description: 추가 사진들 (최대 2장)
-                data:
-                  type: string
-                  format: json
-                  description: 문제 정보(JSON 형식의 문자열)
-                  example: '{"folderId":1,"problemText":"2+4","answer":"6","status":"작성","memo":"문제에 대한 추가 설명","mainTypeId":1,"midTypeId":2,"subTypeIds":[3,4]}'
+                  example:
+                    - "https://storage.googleapis.com/your_bucket_name/additional_image1.jpg"
       responses:
         '200':
           description: 문제 추가 성공
@@ -526,8 +633,11 @@ paths:
                     type: string
                     example: "잘못된 요청입니다."
                   result:
-                    type: string
-                    example: "잘못된 요청 본문"
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "잘못된 요청 본문"
 
   /problems/types:
     post:

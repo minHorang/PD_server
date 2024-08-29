@@ -101,60 +101,65 @@ export const editProblem = async (req, res, next) => {
 // 문제 추가
 export const addProblem = async (req, res) => {
   try {
-    const {
-      folderId,
-      problemText,
-      answer,
-      status: problemStatus,
-      memo,
-      mainTypeId,
-      midTypeId,
-      subTypeIds
-    } = JSON.parse(req.body.data);
-    
-    const userId = req.userId;
+      const {
+          folderId,
+          problemText,
+          answer,
+          status: problemStatus,
+          memo,
+          mainTypeId,
+          midTypeId,
+          subTypeIds,
+          problemImage,
+          solutionImages,
+          passageImages,
+          additionalImages
+      } = req.body;
 
-    if (mainTypeId !== undefined && mainTypeId !== null && typeof mainTypeId !== 'number') {
-      return res.send(response(status.BAD_REQUEST, errorResponseDTO("잘못된 요청 본문")));
-    }
+      const userId = req.userId;
 
-    if (midTypeId !== undefined && midTypeId !== null && typeof midTypeId !== 'number') {
-      return res.send(response(status.BAD_REQUEST, errorResponseDTO("잘못된 요청 본문")));
-    }
-
-    if (subTypeIds !== undefined && subTypeIds !== null) {
-      if (typeof subTypeIds === 'number') {
-        problemData.subTypeIds = [subTypeIds];
-      } else if (Array.isArray(subTypeIds)) {
-        if (subTypeIds.length > 5) {
+      if (typeof mainTypeId !== 'number' && mainTypeId !== undefined && mainTypeId !== null) {
           return res.send(response(status.BAD_REQUEST, errorResponseDTO("잘못된 요청 본문")));
-        }
-      } else {
-        return res.send(response(status.BAD_REQUEST, errorResponseDTO("잘못된 요청 본문")));
       }
-    }
 
-    const problemData = {
-      folderId,
-      problemText,
-      answer,
-      status: problemStatus,
-      memo,
-      mainTypeId,
-      midTypeId,
-      subTypeIds,
-      photos: res.locals.publicUrls // 업로드된 사진 URL 포함
-    };
+      if (typeof midTypeId !== 'number' && midTypeId !== undefined && midTypeId !== null) {
+          return res.send(response(status.BAD_REQUEST, errorResponseDTO("잘못된 요청 본문")));
+      }
 
-    console.log("Problem Data:", problemData);
+      if (subTypeIds !== undefined && subTypeIds !== null) {
+          if (typeof subTypeIds === 'number') {
+              subTypeIds = [subTypeIds];
+          } else if (!Array.isArray(subTypeIds) || subTypeIds.length > 5) {
+              return res.send(response(status.BAD_REQUEST, errorResponseDTO("잘못된 요청 본문")));
+          }
+      }
 
-    const addedProblem = await ProblemService.addProblem(problemData, userId);
-    console.log("추가된 문제:", addedProblem);
+      const problemData = {
+          folderId,
+          problemText,
+          answer,
+          status: problemStatus,
+          memo,
+          mainTypeId,
+          midTypeId,
+          subTypeIds,
+          photos: {
+              problemImage,
+              solutionImages,
+              passageImages,
+              additionalImages
+          }
+      };
 
-    res.send(response(status.SUCCESS, { problemId: addedProblem.problemId }));
+      console.log("Problem Data:", problemData);
+
+      const addedProblem = await ProblemService.addProblem(problemData, userId);
+      console.log("추가된 문제:", addedProblem);
+
+      res.send(response(status.SUCCESS, { problemId: addedProblem.problemId }));
   } catch (error) {
-    console.error('문제 추가 실패:', error);
-    res.send(response(status.BAD_REQUEST, errorResponseDTO("잘못된 요청 본문")));
+      console.error('문제 추가 실패:', error);
+      return res.status(400).send(response(status.BAD_REQUEST, errorResponseDTO("잘못된 요청 본문")));
   }
 };
 

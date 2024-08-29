@@ -4,14 +4,35 @@ import { status } from "../../config/response.status.js";
 
 export const StatisticService = {
     
-  getStatisticIncorrectProblem: async (userId) => {
-    try{
-      
-      return await StatisticModel.getIncorrectProblemStatistic(userId);
-    } catch (error) {
-      throw new BaseError(status.INTERNAL_SERVER_ERROR,"틀린 문제 통계 조회 실패")
-    }
-  },
+
+    getStatisticIncorrectProblem: async (userId) => {
+        try {
+            // 1. 문제 데이터 가져오기
+            const problems = await StatisticModel.getIncorrectProblemStatistic(userId);
+            if (!problems || problems.length === 0) {
+                return [];
+            }
+
+            // 2. 문제 ID 추출
+            const problemIds = problems.map(problem => problem.problem_id);
+
+            // 3. 각 문제에 대한 이미지 URL 가져오기
+            const images = await StatisticModel.getProblemImageUrls(problemIds);
+
+            // 4. 문제 데이터와 이미지 URL 결합
+            const problemsWithImages = problems.map(problem => {
+                const image = images.find(img => img.problem_id === problem.problem_id);
+                return {
+                    ...problem,
+                    problemImage: image ? image.problemImage : null  // 이미지가 없는 경우 null 처리
+                };
+            });
+
+            return problemsWithImages;
+        } catch (error) {
+            throw new BaseError(status.INTERNAL_SERVER_ERROR, "틀린 문제 조회 실패");
+        }
+    },
   
 
   getStatisticIncorrectType: async (userId) => {

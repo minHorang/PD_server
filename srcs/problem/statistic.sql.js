@@ -2,7 +2,11 @@ export const sql = {
     
 
     getIncorrectProblemStatistic: `SELECT * FROM problem WHERE user_id = ? ORDER BY incorrect_count DESC LIMIT 5;`,
-
+    getProblemImageUrls: `
+        SELECT problem_id, photo_url AS problemImage 
+        FROM photo 
+        WHERE problem_id IN (?) AND photo_type = 'problem';
+    `,
     // 가장 많이 틀린 category (type_level 2) ID를 조회
     getMostIncorrectCategoryId: `
         SELECT 

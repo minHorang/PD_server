@@ -13,6 +13,15 @@ export const StatisticModel = {
         }
       },
     
+      getProblemImageUrls: async (problemIds) => {
+        try {
+            const [result] = await pool.query(sql.getProblemImageUrls, [problemIds]);
+            return result;
+        } catch (error) {
+            throw error;
+        }
+    },
+    
       getMostIncorrectCategoryId: async (userId) => {
         try {
             const [result] = await pool.query(sql.getMostIncorrectCategoryId, [userId]);

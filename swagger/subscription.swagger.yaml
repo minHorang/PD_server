@@ -1,36 +1,12 @@
 paths:
   /subscription/approve:
     patch:
-      summary: 구독 승인 및 결제 처리
-      description: 사용자 구독을 승인하고, 토스 결제 API를 통해 결제를 처리합니다.
       tags:
         - 구독
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                paymentKey:
-                  type: string
-                  description: 결제를 위한 토스 결제 키
-                  example: "some_payment_key"
-                orderId:
-                  type: string
-                  description: 주문 ID
-                  example: "order_123456"
-                amount:
-                  type: integer
-                  description: 결제 금액
-                  example: 10000
-              required:
-                - paymentKey
-                - orderId
-                - amount
+      summary: 구독하기
       responses:
-        '200':
-          description: 구독 승인 및 결제 성공
+        "200":
+          description: 구독이 성공적으로 시작
           content:
             application/json:
               schema:
@@ -40,30 +16,24 @@ paths:
                     type: boolean
                     example: true
                   code:
-                    type: integer
-                    example: 2000
+                    type: string
+                    example: SUBSCRIPTION2001
                   message:
                     type: string
-                    example: "구독 승인 및 결제 성공!"
+                    example: 구독하기 성공입니다.
                   result:
                     type: object
-                    description: 결제와 구독 상태 업데이트 결과
-        '500':
-          description: 서버 오류
+                    nullable: true
+        "400":
+          description: 구독 실패
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  isSuccess:
-                    type: boolean
-                    example: false
-                  code:
-                    type: integer
-                    example: 5000
-                  message:
+                  errorMessage:
                     type: string
-                    example: "내부 서버 오류"
+                    example: "Invalid request"
   
   /subscription/cancel:
     patch:

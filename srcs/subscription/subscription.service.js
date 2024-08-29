@@ -9,29 +9,31 @@ const secretKey = process.env.SECRET_KEY;
 const clientKey = process.env.CLIENT_KEY;
 
 export const SubscriptionService = {
-  subscribe: async (userId, paymentInfo) => {
+  subscribe: async (userId) => {
     try {
-      // 결제 승인 API 호출
-      const { paymentKey, orderId, amount } = paymentInfo;
-      const encryptedSecretKey =
-        'Basic ' + Buffer.from(secretKey + ':').toString('base64');
+      // // 결제 승인 API 호출
+      // const { paymentKey, orderId, amount } = paymentInfo;
+      // const encryptedSecretKey =
+      //   'Basic ' + Buffer.from(secretKey + ':').toString('base64');
 
-      const response = await fetch('https://api.tosspayments.com/v1/payments/confirm', {
-        method: 'POST',
-        body: JSON.stringify({ orderId, amount, paymentKey }),
-        headers: {
-          Authorization: encryptedSecretKey,
-          'Content-Type': 'application/json',
-        },
-      });
+      // const response = await fetch('https://api.tosspayments.com/v1/payments/confirm', {
+      //   method: 'POST',
+      //   body: JSON.stringify({ orderId, amount, paymentKey }),
+      //   headers: {
+      //     Authorization: encryptedSecretKey,
+      //     'Content-Type': 'application/json',
+      //   },
+      // });
 
-      const data = await response.json();
+      // const data = await response.json();
 
-      if (data.status === 'DONE') {
-        return await SubscriptionModel.subscribe(userId);
-      } else {
-        throw new BaseError(status.PAYMENT_FAILED, "결제 실패");
-      }
+      // if (data.status === 'DONE') {
+      //   return await SubscriptionModel.subscribe(userId);
+      // } else {
+      //   throw new BaseError(status.PAYMENT_FAILED, "결제 실패");
+      // }
+      return await SubscriptionModel.subscribe(userId);
+
     } catch (error) {
       throw new BaseError(status.INTERNAL_SERVER_ERROR, "구독하기 실패");
     }

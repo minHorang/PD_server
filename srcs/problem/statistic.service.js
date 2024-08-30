@@ -74,14 +74,12 @@ export const StatisticService = {
         throw new BaseError(status.INTERNAL_SERVER_ERROR, "틀린 문제 비율 통계 조회 실패");
     }
   },
-
-
   getAllIncorrectGroupedByCategory: async (userId) => {
     try {
         const results = await StatisticModel.getAllIncorrectGroupedByCategory(userId);
 
         const groupedResult = results.reduce((acc, curr) => {
-            const { main_category, category, sub_category, total_incorrect } = curr;
+            const { main_category, category_id, category, sub_category, total_incorrect } = curr;
 
             let mainCategoryObj = acc.find(item => item.mainCategory === main_category);
             if (!mainCategoryObj) {
@@ -96,6 +94,7 @@ export const StatisticService = {
             if (!categoryObj) {
                 categoryObj = {
                     category: category,
+                    categoryId: category_id,  // 중간 카테고리의 ID 추가
                     subCategories: []
                 };
                 mainCategoryObj.categories.push(categoryObj);
@@ -113,6 +112,6 @@ export const StatisticService = {
     } catch (error) {
         throw new BaseError(status.INTERNAL_SERVER_ERROR, "문제 틀린 횟수 계산 실패");
     }
-  } 
+}
 }
 

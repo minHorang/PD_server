@@ -83,12 +83,12 @@ export const sql = {
         ORDER BY 
             incorrect_percentage DESC;
     `,
-
     getAllIncorrectGroupedByCategory: `
         SELECT 
             pt1.type_name AS main_category,  -- type_level 1
-            pt2.type_name AS category,       -- type_level 2
-            pt3.type_name AS sub_category,   -- type_level 3
+            pt2.type_id AS category_id,       -- type_level 2 ID
+            pt2.type_name AS category,        -- type_level 2
+            pt3.type_name AS sub_category,    -- type_level 3
             SUM(p.incorrect_count) AS total_incorrect
         FROM 
             problem p
@@ -103,7 +103,7 @@ export const sql = {
         WHERE 
             p.user_id = ?  -- 사용자 ID로 필터링
         GROUP BY 
-            pt1.type_name, pt2.type_name, pt3.type_name
+            pt1.type_name, pt2.type_id, pt2.type_name, pt3.type_name
         ORDER BY 
             main_category, category, total_incorrect DESC;
     `,

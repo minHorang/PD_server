@@ -14,6 +14,7 @@ export const subscribe = async (req, res) => {
   }
 };
 
+
 export const cancelSubscribe = async (req, res) => {
   try {
     const userId = req.userId;

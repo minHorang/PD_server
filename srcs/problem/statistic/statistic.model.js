@@ -1,4 +1,4 @@
-import { pool } from "../../config/db.js"; 
+import { pool } from "../../../config/db.js"; 
 import { sql } from "./statistic.sql.js"; 
 
 export const StatisticModel = {

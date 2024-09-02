@@ -1,11 +1,3 @@
-
-
-export const getStatisticIncorrectProblemDTO = (problems) => problems.map(problem => ({
-    problemId: problem.problem_id,
-    problemImage: problem.problem_image,
-    problemText: problem.problem_text,
-  }));
-  
   export const getStatisticIncorrectTypeDTO = (data) => ({
     mainCategory: data.mainCategory,
     category: data.category,
@@ -24,3 +16,7 @@ export const getStatisticIncorrectProblemDTO = (problems) => problems.map(proble
     }))
   });
   
+
+  export const errorResponseDTO = (message) => ({
+    message: message
+  });

@@ -3,75 +3,7 @@ import { BaseError } from "../../config/error.js";
 import { status } from "../../config/response.status.js";
 
 export const ProblemService = {
-  setScale: async (scale) => {
-    return scale;
-  },
 
-  searchProblems: async (query, folderId, userId) => {
-    const isSubscribed = await ProblemModel.checkSubscriptionStatus(userId);
-    if (!isSubscribed) {
-      throw new Error("구독 계정만 이용 가능합니다.");
-    }
-    if (folderId) {
-      return await ProblemModel.searchByFolder(query, folderId);
-    } else {
-      return await ProblemModel.searchAll(query);
-    }
-  },
-
-
-  getProblem: async (problemId) => {
-    try {
-      const problem = await ProblemModel.findById(problemId);
-      if (!problem) return null;
-
-      const photos = await ProblemModel.findPhotosByProblemId(problemId);
-      const types = await ProblemModel.findTypesByProblemId(problemId);
-
-      // photo_type 별로 그룹화
-      const groupedPhotos = photos.reduce((acc, photo) => {
-        if (!acc[photo.photo_type]) {
-          acc[photo.photo_type] = [];
-        }
-        acc[photo.photo_type].push(photo.photo_url);
-        return acc;
-      }, {});
-      
-      return {
-        ...problem,
-        photos: groupedPhotos,
-        types
-      };
-    } catch (error) {
-      throw new Error("문제 조회 실패");
-    }
-  },
-
-  // EDIT 관련
-  updateProblemTextAndAnswer: async (problemId, problemText, answerText) => {
-    await ProblemModel.updateProblem(problemId, problemText, answerText);
-  },
-
-  updateProblemTypes: async (problemId, typeIds) => {
-    // 기존 유형 할당 삭제
-    await ProblemModel.deleteProblemTypeAssignment(problemId);
-
-    // 새로운 유형 할당 추가
-    for (let typeId of typeIds) {
-      if (typeId) {
-        await ProblemModel.addProblemTypeAssignment(problemId, typeId);
-      }
-    }
-  },
-
-  updateProblemPhotos: async (problemId, photos) => {
-    // 기존 이미지 삭제
-    await ProblemModel.deletePhotosByProblemId(problemId);
-    // 새 이미지 저장
-    for (let { url, type } of photos) {
-      await ProblemModel.addPhoto(problemId, url, type);
-    }
-  },
 
   addProblem: async (problemData, userId) => {
     try {
@@ -161,7 +93,6 @@ export const ProblemService = {
         photos
       } = problemData;
       await ProblemModel.updateProblem(problemId, problemText, answer, status, memo);
-      console.log('Service - updateProblem: 문제 수정 완료');
       if (photos) {
         const photoTypes = Object.keys(photos);
         for (const photoType of photoTypes) {
@@ -171,7 +102,6 @@ export const ProblemService = {
             await ProblemModel.addPhoto(problemId, photoUrl, cleanedPhotoType);
           }
         }
-        console.log('Service - updateProblem: 이미지 저장 완료');
       }
       
     } catch (error) {

@@ -1,12 +1,12 @@
-import { status } from "../../config/response.status.js";
+import { status } from "../../../config/response.status.js";
 import { StatisticService } from "./statistic.service.js";
-import { response } from "../../config/response.js";
+import { response } from "../../../config/response.js";
 
 
 import {
-    getStatisticIncorrectProblemDTO,
     getStatisticIncorrectTypeDTO,
     getStatisticIncorrectRatioDTO, 
+    errorResponseDTO,
 } from "./statistic.response.dto.js";
 
 

@@ -81,7 +81,7 @@ export const StatisticService = {
         const results = await StatisticModel.getAllIncorrectGroupedByCategory(userId);
 
         const groupedResult = results.reduce((acc, curr) => {
-            const { main_category, category, sub_category, total_incorrect } = curr;
+            const { main_category, category_id, category, sub_category, total_incorrect } = curr;
 
             let mainCategoryObj = acc.find(item => item.mainCategory === main_category);
             if (!mainCategoryObj) {
@@ -96,6 +96,7 @@ export const StatisticService = {
             if (!categoryObj) {
                 categoryObj = {
                     category: category,
+                    categoryId: category_id, 
                     subCategories: []
                 };
                 mainCategoryObj.categories.push(categoryObj);

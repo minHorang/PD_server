@@ -6,7 +6,7 @@
 <br> 프로젝트 이름 : Wrong Answer Strorage & Hub
 <br> 프로젝트 설명 : 모두를 위한 오답노트 서비스
 <br> 기간: 2024.7.27 ~ 2024.08.31
-
+<br>
 
 ![landing page (1)-1](https://github.com/user-attachments/assets/a1d32edc-5652-4ab7-8579-f0d1b43f8a49)
 ![landing page (1)-2](https://github.com/user-attachments/assets/c394fe8f-10f2-49b9-a0ff-4f8b66949f31)

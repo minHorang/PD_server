@@ -12,13 +12,14 @@ import { folderRouter } from "./srcs/folder/folder.route.js";
 import { chatRouter } from "./srcs/chat/chat.route.js";
 import cors from "cors";
 import { userRouter } from "./srcs/user/user.route.js";
-import  authRouter  from "./srcs/auth/auth.route.js";
+import { portfolioRouter } from "./srcs/portfolio/portfolio.route.js";
+import authRouter from "./srcs/auth/auth.route.js";
 import { subscriptionRouter } from "./srcs/subscription/subscription.route.js";
 import dotenv from "dotenv";
 dotenv.config();
 
 const app = express();
-const port = 3000;
+const port = 4000;
 
 // 미들웨어 설정
 app.use(express.json());
@@ -36,6 +37,8 @@ app.use("/folders", folderRouter);
 app.use("/health", healthCheck);
 
 app.use("/upload", imageRouter);
+
+app.use("/portfolio", portfolioRouter);
 
 app.use("/users", userRouter);
 

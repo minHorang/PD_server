@@ -1,5 +1,5 @@
-export const getListResponseDTO = (portfoliio) => ({
-  portfoliio,
+export const getListResponseDTO = (collab) => ({
+  collab,
 });
 
 export const postSuggestResponseDTO = (message) => ({

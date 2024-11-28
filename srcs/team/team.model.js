@@ -6,7 +6,10 @@ export const TeamModel = {
     console.log(sql.findTeamByCategory, category);
     console.log(category);
     try {
-      const [results] = await pool.query(sql.findTeamByCategory, category);
+      const [results] = await pool.query(sql.findTeamByCategory, [
+        category,
+        category,
+      ]);
       return [results];
     } catch (error) {
       throw new Error("팀 조회 실패");

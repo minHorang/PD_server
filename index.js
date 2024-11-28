@@ -16,6 +16,8 @@ import { portfolioRouter } from "./srcs/portfolio/portfolio.route.js";
 import authRouter from "./srcs/auth/auth.route.js";
 import { subscriptionRouter } from "./srcs/subscription/subscription.route.js";
 import dotenv from "dotenv";
+import { teamRouter } from "./srcs/team/team.route.js";
+import { collabRouter } from "./srcs/collab/collab.route.js";
 dotenv.config();
 
 const app = express();
@@ -40,6 +42,8 @@ app.use("/upload", imageRouter);
 
 app.use("/portfolio", portfolioRouter);
 
+app.use("/project", teamRouter);
+app.use("/collab", collabRouter);
 app.use("/users", userRouter);
 
 app.use("/auth", authRouter);

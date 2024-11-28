@@ -1,5 +1,5 @@
-export const getListResponseDTO = (project) => ({
-  project,
+export const getListResponseDTO = (portfoliio) => ({
+  portfoliio,
 });
 
 export const postSuggestResponseDTO = (message) => ({
@@ -8,8 +8,4 @@ export const postSuggestResponseDTO = (message) => ({
 
 export const errorResponseDTO = (message) => ({
   errorMessage: message.message,
-});
-
-export const mypageResponseDTO = (mypage) => ({
-  mypage,
 });

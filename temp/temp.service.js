@@ -13,3 +13,18 @@ export function CheckFlag(flag) {
     return flagResponseDTO(flag);
   }
 }
+
+export const testDB = async () => {
+  console.log("실행");
+  try {
+    //이름, 아이디, 패스워드가 모두 있으면
+    const [response] = await pool.query(sql.allDB);
+    console.log(response);
+  } catch (error) {
+    throw new BaseError(status.BAD_REQUEST, "조회 실패");
+  }
+};
+
+const sql = {
+  allDB: `SELECT title, part, duration FROM Portfolio WHERE category_id=?`,
+};

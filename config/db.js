@@ -1,10 +1,7 @@
 import mysql from "mysql2/promise";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 export const pool = await mysql.createPool({
-  host: "localhost",
+  host: "127.0.0.1",
   user: "root",
   port: 3306,
   database: "PD",

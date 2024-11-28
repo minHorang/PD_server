@@ -9,7 +9,7 @@ import {
 
 export const getPortfolio = async (req, res) => {
   try {
-    const category = req.params.category;
+    const category = req.query.category;
 
     const portfoliio = await PortfolioService.getList(category);
     if (portfoliio) {

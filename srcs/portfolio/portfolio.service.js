@@ -32,6 +32,20 @@ export const PortfolioService = {
       throw new BaseError(status.BAD_REQUEST, "포트폴리오 조회 실패");
     }
   },
+  getWrite: async (id) => {
+    try {
+      const title = await PortfolioModel.findByUser(id);
+      if (!title) {
+        throw new BaseError(status.NOT_FOUND, "포트폴리오를 찾을 수 없습니다.");
+      }
+      console.log(title);
+      return title;
+    } catch (error) {
+      console.error("portfolio Error:", error);
+      throw new BaseError(status.BAD_REQUEST, "포트폴리오 조회 실패");
+    }
+  },
+
   postSuggest: async (body) => {
     try {
       await PortfolioModel.postSuggest(body);

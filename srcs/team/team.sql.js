@@ -18,11 +18,11 @@ WHERE
         WHERE category_id != 1
     )
   ;`,
-  findTeamById: `SELECT title,duration, wanted, description FROM Project WHERE project_id=?`,
+  findTeamById: `SELECT title, process, wanted, description FROM Project WHERE project_id=?`,
   postMessageSQL: `INSERT INTO Application (project_id, user_id, message, status) VALUES(?,?,?,"지원 중")`,
   postProjectSQL: `START TRANSACTION;
-                    INSERT INTO Project (title, description, status, user_id, duration, part, wanted)
-                    VALUES (?,?,'모집 중',?,?,?,?);
+                    INSERT INTO Project (title, description, status, user_id, duration, part, wanted, process)
+                    VALUES (?,?,'모집 중',?,?,?,?,?);
                     SET @project_id = LAST_INSERT_ID();
                     INSERT INTO ProjectCategory (project_id, category_id) VALUES(@project_id,?);
                     COMMIT;`,

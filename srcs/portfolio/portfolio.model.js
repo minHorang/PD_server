@@ -22,6 +22,16 @@ export const PortfolioModel = {
       throw new Error("포트폴리오 조회 실패");
     }
   },
+  findByUser: async (id) => {
+    console.log(sql.findPortfolioByUser, id);
+    console.log(id);
+    try {
+      const [results] = await pool.query(sql.findPortfolioByUser, id);
+      return [results];
+    } catch (error) {
+      throw new Error("포트폴리오 조회 실패");
+    }
+  },
   postSuggest: async (body) => {
     console.log(sql.postMessageSQL);
     console.log(body.project_id);

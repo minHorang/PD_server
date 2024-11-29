@@ -43,6 +43,24 @@ export const getPortfolioDetail = async (req, res) => {
   } catch (error) {}
 };
 
+export const getMyWrite = async (req, res) => {
+  try {
+    const id = req.query.id;
+
+    const title = await PortfolioService.getWrite(id);
+    if (title) {
+      res.send(response(status.SUCCESS, getListResponseDTO(title)));
+    } else {
+      res.send(
+        response(
+          status.NOT_FOUND,
+          errorResponseDTO("유저정보를 찾을 수 없습니다.")
+        )
+      );
+    }
+  } catch (error) {}
+};
+
 export const postSuggestTeam = async (req, res) => {
   try {
     const body = req.body;

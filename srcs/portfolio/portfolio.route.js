@@ -1,6 +1,7 @@
 import express from "express";
 
 import {
+  getMyWrite,
   getPortfolio,
   getPortfolioDetail,
   postPortfolio,
@@ -11,5 +12,6 @@ export const portfolioRouter = express.Router();
 
 portfolioRouter.get("/list", getPortfolio);
 portfolioRouter.get("/detail", getPortfolioDetail);
+portfolioRouter.get("/title", getMyWrite);
 portfolioRouter.post("/suggest", postSuggestTeam);
 portfolioRouter.post("/", postPortfolio);

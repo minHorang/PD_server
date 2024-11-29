@@ -60,6 +60,7 @@ export const CollabModel = {
         body.duration,
         body.part,
         body.wanted,
+        body.process,
       ]);
     } catch (error) {
       throw new Error("팀 제안 실패 sql");

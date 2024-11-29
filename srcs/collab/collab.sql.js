@@ -7,7 +7,7 @@ SET @category_ids = ?;
 
 START TRANSACTION;
 
-INSERT INTO Project (title, description, status, user_id, duration, part, wanted)VALUES (?,?,'모집 중',?,?,?,?);
+INSERT INTO Project (title, description, status, user_id, process, part, wanted, process)VALUES (?,?,'모집 중',?,?,?,?,?);
 
 SET @project_id = LAST_INSERT_ID();
 

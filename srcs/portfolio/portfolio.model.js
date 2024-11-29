@@ -7,7 +7,7 @@ export const PortfolioModel = {
     console.log(category);
     try {
       const [results] = await pool.query(sql.findPortfolioByCategory, category);
-      return [results];
+      return results;
     } catch (error) {
       throw new Error("포트폴리오 조회 실패");
     }
@@ -17,7 +17,7 @@ export const PortfolioModel = {
     console.log(id);
     try {
       const [results] = await pool.query(sql.findPortfolioById, id);
-      return [results];
+      return results;
     } catch (error) {
       throw new Error("포트폴리오 조회 실패");
     }
@@ -27,7 +27,7 @@ export const PortfolioModel = {
     console.log(id);
     try {
       const [results] = await pool.query(sql.findPortfolioByUser, id);
-      return [results];
+      return results;
     } catch (error) {
       throw new Error("포트폴리오 조회 실패");
     }

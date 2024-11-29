@@ -10,7 +10,7 @@ export const TeamModel = {
         category,
         category,
       ]);
-      return [results];
+      return results;
     } catch (error) {
       throw new Error("팀 조회 실패");
     }
@@ -21,7 +21,7 @@ export const TeamModel = {
     console.log(id);
     try {
       const [results] = await pool.query(sql.findTeamById, id);
-      return [results];
+      return results;
     } catch (error) {
       throw new Error("팀 조회 실패");
     }

@@ -7,7 +7,7 @@ export const CollabModel = {
     console.log(category);
     try {
       const [results] = await pool.query(sql.findCollabByCategory, category);
-      return [results];
+      return results;
     } catch (error) {
       throw new Error("팀 조회 실패");
     }
@@ -18,7 +18,7 @@ export const CollabModel = {
     console.log(id);
     try {
       const [results] = await pool.query(sql.findCollabById, id);
-      return [results];
+      return results;
     } catch (error) {
       throw new Error("팀 조회 실패");
     }

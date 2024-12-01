@@ -73,6 +73,7 @@ export const postSuggestTeam = async (req, res) => {
 
 export const postPortfolio = async (req, res) => {
   try {
+    console.log(req.body);
     const body = req.body;
     await PortfolioService.postPortfolio(body);
 

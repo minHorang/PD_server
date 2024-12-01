@@ -2,8 +2,8 @@
 import express from "express"; // ES6
 import { response } from "./config/response.js";
 
+import cors from "cors";
 import { portfolioRouter } from "./srcs/portfolio/portfolio.route.js";
-
 import dotenv from "dotenv";
 import { teamRouter } from "./srcs/team/team.route.js";
 import { collabRouter } from "./srcs/collab/collab.route.js";
@@ -12,7 +12,14 @@ dotenv.config();
 const app = express();
 const port = 4000;
 
+// 미들웨어 설정
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static("public"));
+app.use(cors());
+
 app.use("/portfolio", portfolioRouter);
+
 app.use("/project", teamRouter);
 app.use("/collab", collabRouter);
 

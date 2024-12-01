@@ -63,7 +63,7 @@ export const CollabModel = {
         body.process,
       ]);
     } catch (error) {
-      throw new Error("팀 제안 실패 sql");
+      throw new Error("프로젝트 생성 실패 sql");
     }
   },
 };

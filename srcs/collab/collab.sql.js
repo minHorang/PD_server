@@ -1,13 +1,13 @@
 export const sql = {
-  findCollabByCategory: `SELECT p.title, p.duration, p.part FROM Project p JOIN ProjectCategory pc ON p.project_id = pc.project_id JOIN Category c ON pc.category_id = c.category_id WHERE c.category_id = ?;`,
-  findCollabById: `SELECT title,duration, wanted, description FROM Project WHERE project_id=?`,
+  findCollabByCategory: `SELECT p.project_id, p.title, p.duration, p.part FROM Project p JOIN ProjectCategory pc ON p.project_id = pc.project_id JOIN Category c ON pc.category_id = c.category_id WHERE c.category_id = ?;`,
+  findCollabById: `SELECT title,duration, wanted, description, status FROM Project WHERE project_id=?`,
   postMessageSQL: `INSERT INTO Application (project_id, user_id, message, status) VALUES(?,?,?,"지원 중")`,
   postProjectCate1SQL: `
 SET @category_ids = ?;
 
 START TRANSACTION;
 
-INSERT INTO Project (title, description, status, user_id, process, part, wanted, process)VALUES (?,?,'모집 중',?,?,?,?,?);
+INSERT INTO Project (title, description, status, user_id, duration, part, wanted, process)VALUES (?,?,'모집 중',?,?,?,?,?);
 
 SET @project_id = LAST_INSERT_ID();
 

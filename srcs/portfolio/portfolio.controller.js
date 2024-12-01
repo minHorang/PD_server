@@ -74,6 +74,7 @@ export const postSuggestTeam = async (req, res) => {
 export const postPortfolio = async (req, res) => {
   try {
     const body = req.body;
+    await PortfolioService.postPortfolio(body);
 
     res.send(
       response(status.SUCCESS, postSuggestResponseDTO("포트폴리오 작성 성공"))

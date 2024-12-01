@@ -1,6 +1,7 @@
 export const sql = {
   findTeamByCategory: `
 SELECT 
+    p.project_id,
     p.title, 
     p.duration, 
     p.part
@@ -11,14 +12,14 @@ JOIN ProjectCategory pc
 JOIN Category c 
     ON pc.category_id = c.category_id
 WHERE 
-    c.category_id = 1
+    c.category_id = ?
     AND p.project_id NOT IN (
         SELECT project_id 
         FROM ProjectCategory
-        WHERE category_id != 1
+        WHERE category_id != ?
     )
   ;`,
-  findTeamById: `SELECT title, process, wanted, description FROM Project WHERE project_id=?`,
+  findTeamById: `SELECT title, process, wanted, description, status FROM Project WHERE project_id=?`,
   postMessageSQL: `INSERT INTO Application (project_id, user_id, message, status) VALUES(?,?,?,"지원 중")`,
   postProjectSQL: `START TRANSACTION;
                     INSERT INTO Project (title, description, status, user_id, duration, part, wanted, process)
